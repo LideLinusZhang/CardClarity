@@ -1,4 +1,4 @@
-package edu.card.clarity
+package edu.card.clarity.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
