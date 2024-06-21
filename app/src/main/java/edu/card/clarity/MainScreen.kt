@@ -1,7 +1,13 @@
 package edu.card.clarity
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
@@ -9,20 +15,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.presentation.BottomNavBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = {BottomBar(navController = navController)}
+        bottomBar = {
+            BottomBar(
+                navController = navController,
+            )
+        }
     ) {
         BottomNavGraph(navController = navController)
     }
@@ -58,7 +71,10 @@ fun RowScope.AddItem(
 ) {
     BottomNavigationItem(
         label = {
-            Text(text = screen.title)
+            Text(
+                text = screen.title,
+                textAlign = TextAlign.Center,
+            )
         },
         icon = {
             Icon(imageVector = screen.icon, contentDescription = "Navigation Icon")
@@ -68,6 +84,7 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navController.navigate(screen.route)
-        }
+        },
+        modifier = Modifier.weight(1f).padding(top = 10.dp, bottom = 10.dp),
     )
 }

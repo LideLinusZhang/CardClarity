@@ -19,12 +19,12 @@ sealed class BottomNavBar (
     )
     data object AddCard: BottomNavBar (
         route = "addCard",
-        title = "AddCard",
+        title = "Add Card",
         icon = Icons.Default.AddCircle
     )
     data object MyBenefits: BottomNavBar (
-        route = "myBenefits",
-        title = "MyBenefits",
+        route = "Benefits",
+        title = "Benefits",
         icon = Icons.Default.Star
     )
     data object Purchase: BottomNavBar (
