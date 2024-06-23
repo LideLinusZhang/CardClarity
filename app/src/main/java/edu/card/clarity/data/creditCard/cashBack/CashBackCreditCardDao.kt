@@ -1,0 +1,122 @@
+package edu.card.clarity.data.creditCard.cashBack
+
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
+import java.util.Date
+import java.util.UUID
+
+@Dao
+interface CashBackCreditCardDao {
+    /**
+     * Observes list of systems.
+     *
+     * @return all cash back credit cards.
+     */
+    @Query("SELECT * FROM cashBackCreditCard")
+    fun observeAll(): Flow<List<CashBackCreditCardEntity>>
+
+    /**
+     * Observes a single credit card.
+     *
+     * @param id the credit card id.
+     * @return the credit card with id.
+     */
+    @Query("SELECT * FROM cashBackCreditCard WHERE id = :id")
+    fun observeById(id: UUID): Flow<CashBackCreditCardEntity>
+
+    /**
+     * Observes all credit cards with credit cards associated to them from the credit card table.
+     *
+     * @return all credit cards with credit cards associated to them.
+     */
+    @Transaction
+    @Query("SELECT * FROM cashBackCreditCard")
+    fun observeCashBackCreditCardWithPurchaseReturn(): Flow<List<CashBackCreditCardWithPurchaseReturns>>
+
+    /**
+     * Select all credit cards from the credit card table.
+     *
+     * @return all credit cards.
+     */
+    @Query("SELECT * FROM cashBackCreditCard")
+    suspend fun getAll(): List<CashBackCreditCardEntity>
+
+    /**
+     * Select a credit card by id.
+     *
+     * @param id the credit card id.
+     * @return the credit card with id.
+     */
+    @Query("SELECT * FROM cashBackCreditCard WHERE id = :id")
+    suspend fun getById(id: UUID): CashBackCreditCardEntity?
+
+    /**
+     * Select all credit cards with credit cards associated to them from the credit card table.
+     *
+     * @return all credit cards with credit cards associated to them.
+     */
+    @Transaction
+    @Query("SELECT * FROM cashBackCreditCard")
+    suspend fun getCashBackCreditCardWithPurchaseReturn(): List<CashBackCreditCardWithPurchaseReturns>
+
+    /**
+     * Insert or update a credit card in the database. If a credit card already exists, replace it.
+     *
+     * @param cashBackCreditCard the credit card to be inserted or updated.
+     */
+    @Upsert
+    suspend fun upsert(cashBackCreditCard: CashBackCreditCardEntity)
+
+    /**
+     * Insert or update credit cards in the database. If a credit card already exists, replace it.
+     *
+     * @param cashBackCreditCards the credit cards to be inserted or updated.
+     */
+    @Upsert
+    suspend fun upsertAll(cashBackCreditCards: List<CashBackCreditCardEntity>)
+
+    /**
+     * Update the statement date of a credit card
+     *
+     * @param id id of the credit card
+     * @param statementDate statement date to be updated
+     */
+    @Query("UPDATE cashBackCreditCard SET statementDate = :statementDate WHERE id = :id")
+    suspend fun updateStatementDate(id: UUID, statementDate: Date)
+
+    /**
+     * Update the statement date of a credit card
+     *
+     * @param id id of the credit card
+     * @param paymentDueDate payment due date to be updated
+     */
+    @Query("UPDATE cashBackCreditCard SET paymentDueDate = :paymentDueDate WHERE id = :id")
+    suspend fun updatePaymentDueDate(id: UUID, paymentDueDate: Date)
+
+    /**
+     * Update the name of a credit card
+     *
+     * @param id id of the task
+     * @param name name to be updated
+     */
+    @Query("UPDATE cashBackCreditCard SET name = :name WHERE id = :id")
+    suspend fun updateName(id: UUID, name: String)
+
+    /**
+     * Delete a credit card by id.
+     *
+     * @param id id of the credit card
+     * @return the number of credit card deleted. This should always be 1.
+     */
+    @Query("DELETE FROM cashBackCreditCard WHERE id = :id")
+    suspend fun deleteById(id: UUID): Int
+
+    /**
+     * Delete all credit cards.
+     */
+    @Query("DELETE FROM cashBackCreditCard")
+    suspend fun deleteAll()
+}

@@ -1,8 +1,13 @@
 package edu.card.clarity.domain
 
-class PointSystem (
+import java.util.UUID
+
+data class PointSystem (
+    val id: UUID,
     val name: String,
     val pointToCashConversionRate: Float
 ) {
-    fun getEquivalentCashAmount(pointAmount: Int): Float = pointAmount * pointToCashConversionRate
+    fun getEquivalentCashAmount(pointAmount: Int): Float {
+        return pointAmount * pointToCashConversionRate
+    }
 }

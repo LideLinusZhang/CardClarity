@@ -4,15 +4,17 @@ import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.purchaseReturn.MultiplierPurchaseReturn
 import java.util.Date
+import java.util.UUID
 
 class PointBackCreditCard(
+    id: UUID,
     name: String,
     statementDate: Date,
     paymentDueDate: Date,
+    val pointSystem: PointSystem,
     purchaseReturns: MutableList<MultiplierPurchaseReturn> = mutableListOf(),
-    val pointSystem: PointSystem
 ) : CreditCard<MultiplierPurchaseReturn>(
-    name, statementDate, paymentDueDate, purchaseReturns
+    id, name, statementDate, paymentDueDate, purchaseReturns
 ) {
     override fun getReturnAmountInCash(purchase: Purchase): Float {
         return getReturnAmountInPoint(purchase) * pointSystem.pointToCashConversionRate
@@ -20,7 +22,7 @@ class PointBackCreditCard(
 
     fun getReturnAmountInPoint(purchase: Purchase): Int {
         val purchaseReturn =
-            purchaseReturns.first { it.applicablePurchaseTypes.contains(purchase.type) }
+            purchaseReturns.first { it.applicablePurchaseType == purchase.type }
 
         return purchaseReturn.getReturnAmount(purchase).toInt()
     }
