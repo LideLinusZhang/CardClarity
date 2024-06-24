@@ -13,6 +13,7 @@ import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
 
+@JvmName("pointBackCreditCardInfoEntityToDomainModel")
 fun List<PointBackCreditCardInfoEntity>.toDomainModel() = map(
     PointBackCreditCardInfoEntity::toDomainModel
 )
@@ -23,6 +24,7 @@ fun PointBackCreditCardInfoEntity.toDomainModel() = CreditCardInfo(
     paymentDueDate = paymentDueDate
 )
 
+@JvmName("cashBackCreditCardInfoEntityToDomainModel")
 fun List<CashBackCreditCardInfoEntity>.toDomainModel() = map(
     CashBackCreditCardInfoEntity::toDomainModel
 )
@@ -33,6 +35,7 @@ fun CashBackCreditCardInfoEntity.toDomainModel() = CreditCardInfo(
     paymentDueDate = paymentDueDate
 )
 
+@JvmName("pointBackCreditCardEntityToDomainModel")
 fun List<PointBackCreditCardEntity>.toDomainModel() = map(
     PointBackCreditCardEntity::toDomainModel
 )
@@ -44,6 +47,7 @@ fun PointBackCreditCardEntity.toDomainModel() = PointBackCreditCard(
     purchaseReturns = purchaseReturns.toDomainModel()
 )
 
+@JvmName("cashBackCreditCardEntityToDomainModel")
 fun List<CashBackCreditCardEntity>.toDomainModel() = map(
     CashBackCreditCardEntity::toDomainModel
 )
@@ -54,6 +58,7 @@ fun CashBackCreditCardEntity.toDomainModel() = CashBackCreditCard(
     purchaseReturns = purchaseReturns.toDomainModel()
 )
 
+@JvmName("pointSystemEntityToDomainModel")
 fun List<PointSystemEntity>.toDomainModel() = map(PointSystemEntity::toDomainModel)
 
 fun PointSystemEntity.toDomainModel() = PointSystem(
@@ -67,6 +72,7 @@ fun MultiplierPurchaseReturnEntity.toDomainModel() = PurchaseReturn(
     returnFactor = multiplier
 )
 
+@JvmName("multiplierPurchaseReturnEntityToDomainModel")
 fun List<MultiplierPurchaseReturnEntity>.toDomainModel() =
     map(MultiplierPurchaseReturnEntity::toDomainModel)
 
@@ -75,5 +81,6 @@ fun PercentagePurchaseReturnEntity.toDomainModel() = PurchaseReturn(
     returnFactor = percentage
 )
 
+@JvmName("percentagePurchaseReturnEntityToDomainModel")
 fun List<PercentagePurchaseReturnEntity>.toDomainModel() =
     map(PercentagePurchaseReturnEntity::toDomainModel)
