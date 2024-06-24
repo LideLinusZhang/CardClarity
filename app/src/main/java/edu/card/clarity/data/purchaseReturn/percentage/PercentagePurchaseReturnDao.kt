@@ -1,10 +1,12 @@
 package edu.card.clarity.data.purchaseReturn.percentage
 
+import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import edu.card.clarity.domain.PurchaseType
 import java.util.UUID
 
+@Dao
 interface PercentagePurchaseReturnDao {
     /**
      * Insert or update a purchase return in the database.

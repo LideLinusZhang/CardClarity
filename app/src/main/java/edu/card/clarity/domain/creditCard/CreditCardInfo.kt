@@ -1,9 +1,9 @@
 package edu.card.clarity.domain.creditCard
 
-import java.util.Date
+import android.icu.util.Calendar
 
 open class CreditCardInfo(
     val name: String,
-    val statementDate: Date,
-    val paymentDueDate: Date
+    val statementDate: Calendar,
+    val paymentDueDate: Calendar
 )
