@@ -5,7 +5,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
 import java.util.UUID
 
 @Dao
@@ -87,33 +86,6 @@ interface CashBackCreditCardDao {
      */
     @Upsert
     suspend fun upsertAll(cashBackCreditCards: List<CashBackCreditCardInfoEntity>)
-
-    /**
-     * Update the statement date of a credit card
-     *
-     * @param id id of the credit card
-     * @param statementDate statement date to be updated
-     */
-    @Query("UPDATE cashBackCreditCard SET statementDate = :statementDate WHERE id = :id")
-    suspend fun updateStatementDate(id: UUID, statementDate: Date)
-
-    /**
-     * Update the statement date of a credit card
-     *
-     * @param id id of the credit card
-     * @param paymentDueDate payment due date to be updated
-     */
-    @Query("UPDATE cashBackCreditCard SET paymentDueDate = :paymentDueDate WHERE id = :id")
-    suspend fun updatePaymentDueDate(id: UUID, paymentDueDate: Date)
-
-    /**
-     * Update the name of a credit card
-     *
-     * @param id id of the task
-     * @param name name to be updated
-     */
-    @Query("UPDATE cashBackCreditCard SET name = :name WHERE id = :id")
-    suspend fun updateName(id: UUID, name: String)
 
     /**
      * Delete a credit card by id.

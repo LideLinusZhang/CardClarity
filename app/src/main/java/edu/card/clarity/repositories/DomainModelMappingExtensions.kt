@@ -54,6 +54,8 @@ fun CashBackCreditCardEntity.toDomainModel() = CashBackCreditCard(
     purchaseReturns = purchaseReturns.toDomainModel()
 )
 
+fun List<PointSystemEntity>.toDomainModel() = map(PointSystemEntity::toDomainModel)
+
 fun PointSystemEntity.toDomainModel() = PointSystem(
     id = id,
     name = name,

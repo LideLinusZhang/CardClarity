@@ -5,7 +5,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
 import java.util.UUID
 
 @Dao
@@ -89,24 +88,6 @@ interface PointBackCreditCardDao {
     suspend fun upsertAll(cardInfoList: List<PointBackCreditCardInfoEntity>)
 
     /**
-     * Update the statement date of a credit card
-     *
-     * @param id id of the credit card
-     * @param statementDate statement date to be updated
-     */
-    @Query("UPDATE pointBackCreditCard SET statementDate = :statementDate WHERE id = :id")
-    suspend fun updateStatementDate(id: UUID, statementDate: Date)
-
-    /**
-     * Update the statement date of a credit card
-     *
-     * @param id id of the credit card
-     * @param paymentDueDate payment due date to be updated
-     */
-    @Query("UPDATE pointBackCreditCard SET paymentDueDate = :paymentDueDate WHERE id = :id")
-    suspend fun updatePaymentDueDate(id: UUID, paymentDueDate: Date)
-
-    /**
      * Update the point system id of a credit card
      *
      * @param id id of the credit card
@@ -114,15 +95,6 @@ interface PointBackCreditCardDao {
      */
     @Query("UPDATE pointBackCreditCard SET pointSystemId = :pointSystemId WHERE id = :id")
     suspend fun updatePointSystemId(id: UUID, pointSystemId: UUID)
-
-    /**
-     * Update the name of a credit card
-     *
-     * @param id id of the task
-     * @param name name to be updated
-     */
-    @Query("UPDATE pointBackCreditCard SET name = :name WHERE id = :id")
-    suspend fun updateName(id: UUID, name: String)
 
     /**
      * Delete a credit card by id.

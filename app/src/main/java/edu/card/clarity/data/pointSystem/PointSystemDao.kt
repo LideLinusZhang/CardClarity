@@ -32,8 +32,8 @@ interface PointSystemDao {
      * @return all point systems with credit cards associated to them.
      */
     @Transaction
-    @Query("SELECT * FROM pointSystem")
-    fun observePointSystemWithCreditCards(): Flow<List<PointSystemWithCreditCards>>
+    @Query("SELECT * FROM pointSystem WHERE id = :id")
+    fun observePointSystemWithCreditCards(id: UUID): Flow<PointSystemWithCreditCards>
 
     /**
      * Select all point systems from the point system table.
@@ -58,8 +58,8 @@ interface PointSystemDao {
      * @return all point systems with credit cards associated to them.
      */
     @Transaction
-    @Query("SELECT * FROM pointSystem")
-    suspend fun getPointSystemWithCreditCards(): List<PointSystemWithCreditCards>
+    @Query("SELECT * FROM pointSystem WHERE id = :id")
+    suspend fun getPointSystemWithCreditCards(id: UUID): PointSystemWithCreditCards?
 
     /**
      * Insert or update a point system in the database. If a point system already exists, replace it.
@@ -76,24 +76,6 @@ interface PointSystemDao {
      */
     @Upsert
     suspend fun upsertAll(pointSystems: List<PointSystemEntity>)
-
-    /**
-     * Update the conversion rate of a point system
-     *
-     * @param id id of the task
-     * @param conversionRate conversion rate to be updated
-     */
-    @Query("UPDATE pointSystem SET pointToCashConversionRate = :conversionRate WHERE id = :id")
-    suspend fun updateConversionRate(id: UUID, conversionRate: Float)
-
-    /**
-     * Update the name of a point system
-     *
-     * @param id id of the task
-     * @param name name to be updated
-     */
-    @Query("UPDATE pointSystem SET name = :name WHERE id = :id")
-    suspend fun updateName(id: UUID, name: String)
 
     /**
      * Delete a point system by id.
