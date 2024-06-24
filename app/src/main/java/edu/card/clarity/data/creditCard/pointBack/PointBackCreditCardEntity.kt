@@ -1,25 +1,21 @@
 package edu.card.clarity.data.creditCard.pointBack
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import edu.card.clarity.data.creditCard.CreditCardEntity
+import androidx.room.Embedded
+import androidx.room.Relation
+import edu.card.clarity.data.creditCard.ICreditCardEntity
 import edu.card.clarity.data.pointSystem.PointSystemEntity
-import java.util.Date
-import java.util.UUID
+import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnEntity
 
-@Entity(
-    tableName = "pointBackCreditCard",
-    foreignKeys = [
-        ForeignKey(
-            entity = PointSystemEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["pointSystemId"]
-        )
-    ]
-)
 data class PointBackCreditCardEntity(
-    override val name: String,
-    override val statementDate: Date,
-    override val paymentDueDate: Date,
-    val pointSystemId: UUID
-) : CreditCardEntity()
+    @Embedded override val creditCardInfo: PointBackCreditCardInfoEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "creditCardId"
+    )
+    override val purchaseReturns: List<MultiplierPurchaseReturnEntity>,
+    @Relation(
+        parentColumn = "pointSystemId",
+        entityColumn = "id"
+    )
+    val pointSystem: PointSystemEntity
+) : ICreditCardEntity

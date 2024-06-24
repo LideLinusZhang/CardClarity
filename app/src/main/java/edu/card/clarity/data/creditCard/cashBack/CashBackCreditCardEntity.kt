@@ -1,12 +1,15 @@
 package edu.card.clarity.data.creditCard.cashBack
 
-import androidx.room.Entity
-import edu.card.clarity.data.creditCard.CreditCardEntity
-import java.util.Date
+import androidx.room.Embedded
+import androidx.room.Relation
+import edu.card.clarity.data.creditCard.ICreditCardEntity
+import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnEntity
 
-@Entity(tableName = "cashBackCreditCard")
 data class CashBackCreditCardEntity(
-    override val name: String,
-    override val paymentDueDate: Date,
-    override val statementDate: Date
-) : CreditCardEntity()
+    @Embedded override val creditCardInfo: CashBackCreditCardInfoEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "creditCardId"
+    )
+    override val purchaseReturns: List<MultiplierPurchaseReturnEntity>
+) : ICreditCardEntity

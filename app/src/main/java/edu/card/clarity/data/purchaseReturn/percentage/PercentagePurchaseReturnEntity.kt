@@ -3,7 +3,7 @@ package edu.card.clarity.data.purchaseReturn.percentage
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
-import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardEntity
+import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardInfoEntity
 import edu.card.clarity.data.purchaseReturn.IPurchaseReturnEntity
 import edu.card.clarity.domain.PurchaseType
 import java.util.UUID
@@ -13,7 +13,7 @@ import java.util.UUID
     primaryKeys = ["creditCardId", "purchaseType"],
     foreignKeys = [
         ForeignKey(
-            entity = CashBackCreditCardEntity::class,
+            entity = CashBackCreditCardInfoEntity::class,
             parentColumns = ["id"],
             childColumns = ["creditCardId"],
             onDelete = CASCADE

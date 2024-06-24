@@ -1,18 +1,14 @@
 package edu.card.clarity.domain.creditCard
 
 import edu.card.clarity.domain.Purchase
-import edu.card.clarity.domain.purchaseReturn.PercentagePurchaseReturn
-import java.util.Date
+import edu.card.clarity.domain.PurchaseReturn
 import java.util.UUID
 
-class CashBackCreditCard(
-    id: UUID,
-    name: String,
-    statementDate: Date,
-    paymentDueDate: Date,
-    purchaseReturns: MutableList<PercentagePurchaseReturn> = mutableListOf()
-) : CreditCard<PercentagePurchaseReturn>(id, name, statementDate, paymentDueDate, purchaseReturns
-) {
+data class CashBackCreditCard(
+    override val id: UUID,
+    override val info: CreditCardInfo,
+    override val purchaseReturns: List<PurchaseReturn>
+) : ICreditCard {
     override fun getReturnAmountInCash(purchase: Purchase): Float {
         val purchaseReturn =
             purchaseReturns.first { it.applicablePurchaseType == purchase.type }

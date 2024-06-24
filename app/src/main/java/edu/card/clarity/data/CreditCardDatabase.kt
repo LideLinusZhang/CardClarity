@@ -3,9 +3,9 @@ package edu.card.clarity.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardDao
-import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardEntity
+import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardInfoEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardDao
-import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardEntity
+import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardInfoEntity
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnEntity
@@ -14,8 +14,8 @@ import edu.card.clarity.data.purchaseReturn.percentage.PercentagePurchaseReturnE
 @Database(
     entities = [
         PointSystemEntity::class,
-        CashBackCreditCardEntity::class,
-        PointBackCreditCardEntity::class,
+        CashBackCreditCardInfoEntity::class,
+        PointBackCreditCardInfoEntity::class,
         MultiplierPurchaseReturnEntity::class,
         PercentagePurchaseReturnEntity::class
     ],

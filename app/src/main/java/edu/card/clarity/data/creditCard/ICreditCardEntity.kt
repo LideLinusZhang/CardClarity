@@ -2,7 +2,7 @@ package edu.card.clarity.data.creditCard
 
 import edu.card.clarity.data.purchaseReturn.IPurchaseReturnEntity
 
-interface ICreditCardWithPurchaseReturns {
-    val creditCard: CreditCardEntity
+interface ICreditCardEntity {
+    val creditCardInfo: ICreditCardInfoEntity
     val purchaseReturns: List<IPurchaseReturnEntity>
 }

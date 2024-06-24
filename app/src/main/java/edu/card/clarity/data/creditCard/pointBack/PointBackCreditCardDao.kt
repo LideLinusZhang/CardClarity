@@ -11,72 +11,82 @@ import java.util.UUID
 @Dao
 interface PointBackCreditCardDao {
     /**
-     * Observes list of systems.
+     * Observes list of credit card info.
      *
-     * @return all cash back credit cards.
+     * @return all cash back credit cards' info.
      */
+    @Query("SELECT * FROM pointBackCreditCard")
+    fun observeAllInfo(): Flow<List<PointBackCreditCardInfoEntity>>
+
+    /**
+     * Observes a single credit card's info.
+     *
+     * @param id the credit card id.
+     * @return the credit card info with id.
+     */
+    @Query("SELECT * FROM pointBackCreditCard WHERE id = :id")
+    fun observeInfoById(id: UUID): Flow<PointBackCreditCardInfoEntity>
+
+    /**
+     * Observes all credit cards with purchase returns associated to them from the credit card table.
+     *
+     * @return all credit cards with purchase returns associated to them.
+     */
+    @Transaction
     @Query("SELECT * FROM pointBackCreditCard")
     fun observeAll(): Flow<List<PointBackCreditCardEntity>>
 
     /**
-     * Observes a single credit card.
+     * Select all credit cards' info from the credit card table.
+     *
+     * @return all credit cards' info.
+     */
+    @Query("SELECT * FROM pointBackCreditCard")
+    suspend fun getAllInfo(): List<PointBackCreditCardInfoEntity>
+
+    /**
+     * Select a credit card's info by id.
      *
      * @param id the credit card id.
-     * @return the credit card with id.
+     * @return the credit card's info with id.
      */
     @Query("SELECT * FROM pointBackCreditCard WHERE id = :id")
-    fun observeById(id: UUID): Flow<PointBackCreditCardEntity>
+    suspend fun getInfoById(id: UUID): PointBackCreditCardInfoEntity?
 
     /**
-     * Observes all credit cards with credit cards associated to them from the credit card table.
-     *
-     * @return all credit cards with credit cards associated to them.
-     */
-    @Transaction
-    @Query("SELECT * FROM pointBackCreditCard")
-    fun observeCashBackCreditCardWithPurchaseReturn(): Flow<List<PointBackCreditCardWithPurchaseReturns>>
-
-    /**
-     * Select all credit cards from the credit card table.
-     *
-     * @return all credit cards.
-     */
-    @Query("SELECT * FROM pointBackCreditCard")
-    suspend fun getAll(): List<PointBackCreditCardEntity>
-
-    /**
-     * Select a credit card by id.
+     * Select a credit card with associated purchase returns by id.
      *
      * @param id the credit card id.
-     * @return the credit card with id.
+     * @return the credit card with associated purchase returns with id.
      */
+    @Transaction
     @Query("SELECT * FROM pointBackCreditCard WHERE id = :id")
     suspend fun getById(id: UUID): PointBackCreditCardEntity?
 
     /**
-     * Select all credit cards with credit cards associated to them from the credit card table.
+     * Select all credit cards with purchase returns associated to them from the credit card table.
      *
-     * @return all credit cards with credit cards associated to them.
+     * @return all credit cards with purchase returns associated to them.
      */
     @Transaction
     @Query("SELECT * FROM pointBackCreditCard")
-    suspend fun getCashBackCreditCardWithPurchaseReturn(): List<PointBackCreditCardEntity>
+    suspend fun getAll(): List<PointBackCreditCardEntity>
 
     /**
-     * Insert or update a credit card in the database. If a credit card already exists, replace it.
+     * Insert or update a credit card's info in the database. If a credit card already exists, replace it.
      *
-     * @param pointBackCreditCard the credit card to be inserted or updated.
+     * @param cardInfo the credit card's info to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(pointBackCreditCard: PointBackCreditCardEntity)
+    suspend fun upsert(cardInfo: PointBackCreditCardInfoEntity)
 
     /**
-     * Insert or update credit cards in the database. If a credit card already exists, replace it.
+     * Insert or update credit cards' info in the database. If a credit card already exists, replace it.
      *
-     * @param pointBackCreditCard the credit cards to be inserted or updated.
+     * @param cardInfoList the credit cards' info to be inserted or updated.
      */
     @Upsert
-    suspend fun upsertAll(pointBackCreditCard: List<PointBackCreditCardEntity>)
+    suspend fun upsertAll(cardInfoList: List<PointBackCreditCardInfoEntity>)
 
     /**
      * Update the statement date of a credit card

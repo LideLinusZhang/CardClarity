@@ -16,7 +16,7 @@ interface CashBackCreditCardDao {
      * @return all cash back credit cards.
      */
     @Query("SELECT * FROM cashBackCreditCard")
-    fun observeAll(): Flow<List<CashBackCreditCardEntity>>
+    fun observeAllInfo(): Flow<List<CashBackCreditCardInfoEntity>>
 
     /**
      * Observes a single credit card.
@@ -25,7 +25,7 @@ interface CashBackCreditCardDao {
      * @return the credit card with id.
      */
     @Query("SELECT * FROM cashBackCreditCard WHERE id = :id")
-    fun observeById(id: UUID): Flow<CashBackCreditCardEntity>
+    fun observeInfoById(id: UUID): Flow<CashBackCreditCardInfoEntity>
 
     /**
      * Observes all credit cards with credit cards associated to them from the credit card table.
@@ -34,7 +34,7 @@ interface CashBackCreditCardDao {
      */
     @Transaction
     @Query("SELECT * FROM cashBackCreditCard")
-    fun observeCashBackCreditCardWithPurchaseReturn(): Flow<List<CashBackCreditCardWithPurchaseReturns>>
+    fun observeAll(): Flow<List<CashBackCreditCardEntity>>
 
     /**
      * Select all credit cards from the credit card table.
@@ -42,7 +42,7 @@ interface CashBackCreditCardDao {
      * @return all credit cards.
      */
     @Query("SELECT * FROM cashBackCreditCard")
-    suspend fun getAll(): List<CashBackCreditCardEntity>
+    suspend fun getAllInfo(): List<CashBackCreditCardInfoEntity>
 
     /**
      * Select a credit card by id.
@@ -50,6 +50,16 @@ interface CashBackCreditCardDao {
      * @param id the credit card id.
      * @return the credit card with id.
      */
+    @Query("SELECT * FROM cashBackCreditCard WHERE id = :id")
+    suspend fun getInfoById(id: UUID): CashBackCreditCardInfoEntity?
+
+    /**
+     * Select a credit card with associated purchase returns by id.
+     *
+     * @param id the credit card id.
+     * @return the credit card with associated purchase returns with id.
+     */
+    @Transaction
     @Query("SELECT * FROM cashBackCreditCard WHERE id = :id")
     suspend fun getById(id: UUID): CashBackCreditCardEntity?
 
@@ -60,7 +70,7 @@ interface CashBackCreditCardDao {
      */
     @Transaction
     @Query("SELECT * FROM cashBackCreditCard")
-    suspend fun getCashBackCreditCardWithPurchaseReturn(): List<CashBackCreditCardWithPurchaseReturns>
+    suspend fun getAll(): List<CashBackCreditCardEntity>
 
     /**
      * Insert or update a credit card in the database. If a credit card already exists, replace it.
@@ -68,7 +78,7 @@ interface CashBackCreditCardDao {
      * @param cashBackCreditCard the credit card to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(cashBackCreditCard: CashBackCreditCardEntity)
+    suspend fun upsert(cashBackCreditCard: CashBackCreditCardInfoEntity)
 
     /**
      * Insert or update credit cards in the database. If a credit card already exists, replace it.
@@ -76,7 +86,7 @@ interface CashBackCreditCardDao {
      * @param cashBackCreditCards the credit cards to be inserted or updated.
      */
     @Upsert
-    suspend fun upsertAll(cashBackCreditCards: List<CashBackCreditCardEntity>)
+    suspend fun upsertAll(cashBackCreditCards: List<CashBackCreditCardInfoEntity>)
 
     /**
      * Update the statement date of a credit card

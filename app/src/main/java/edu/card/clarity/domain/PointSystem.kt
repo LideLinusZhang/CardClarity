@@ -2,7 +2,7 @@ package edu.card.clarity.domain
 
 import java.util.UUID
 
-data class PointSystem (
+data class PointSystem(
     val id: UUID,
     val name: String,
     val pointToCashConversionRate: Float

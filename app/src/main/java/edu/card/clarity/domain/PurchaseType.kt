@@ -1,4 +1,3 @@
 package edu.card.clarity.domain
 
-enum class PurchaseType {
-}
+enum class PurchaseType
