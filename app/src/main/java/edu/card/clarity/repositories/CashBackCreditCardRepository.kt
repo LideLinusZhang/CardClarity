@@ -4,14 +4,12 @@ import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardDao
 import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardInfoEntity
 import edu.card.clarity.data.purchaseReturn.percentage.PercentagePurchaseReturnDao
 import edu.card.clarity.data.purchaseReturn.percentage.PercentagePurchaseReturnEntity
-import edu.card.clarity.dependencyInjection.ApplicationScope
 import edu.card.clarity.dependencyInjection.DefaultDispatcher
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.PurchaseType
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -24,7 +22,6 @@ class CashBackCreditCardRepository @Inject constructor(
     private val creditCardDataSource: CashBackCreditCardDao,
     private val purchaseReturnDataSource: PercentagePurchaseReturnDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
-    @ApplicationScope private val scope: CoroutineScope,
 ) : ICreditCardRepository {
     override suspend fun createCreditCard(info: CreditCardInfo, pointSystem: PointSystem): UUID {
         val id = withContext(dispatcher) {

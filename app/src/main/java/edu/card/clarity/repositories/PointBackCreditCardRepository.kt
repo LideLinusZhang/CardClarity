@@ -4,14 +4,12 @@ import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardDao
 import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardInfoEntity
 import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnDao
 import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnEntity
-import edu.card.clarity.dependencyInjection.ApplicationScope
 import edu.card.clarity.dependencyInjection.DefaultDispatcher
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.PurchaseType
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -24,7 +22,6 @@ class PointBackCreditCardRepository @Inject constructor(
     private val creditCardDataSource: PointBackCreditCardDao,
     private val purchaseReturnDataSource: MultiplierPurchaseReturnDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
-    @ApplicationScope private val scope: CoroutineScope,
 ) : ICreditCardRepository {
     override suspend fun createCreditCard(info: CreditCardInfo, pointSystem: PointSystem): UUID {
         val id = withContext(dispatcher) {

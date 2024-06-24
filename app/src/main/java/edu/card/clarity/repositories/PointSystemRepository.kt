@@ -2,12 +2,10 @@ package edu.card.clarity.repositories
 
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
-import edu.card.clarity.dependencyInjection.ApplicationScope
 import edu.card.clarity.dependencyInjection.DefaultDispatcher
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -19,7 +17,6 @@ import javax.inject.Singleton
 class PointSystemRepository @Inject constructor(
     private val dataSource: PointSystemDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
-    @ApplicationScope private val scope: CoroutineScope
 ) {
     suspend fun createPointSystem(name: String, conversionRate: Float): UUID {
         val id = withContext(dispatcher) {
