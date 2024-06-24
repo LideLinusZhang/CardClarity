@@ -128,7 +128,9 @@ fun CardItem(
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = "Check Circle",
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(end = 1.dp),
                         )
                         Text(
                             text = "Payment Reminder",
