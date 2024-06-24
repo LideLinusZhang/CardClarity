@@ -127,7 +127,9 @@ fun CardItem(
                 Column(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
                 ) {
                     Spacer(modifier = Modifier.height(100.dp))
                     Row {
