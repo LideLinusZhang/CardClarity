@@ -113,7 +113,7 @@ fun CardItem(
                 modifier = Modifier
                     .weight(0.45f)
                     .fillMaxHeight()
-                    .background(Color.Gray)
+                    .background(color = Color(0xFFBFC0C2))
                     .padding(end = 12.dp)
             ) {
                 Column(
