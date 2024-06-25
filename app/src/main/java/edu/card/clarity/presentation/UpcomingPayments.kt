@@ -82,7 +82,7 @@ fun MonthView(
     val daysInMonth: Int = month.lengthOfMonth()
     val firstOfMonth: LocalDate = month.atDay(1)
     val dayOfWeekOffset: Int = firstOfMonth.dayOfWeek.value % 7
-    val days = listOf("M", "T", "W", "Th", "F", "Sat", "Sun")
+    val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
     Column {
         // month navigation
