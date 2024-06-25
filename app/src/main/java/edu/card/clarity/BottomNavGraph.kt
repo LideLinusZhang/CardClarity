@@ -8,6 +8,7 @@ import edu.card.clarity.presentation.AddCardScreen
 import edu.card.clarity.presentation.BottomNavBar
 import edu.card.clarity.presentation.HomeScreen
 import edu.card.clarity.presentation.MyBenefitsScreen
+import edu.card.clarity.presentation.MyCardsScreen
 import edu.card.clarity.presentation.PurchaseScreen
 
 @Composable
@@ -16,8 +17,8 @@ fun BottomNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = BottomNavBar.Home.route
     ) {
-        composable(route = BottomNavBar.Home.route) {
-            HomeScreen()
+        composable(BottomNavBar.Home.route) {
+            HomeScreen(navController)
         }
         composable(route = BottomNavBar.AddCard.route) {
             AddCardScreen()
@@ -27,6 +28,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomNavBar.Purchase.route) {
             PurchaseScreen()
+        }
+        composable("myCards") {
+            MyCardsScreen()
         }
     }
 }
