@@ -112,12 +112,17 @@ fun MonthView(
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
             contentPadding = PaddingValues(all = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),  // Spacing between columns
-            verticalArrangement = Arrangement.spacedBy(4.dp)    // Spacing between rows
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // days of the week header
             items(days.size) { index ->
-                Text(text = days[index], modifier = Modifier.padding(8.dp), color = Color.Black)
+                Text(
+                    text = days[index],
+                    modifier = Modifier.padding(8.dp),
+                    color = Color.Black,
+                    style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center),
+                )
             }
 
             items(daysInMonth + dayOfWeekOffset) { index: Int ->
@@ -125,7 +130,7 @@ fun MonthView(
                     val day: Int = index - dayOfWeekOffset + 1
                     DayCell(day = day, month = month, cards = cards)
                 } else {
-                    Box(Modifier.size(40.dp))  // Placeholder for empty grid spaces
+                    Box(Modifier.size(40.dp))
                 }
             }
         }
