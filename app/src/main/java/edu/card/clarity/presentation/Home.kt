@@ -1,6 +1,7 @@
 package edu.card.clarity.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -13,9 +14,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -24,9 +27,8 @@ fun HomeScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Header(userName = "Sophie Chan")
 
-        BarChartScreen()
+        RewardsSummary(userName = "Sophie Chan")
 
         Column(
             modifier = Modifier
@@ -37,7 +39,9 @@ fun HomeScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            CardBox(label = "My Cards")
+            CardBox(label = "My Cards") {
+                navController.navigate("myCards")
+            }
             CardBox(label = "Upcoming Payments")
         }
 
@@ -45,7 +49,12 @@ fun HomeScreen() {
 }
 
 @Composable
-fun Header(userName: String) {
+fun RewardsSummary(userName: String) {
+    val months = listOf("March", "April", "May")
+    val data = listOf(100, 170, 300)
+    val maxData = data.maxOrNull() ?: 1
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,15 +76,6 @@ fun Header(userName: String) {
             color = Color.Black
         )
     }
-}
-
-
-@Composable
-fun BarChartScreen() {
-    val months = listOf("March", "April", "May")
-    val data = listOf(100, 170, 300)
-    val maxData = data.maxOrNull() ?: 1
-
     Column(
         modifier = Modifier
             .fillMaxHeight(0.5f),
@@ -138,76 +138,33 @@ fun Bar(month: String, value: Int, maxValue: Int) {
 }
 
 @Composable
-fun Bar(label: String, savings: Number) {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.Gray)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = label,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun BarBox(label: String, amount: Number) {
-    Box(
-        contentAlignment = Alignment.TopCenter,
-        modifier = Modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.Gray)
-            .padding(16.dp)
-            .widthIn(min = 56.dp, max = 56.dp),
-    ) {
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxHeight()
-        ) {
-            Text(
-                text = label,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-            )
-            Text(
-                text = "$$amount",
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-            )
-        }
-
-    }
-}
-
-@Composable
-fun CardBox(label: String) {
+fun CardBox(label: String, onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(Color.LightGray)
-            .padding(16.dp)
-            .heightIn(min = 80.dp, max = 80.dp)
-
+            .clickable { onClick() }
     ) {
-        Text(
-            text = label,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Normal,
-            color = Color.Black,
-        )
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .heightIn(min = 80.dp, max = 80.dp)
+        ) {
+            Text(
+                text = label,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black,
+            )
+        }
     }
 }
+
 
 @Composable
 @Preview
 fun HomeScreenPreview() {
-    HomeScreen()
+    val navController = rememberNavController()
+    HomeScreen(navController)
 }
