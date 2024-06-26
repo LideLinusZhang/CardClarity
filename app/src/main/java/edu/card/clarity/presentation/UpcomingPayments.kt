@@ -144,7 +144,11 @@ fun MonthView(
 @Composable
 fun DayCell(day: Int, month: YearMonth, cards: List<CardInfo>) {
     val date: LocalDate = month.atDay(day)
-    val paymentColor = cards.find { LocalDate.parse(it.dueDate).isEqual(date) }?.backgroundColor ?: Color.LightGray
+    // check if any card has a due date with the same day of the month as 'day'
+    val paymentColor = cards.find { card ->
+        val cardDueDate = LocalDate.parse(card.dueDate)
+        cardDueDate.dayOfMonth == day
+    }?.backgroundColor ?: Color.LightGray
 
     Box(
         modifier = Modifier
