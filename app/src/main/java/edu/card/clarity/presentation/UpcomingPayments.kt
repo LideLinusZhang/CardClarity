@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import edu.card.clarity.ui.theme.CardClarityTheme
+import edu.card.clarity.ui.theme.CardClarityTypography
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -34,17 +35,19 @@ val cards = listOf(
 
 @Composable
 fun UpcomingPaymentsScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 32.dp, vertical = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Header()
-
-        CalendarPager(cards)
-        UpcomingPayment(cards)
+    CardClarityTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(horizontal = 32.dp, vertical = 40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Header()
+            CalendarPager(cards)
+            UpcomingPayment(cards)
+        }
     }
 }
 
@@ -55,7 +58,7 @@ fun Header() {
             .fillMaxWidth()
             .padding(bottom = 16.dp),
         text = "Upcoming Credit Card Payments",
-        style = MaterialTheme.typography.titleLarge,
+        style = CardClarityTypography.titleLarge,
         color = Color.Black
     )
 }
@@ -99,7 +102,7 @@ fun MonthView(
             // month + year
             Text(
                 text = "${month.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${month.year}",
-                style = MaterialTheme.typography.titleSmall
+                style = CardClarityTypography.titleLarge
             )
 
             // next
@@ -121,7 +124,7 @@ fun MonthView(
                     text = days[index],
                     modifier = Modifier.padding(8.dp),
                     color = Color.Black,
-                    style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center),
+                    style = CardClarityTypography.bodyLarge.copy(textAlign = TextAlign.Center),
                 )
             }
 
@@ -151,7 +154,7 @@ fun DayCell(day: Int, month: YearMonth, cards: List<CardInfo>) {
     ) {
         Text(
             text = day.toString(),
-            style = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Center),
+            style = CardClarityTypography.bodyLarge.copy(textAlign = TextAlign.Center),
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -179,7 +182,7 @@ fun PaymentLegend(cards: List<CardInfo>) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = card.cardName,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = CardClarityTypography.bodyLarge
                 )
             }
         }
@@ -200,15 +203,15 @@ fun UpcomingPayment(cards: List<CardInfo>) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Next upcoming payment",
-            style = MaterialTheme.typography.titleMedium,
+            text = "Next payment",
+            style = CardClarityTypography.titleLarge,
             modifier = Modifier
                 .padding(vertical = 8.dp)
         )
         if (nextPayment != null) {
             Box(
                 modifier = Modifier
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(4))
+                    .background(color = nextPayment.backgroundColor, shape = RoundedCornerShape(4))
                     .fillMaxWidth()
             ) {
                 Row(
@@ -219,14 +222,14 @@ fun UpcomingPayment(cards: List<CardInfo>) {
                 ) {
                     Text(
                         text = "${nextPayment.cardName}\nDue Date: ${nextPayment.dueDate}",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = CardClarityTypography.bodyLarge
                     )
                 }
             }
         } else {
             Text(
                 text = "No upcoming payments",
-                style = MaterialTheme.typography.bodyMedium,
+                style = CardClarityTypography.bodyLarge,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }

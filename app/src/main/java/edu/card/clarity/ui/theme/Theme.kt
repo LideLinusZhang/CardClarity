@@ -51,7 +51,7 @@ fun CardClarityTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = CardClarityTypography,
         content = content
     )
 }
