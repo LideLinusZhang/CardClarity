@@ -10,6 +10,7 @@ import edu.card.clarity.presentation.HomeScreen
 import edu.card.clarity.presentation.MyBenefitsScreen
 import edu.card.clarity.presentation.MyCardsScreen
 import edu.card.clarity.presentation.PurchaseScreen
+import edu.card.clarity.presentation.UpcomingPaymentsScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
@@ -31,6 +32,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable("myCards") {
             MyCardsScreen()
+        }
+        composable("upcomingPayments") {
+            UpcomingPaymentsScreen()
         }
     }
 }

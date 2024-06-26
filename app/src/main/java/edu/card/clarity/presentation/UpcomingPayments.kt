@@ -82,7 +82,7 @@ fun MonthView(
     val daysInMonth: Int = month.lengthOfMonth()
     val firstOfMonth: LocalDate = month.atDay(1)
     val dayOfWeekOffset: Int = firstOfMonth.dayOfWeek.value % 7
-    val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    val days = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
     Column {
         // month navigation
@@ -201,7 +201,9 @@ fun UpcomingPayment(cards: List<CardInfo>) {
     ) {
         Text(
             text = "Next upcoming payment",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
         )
         if (nextPayment != null) {
             Box(
