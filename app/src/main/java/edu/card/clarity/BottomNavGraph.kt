@@ -22,7 +22,7 @@ fun BottomNavGraph(navController: NavHostController) {
             HomeScreen(navController)
         }
         composable(route = BottomNavBar.AddCard.route) {
-            AddCardScreen()
+            AddCardScreen(navController)
         }
         composable(route = BottomNavBar.MyBenefits.route) {
             MyBenefitsScreen()
