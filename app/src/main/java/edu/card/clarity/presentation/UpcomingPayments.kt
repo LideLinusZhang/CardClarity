@@ -56,7 +56,7 @@ fun Header() {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
+            .padding(vertical = 16.dp),
         text = "Upcoming Credit Card Payments",
         style = CardClarityTypography.titleLarge,
         color = Color.Black
@@ -114,7 +114,6 @@ fun MonthView(
         // calendar
         LazyVerticalGrid(
             columns = GridCells.Fixed(7),
-            contentPadding = PaddingValues(all = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -168,7 +167,7 @@ fun DayCell(day: Int, month: YearMonth, cards: List<CardInfo>) {
 fun PaymentLegend(cards: List<CardInfo>) {
     Column(
         modifier = Modifier
-            .padding(all = 8.dp)
+            .padding(vertical = 8.dp)
             .background(color = Color.LightGray, shape = RoundedCornerShape(4))
     ) {
         cards.forEach { card ->
@@ -202,7 +201,7 @@ fun UpcomingPayment(cards: List<CardInfo>) {
 
     Column (
         modifier = Modifier
-            .padding(all = 8.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
