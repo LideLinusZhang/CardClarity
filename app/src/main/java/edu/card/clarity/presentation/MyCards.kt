@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.card.clarity.ui.theme.CardClarityTheme
-import edu.card.clarity.ui.theme.Typography
+import edu.card.clarity.ui.theme.CardClarityTypography
 
 data class CardInfo(
     val cardName: String,
@@ -46,7 +46,7 @@ fun MyCardsScreen() {
                 text = "My Cards",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = Typography.bodyLarge.fontFamily,
+                fontFamily = CardClarityTypography.bodyLarge.fontFamily,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))

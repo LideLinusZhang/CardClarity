@@ -19,28 +19,26 @@ val customFontFamily = FontFamily(
     Font(googleFont = GoogleFont("Patrick Hand"), fontProvider = provider)
 )
 
-val Typography = Typography(
+val CardClarityTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = customFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
+    ),
     titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+        fontFamily = customFontFamily,
+        fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+//    labelSmall = TextStyle(
+//        fontFamily = customFontFamily,
+//        fontWeight = FontWeight.Medium,
+//        fontSize = 11.sp,
+//        lineHeight = 16.sp,
+//        letterSpacing = 0.5.sp
+//    )
 )

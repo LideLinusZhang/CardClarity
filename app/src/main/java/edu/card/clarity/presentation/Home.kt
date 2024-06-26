@@ -42,7 +42,9 @@ fun HomeScreen(navController: NavController) {
             CardBox(label = "My Cards") {
                 navController.navigate("myCards")
             }
-            CardBox(label = "Upcoming Payments")
+            CardBox(label = "Upcoming Payments") {
+                navController.navigate("upcomingPayments")
+            }
         }
 
     }
@@ -138,13 +140,13 @@ fun Bar(month: String, value: Int, maxValue: Int) {
 }
 
 @Composable
-fun CardBox(label: String, onClick: () -> Unit = {}) {
+fun CardBox(label: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(Color.LightGray)
-            .clickable { onClick() }
+            .clickable(onClick = onClick)
     ) {
         Box(
             modifier = Modifier
