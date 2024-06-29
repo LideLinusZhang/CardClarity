@@ -8,11 +8,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.card.clarity.data.CreditCardDatabase
-import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardDao
-import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardDao
+import edu.card.clarity.data.creditCard.CreditCardDao
+import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnDao
-import edu.card.clarity.data.purchaseReturn.percentage.PercentagePurchaseReturnDao
+import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import javax.inject.Singleton
 
 @Module
@@ -32,18 +31,15 @@ object CreditCardDatabaseModule {
     fun providePointSystemDao(database: CreditCardDatabase): PointSystemDao = database.pointSystem()
 
     @Provides
-    fun providePercentagePurchaseReturnDao(database: CreditCardDatabase): PercentagePurchaseReturnDao =
-        database.percentagePurchaseReturn()
+    fun providePurchaseRewardDao(database: CreditCardDatabase): PurchaseRewardDao =
+        database.purchaseReward()
 
     @Provides
-    fun provideMultiplierPurchaseReturnDao(database: CreditCardDatabase): MultiplierPurchaseReturnDao =
-        database.multiplierPurchaseReturn()
+    fun provideCreditCardDao(database: CreditCardDatabase): CreditCardDao =
+        database.creditCard()
 
     @Provides
-    fun provideCashBackCreditCardDao(database: CreditCardDatabase): CashBackCreditCardDao =
-        database.cashBackCreditCard()
-
-    @Provides
-    fun providePointBackCreditCardDao(database: CreditCardDatabase): PointBackCreditCardDao =
-        database.pointBackCreditCard()
+    fun providePointBackCardPointSystemAssociationDao(
+        database: CreditCardDatabase
+    ): PointBackCardPointSystemAssociationDao = database.pointSystemAssociation()
 }

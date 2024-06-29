@@ -1,28 +1,30 @@
 package edu.card.clarity.repositories
 
-import edu.card.clarity.domain.PointSystem
-import edu.card.clarity.domain.PurchaseType
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
+import edu.card.clarity.enums.PurchaseType
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 interface ICreditCardRepository {
-    suspend fun createCreditCard(info: CreditCardInfo, pointSystem: PointSystem): UUID
+    suspend fun createCreditCard(info: CreditCardInfo): UUID
 
-    suspend fun addPurchaseReturn(
+    suspend fun addPurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
         factor: Float
     )
 
-    suspend fun updatePurchaseReturn(
+    suspend fun updatePurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
         factor: Float
     )
 
-    suspend fun removePurchaseReturn(creditCardId: UUID, purchaseTypes: List<PurchaseType>)
+    suspend fun removePurchaseReward(
+        creditCardId: UUID,
+        purchaseTypes: List<PurchaseType>
+    )
 
     suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo)
 

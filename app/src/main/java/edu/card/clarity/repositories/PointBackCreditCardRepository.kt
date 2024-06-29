@@ -1,14 +1,14 @@
 package edu.card.clarity.repositories
 
-import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardDao
-import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardInfoEntity
-import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnDao
-import edu.card.clarity.data.purchaseReturn.multiplier.MultiplierPurchaseReturnEntity
-import edu.card.clarity.dependencyInjection.DefaultDispatcher
-import edu.card.clarity.domain.PointSystem
-import edu.card.clarity.domain.PurchaseType
+import edu.card.clarity.data.creditCard.CreditCardDao
+import edu.card.clarity.data.creditCard.CreditCardEntity
+import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
+import edu.card.clarity.enums.PurchaseType
+import edu.card.clarity.enums.RewardType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,126 +19,126 @@ import javax.inject.Singleton
 
 @Singleton
 class PointBackCreditCardRepository @Inject constructor(
-    private val creditCardDataSource: PointBackCreditCardDao,
-    private val purchaseReturnDataSource: MultiplierPurchaseReturnDao,
-    @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
-) : ICreditCardRepository {
-    override suspend fun createCreditCard(info: CreditCardInfo, pointSystem: PointSystem): UUID {
-        val id = withContext(dispatcher) {
-            UUID.randomUUID()
-        }
-
-        val cardInfoEntity = PointBackCreditCardInfoEntity(
-            id,
-            info.name,
-            info.statementDate,
-            info.paymentDueDate,
-            pointSystem.id
-        )
-
-        creditCardDataSource.upsert(cardInfoEntity)
-
-        return id
-    }
-
-    override suspend fun addPurchaseReturn(
+    creditCardDataSource: CreditCardDao,
+    purchaseReturnDataSource: PurchaseRewardDao,
+    private val pointSystemAssociationDataSource: PointBackCardPointSystemAssociationDao,
+    dispatcher: CoroutineDispatcher,
+) : CreditCardRepositoryBase(creditCardDataSource, purchaseReturnDataSource, dispatcher),
+    ICreditCardRepository {
+    override suspend fun addPurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
         @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") multiplier: Float
     ) {
-        require(multiplier > 1.0) { "Multiplier must be greater than 1" }
-
-        withContext(dispatcher) {
-            for (purchaseType in purchaseTypes) {
-                purchaseReturnDataSource.upsert(
-                    MultiplierPurchaseReturnEntity(
-                        creditCardId = creditCardId,
-                        purchaseType = purchaseType,
-                        multiplier = multiplier
-                    )
-                )
-            }
+        require(super.getCreditCardRewardType(creditCardId) == RewardType.PointBack) {
+            createCreditCardNotExistErrorMessage(creditCardId, RewardType.PointBack)
         }
+        require(multiplier >= 1.0) {
+            "Multiplier must be greater than or equal to 1."
+        }
+
+        super.addPurchaseReward(creditCardId, RewardType.PointBack, purchaseTypes, multiplier)
     }
 
-    override suspend fun updatePurchaseReturn(
+    override suspend fun updatePurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
         @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") multiplier: Float
     ) {
-        addPurchaseReturn(creditCardId, purchaseTypes, multiplier)
+        addPurchaseReward(creditCardId, purchaseTypes, multiplier)
     }
 
-    override suspend fun removePurchaseReturn(
+    override suspend fun removePurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>
     ) {
-        withContext(dispatcher) {
-            for (purchaseType in purchaseTypes) {
-                purchaseReturnDataSource.delete(creditCardId, purchaseType)
-            }
+        if (super.getCreditCardRewardType(creditCardId) == RewardType.PointBack) {
+
+            super.removePurchaseReward(creditCardId, purchaseTypes)
         }
     }
 
     override suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo) {
-        val cardInfoEntity = creditCardDataSource.getInfoById(id)?.copy(
-            name = info.name,
-            statementDate = info.statementDate,
-            paymentDueDate = info.paymentDueDate
-        ) ?: throw IllegalArgumentException("Credit card with ID $id not found.")
-
-        creditCardDataSource.upsert(cardInfoEntity)
-    }
-
-    suspend fun updateCreditCardPointSystem(id: UUID, pointSystem: PointSystem) {
-        if (creditCardDataSource.getInfoById(id) === null) {
-            throw IllegalArgumentException("Credit card with ID $id not found.")
+        require(info.rewardType == RewardType.PointBack) {
+            CREDIT_CARD_REWARD_TYPE_IMMUTABLE_ERROR_MESSAGE
+        }
+        require(super.getCreditCardRewardType(id) == RewardType.PointBack) {
+            createCreditCardNotExistErrorMessage(id, RewardType.PointBack)
         }
 
-        creditCardDataSource.updatePointSystemId(id, pointSystem.id)
+        super.updateCreditCardInfo(id, info)
     }
 
     override suspend fun getCreditCard(id: UUID): PointBackCreditCard? {
-        return creditCardDataSource.getById(id)?.toDomainModel()
+        return creditCardDataSource.getById(id)?.let {
+            if (it.creditCardInfo.rewardType == RewardType.PointBack) {
+                val pointSystemEntity = pointSystemAssociationDataSource
+                    .getByCreditCardId(id)
+                    ?.pointSystem!!
+
+                it.toDomainModel(pointSystemEntity)
+            } else null
+        }
     }
 
     override suspend fun getCreditCardInfo(id: UUID): CreditCardInfo? {
-        return creditCardDataSource.getInfoById(id)?.toDomainModel()
+        return creditCardDataSource.getInfoById(id)?.let {
+            if (it.rewardType == RewardType.PointBack) {
+                it.toDomainModel()
+            } else null
+        }
     }
 
     override suspend fun getAllCreditCards(): List<PointBackCreditCard> {
-        return withContext(dispatcher) {
-            creditCardDataSource.getAll().toDomainModel()
+        return creditCardDataSource.getAllOf(RewardType.PointBack).map {
+            val pointSystemEntity = pointSystemAssociationDataSource
+                .getByCreditCardId(it.creditCardInfo.id)
+                ?.pointSystem!!
+
+            it.toDomainModel(pointSystemEntity)
         }
     }
 
     override suspend fun getAllCreditCardInfo(): List<CreditCardInfo> {
-        return withContext(dispatcher) {
-            creditCardDataSource.getAllInfo().toDomainModel()
-        }
+        return super.getAllCreditCardInfoOf(RewardType.PointBack)
     }
 
     override fun getAllCreditCardsStream(): Flow<List<PointBackCreditCard>> {
-        return creditCardDataSource.observeAll().map {
+        return creditCardDataSource.observeAllOf(RewardType.PointBack).map {
             withContext(dispatcher) {
-                it.toDomainModel()
+                it.map {
+                    val pointSystemEntity = pointSystemAssociationDataSource
+                        .getByCreditCardId(it.creditCardInfo.id)
+                        ?.pointSystem!!
+
+                    it.toDomainModel(pointSystemEntity)
+                }
             }
         }
     }
 
     override fun getAllCreditCardInfoStream(): Flow<List<CreditCardInfo>> {
-        return creditCardDataSource.observeAllInfo().map {
-            withContext(dispatcher) {
-                it.toDomainModel()
-            }
-        }
+        return super.getAllCreditCardInfoStreamOf(RewardType.PointBack)
     }
 
     override suspend fun deleteAllCreditCards() {
-        creditCardDataSource.deleteAll()
+        return super.deleteAllCreditCardsOf(RewardType.PointBack)
     }
 
     override suspend fun deleteCreditCard(id: UUID) {
-        creditCardDataSource.deleteById(id)
+        if (super.getCreditCardRewardType(id) == RewardType.PointBack) {
+            super.deleteCreditCard(id)
+        }
+    }
+
+    private fun CreditCardEntity.toDomainModel(
+        pointSystemEntity: PointSystemEntity
+    ): PointBackCreditCard {
+        return PointBackCreditCard(
+            this.creditCardInfo.id,
+            this.creditCardInfo.toDomainModel(),
+            this.purchaseRewards.toDomainModel(),
+            pointSystemEntity.toDomainModel()
+        )
     }
 }

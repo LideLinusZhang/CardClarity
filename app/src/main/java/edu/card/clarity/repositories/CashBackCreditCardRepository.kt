@@ -1,14 +1,11 @@
 package edu.card.clarity.repositories
 
-import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardDao
-import edu.card.clarity.data.creditCard.cashBack.CashBackCreditCardInfoEntity
-import edu.card.clarity.data.purchaseReturn.percentage.PercentagePurchaseReturnDao
-import edu.card.clarity.data.purchaseReturn.percentage.PercentagePurchaseReturnEntity
-import edu.card.clarity.dependencyInjection.DefaultDispatcher
-import edu.card.clarity.domain.PointSystem
-import edu.card.clarity.domain.PurchaseType
+import edu.card.clarity.data.creditCard.CreditCardDao
+import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import edu.card.clarity.enums.PurchaseType
+import edu.card.clarity.enums.RewardType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,117 +16,114 @@ import javax.inject.Singleton
 
 @Singleton
 class CashBackCreditCardRepository @Inject constructor(
-    private val creditCardDataSource: CashBackCreditCardDao,
-    private val purchaseReturnDataSource: PercentagePurchaseReturnDao,
-    @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
-) : ICreditCardRepository {
-    override suspend fun createCreditCard(info: CreditCardInfo, pointSystem: PointSystem): UUID {
-        val id = withContext(dispatcher) {
-            UUID.randomUUID()
-        }
-
-        val cardInfoEntity = CashBackCreditCardInfoEntity(
-            id,
-            info.name,
-            info.statementDate,
-            info.paymentDueDate,
-        )
-
-        creditCardDataSource.upsert(cardInfoEntity)
-
-        return id
-    }
-
-    override suspend fun addPurchaseReturn(
+    creditCardDataSource: CreditCardDao,
+    purchaseReturnDataSource: PurchaseRewardDao,
+    dispatcher: CoroutineDispatcher,
+) : CreditCardRepositoryBase(creditCardDataSource, purchaseReturnDataSource, dispatcher),
+    ICreditCardRepository {
+    override suspend fun addPurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
         @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") percentage: Float
     ) {
-        require(percentage > 0.0 && percentage <= 1.0) { "Percentage be between 0 and 1 in float" }
-
-        withContext(dispatcher) {
-            for (purchaseType in purchaseTypes) {
-                purchaseReturnDataSource.upsert(
-                    PercentagePurchaseReturnEntity(
-                        creditCardId = creditCardId,
-                        purchaseType = purchaseType,
-                        percentage = percentage
-                    )
-                )
-            }
+        require(super.getCreditCardRewardType(creditCardId) == RewardType.CashBack) {
+            createCreditCardNotExistErrorMessage(creditCardId, RewardType.CashBack)
         }
+        require(percentage > 0.0 && percentage <= 1.0) {
+            "Percentage be between 0 and 1 in float"
+        }
+
+        super.addPurchaseReward(creditCardId, RewardType.CashBack, purchaseTypes, percentage)
     }
 
-    override suspend fun updatePurchaseReturn(
+    override suspend fun updatePurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
         @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") percentage: Float
     ) {
-        addPurchaseReturn(creditCardId, purchaseTypes, percentage)
+        addPurchaseReward(creditCardId, purchaseTypes, percentage)
     }
 
-    override suspend fun removePurchaseReturn(
+    override suspend fun removePurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>
     ) {
-        withContext(dispatcher) {
-            for (purchaseType in purchaseTypes) {
-                purchaseReturnDataSource.delete(creditCardId, purchaseType)
-            }
+        if (super.getCreditCardRewardType(creditCardId) == RewardType.CashBack) {
+
+            super.removePurchaseReward(creditCardId, purchaseTypes)
         }
     }
 
     override suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo) {
-        val cardInfoEntity = creditCardDataSource.getInfoById(id)?.copy(
-            name = info.name,
-            statementDate = info.statementDate,
-            paymentDueDate = info.paymentDueDate
-        ) ?: throw IllegalArgumentException("Credit card with ID $id not found.")
+        require(info.rewardType == RewardType.CashBack) {
+            CREDIT_CARD_REWARD_TYPE_IMMUTABLE_ERROR_MESSAGE
+        }
+        require(super.getCreditCardRewardType(id) == RewardType.CashBack) {
+            createCreditCardNotExistErrorMessage(id, RewardType.CashBack)
+        }
 
-        creditCardDataSource.upsert(cardInfoEntity)
+        super.updateCreditCardInfo(id, info)
     }
 
     override suspend fun getCreditCard(id: UUID): CashBackCreditCard? {
-        return creditCardDataSource.getById(id)?.toDomainModel()
+        return creditCardDataSource.getById(id)?.let {
+            if (it.creditCardInfo.rewardType == RewardType.CashBack) {
+                CashBackCreditCard(
+                    it.creditCardInfo.id,
+                    it.creditCardInfo.toDomainModel(),
+                    it.purchaseRewards.toDomainModel()
+                )
+            } else null
+        }
     }
 
     override suspend fun getCreditCardInfo(id: UUID): CreditCardInfo? {
-        return creditCardDataSource.getInfoById(id)?.toDomainModel()
+        return creditCardDataSource.getInfoById(id)?.let {
+            if (it.rewardType == RewardType.CashBack) {
+                it.toDomainModel()
+            } else null
+        }
     }
 
     override suspend fun getAllCreditCards(): List<CashBackCreditCard> {
-        return withContext(dispatcher) {
-            creditCardDataSource.getAll().toDomainModel()
+        return creditCardDataSource.getAllOf(RewardType.CashBack).map {
+            CashBackCreditCard(
+                it.creditCardInfo.id,
+                it.creditCardInfo.toDomainModel(),
+                it.purchaseRewards.toDomainModel()
+            )
         }
     }
 
     override suspend fun getAllCreditCardInfo(): List<CreditCardInfo> {
-        return withContext(dispatcher) {
-            creditCardDataSource.getAllInfo().toDomainModel()
-        }
+        return super.getAllCreditCardInfoOf(RewardType.CashBack)
     }
 
     override fun getAllCreditCardsStream(): Flow<List<CashBackCreditCard>> {
-        return creditCardDataSource.observeAll().map {
+        return creditCardDataSource.observeAllOf(RewardType.CashBack).map {
             withContext(dispatcher) {
-                it.toDomainModel()
+                it.map {
+                    CashBackCreditCard(
+                        it.creditCardInfo.id,
+                        it.creditCardInfo.toDomainModel(),
+                        it.purchaseRewards.toDomainModel()
+                    )
+                }
             }
         }
     }
 
     override fun getAllCreditCardInfoStream(): Flow<List<CreditCardInfo>> {
-        return creditCardDataSource.observeAllInfo().map {
-            withContext(dispatcher) {
-                it.toDomainModel()
-            }
-        }
+        return super.getAllCreditCardInfoStreamOf(RewardType.CashBack)
     }
 
     override suspend fun deleteAllCreditCards() {
-        creditCardDataSource.deleteAll()
+        return super.deleteAllCreditCardsOf(RewardType.CashBack)
     }
 
     override suspend fun deleteCreditCard(id: UUID) {
-        creditCardDataSource.deleteById(id)
+        if (super.getCreditCardRewardType(id) == RewardType.CashBack) {
+            super.deleteCreditCard(id)
+        }
     }
 }

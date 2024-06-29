@@ -2,7 +2,7 @@ package edu.card.clarity.data.pointSystem
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import edu.card.clarity.data.creditCard.pointBack.PointBackCreditCardInfoEntity
+import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 
 data class PointSystemWithCreditCards(
     @Embedded val pointSystem: PointSystemEntity,
@@ -10,5 +10,5 @@ data class PointSystemWithCreditCards(
         parentColumn = "id",
         entityColumn = "pointSystemId"
     )
-    val creditCards: List<PointBackCreditCardInfoEntity>
+    val creditCards: List<CreditCardInfoEntity>
 )
