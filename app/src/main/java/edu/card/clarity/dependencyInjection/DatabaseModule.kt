@@ -7,39 +7,43 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import edu.card.clarity.data.CreditCardDatabase
+import edu.card.clarity.data.Database
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
+import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object CreditCardDatabaseModule {
+object DatabaseModule {
     @Singleton
     @Provides
-    fun provideDataBase(@ApplicationContext context: Context): CreditCardDatabase {
+    fun provideDatabase(@ApplicationContext context: Context): Database {
         return Room.databaseBuilder(
             context.applicationContext,
-            CreditCardDatabase::class.java,
-            "credit_card_db"
+            Database::class.java,
+            name = "card_clarity_db"
         ).build()
     }
 
     @Provides
-    fun providePointSystemDao(database: CreditCardDatabase): PointSystemDao = database.pointSystem()
+    fun providePointSystemDao(database: Database): PointSystemDao = database.pointSystem()
 
     @Provides
-    fun providePurchaseRewardDao(database: CreditCardDatabase): PurchaseRewardDao =
+    fun providePurchaseRewardDao(database: Database): PurchaseRewardDao =
         database.purchaseReward()
 
     @Provides
-    fun provideCreditCardDao(database: CreditCardDatabase): CreditCardDao =
+    fun provideCreditCardDao(database: Database): CreditCardDao =
         database.creditCard()
 
     @Provides
     fun providePointBackCardPointSystemAssociationDao(
-        database: CreditCardDatabase
+        database: Database
     ): PointBackCardPointSystemAssociationDao = database.pointSystemAssociation()
+
+    @Provides
+    fun providePurchaseDao(database: Database): PurchaseDao = database.purchase()
 }

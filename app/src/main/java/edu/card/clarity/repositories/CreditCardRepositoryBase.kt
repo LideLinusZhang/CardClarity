@@ -4,7 +4,7 @@ import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
-import edu.card.clarity.dependencyInjection.DefaultDispatcher
+import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType

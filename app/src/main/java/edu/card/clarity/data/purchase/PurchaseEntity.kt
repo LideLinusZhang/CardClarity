@@ -19,8 +19,7 @@ import java.util.UUID
         )
     ],
     indices = [
-        Index("creditCardId"),
-        Index("date")
+        Index("creditCardId")
     ]
 )
 data class PurchaseEntity(

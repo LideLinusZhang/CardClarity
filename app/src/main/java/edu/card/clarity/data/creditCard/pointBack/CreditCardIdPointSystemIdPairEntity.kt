@@ -29,7 +29,7 @@ import java.util.UUID
         Index("pointSystemId", unique = true)
     ]
 )
-data class CreditCardIdPointSystemIdPair(
+data class CreditCardIdPointSystemIdPairEntity(
     val creditCardId: UUID,
     val pointSystemId: UUID,
 )

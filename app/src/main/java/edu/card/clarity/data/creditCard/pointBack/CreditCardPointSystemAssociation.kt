@@ -5,9 +5,9 @@ import androidx.room.Relation
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 
 data class CreditCardPointSystemAssociation(
-    @Embedded val idPair: CreditCardIdPointSystemIdPair,
+    @Embedded val idPair: CreditCardIdPointSystemIdPairEntity,
     @Relation(
-        entity = CreditCardIdPointSystemIdPair::class,
+        entity = CreditCardIdPointSystemIdPairEntity::class,
         parentColumn = "pointSystemId",
         entityColumn = "id"
     )

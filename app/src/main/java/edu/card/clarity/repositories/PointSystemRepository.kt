@@ -2,7 +2,7 @@ package edu.card.clarity.repositories
 
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
-import edu.card.clarity.dependencyInjection.DefaultDispatcher
+import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import kotlinx.coroutines.CoroutineDispatcher
