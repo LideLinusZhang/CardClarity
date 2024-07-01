@@ -1,13 +1,13 @@
-package edu.card.clarity.repositories
+package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
-import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.repositories.utils.toDomainModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,7 +17,7 @@ import java.util.UUID
 abstract class CreditCardRepositoryBase internal constructor(
     protected val creditCardDataSource: CreditCardDao,
     private val purchaseRewardDataSource: PurchaseRewardDao,
-    @DefaultDispatcher protected val dispatcher: CoroutineDispatcher
+    protected val dispatcher: CoroutineDispatcher
 ) {
     suspend fun createCreditCard(info: CreditCardInfo): UUID {
         val id = withContext(dispatcher) {
@@ -69,12 +69,14 @@ abstract class CreditCardRepositoryBase internal constructor(
         }
     }
 
-    protected open suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo) {
-        val cardInfoEntity = creditCardDataSource.getInfoById(id)?.copy(
+    protected open suspend fun updateCreditCardInfo(info: CreditCardInfo) {
+        require(info.id != null)
+
+        val cardInfoEntity = creditCardDataSource.getInfoById(info.id)?.copy(
             name = info.name,
             statementDate = info.statementDate,
             paymentDueDate = info.paymentDueDate
-        ) ?: throw IllegalArgumentException("Credit card with ID $id not found.")
+        ) ?: throw IllegalArgumentException("Credit card with ID ${info.id} not found.")
 
         creditCardDataSource.upsert(cardInfoEntity)
     }

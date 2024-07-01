@@ -1,4 +1,4 @@
-package edu.card.clarity.repositories
+package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
@@ -26,7 +26,7 @@ interface ICreditCardRepository {
         purchaseTypes: List<PurchaseType>
     )
 
-    suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo)
+    suspend fun updateCreditCardInfo(info: CreditCardInfo)
 
     suspend fun getCreditCard(id: UUID): ICreditCard?
     suspend fun getCreditCardInfo(id: UUID): CreditCardInfo?

@@ -1,14 +1,16 @@
-package edu.card.clarity.repositories
+package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
+import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.repositories.utils.toDomainModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,7 +24,7 @@ class PointBackCreditCardRepository @Inject constructor(
     creditCardDataSource: CreditCardDao,
     purchaseReturnDataSource: PurchaseRewardDao,
     private val pointSystemAssociationDataSource: PointBackCardPointSystemAssociationDao,
-    dispatcher: CoroutineDispatcher,
+    @DefaultDispatcher dispatcher: CoroutineDispatcher,
 ) : CreditCardRepositoryBase(creditCardDataSource, purchaseReturnDataSource, dispatcher),
     ICreditCardRepository {
     override suspend fun addPurchaseReward(
@@ -58,15 +60,16 @@ class PointBackCreditCardRepository @Inject constructor(
         }
     }
 
-    override suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo) {
+    override suspend fun updateCreditCardInfo(info: CreditCardInfo) {
+        require(info.id != null)
         require(info.rewardType == RewardType.PointBack) {
             CREDIT_CARD_REWARD_TYPE_IMMUTABLE_ERROR_MESSAGE
         }
-        require(super.getCreditCardRewardType(id) == RewardType.PointBack) {
-            createCreditCardNotExistErrorMessage(id, RewardType.PointBack)
+        require(super.getCreditCardRewardType(info.id) == RewardType.PointBack) {
+            createCreditCardNotExistErrorMessage(info.id, RewardType.PointBack)
         }
 
-        super.updateCreditCardInfo(id, info)
+        super.updateCreditCardInfo(info)
     }
 
     override suspend fun getCreditCard(id: UUID): PointBackCreditCard? {
@@ -135,7 +138,6 @@ class PointBackCreditCardRepository @Inject constructor(
         pointSystemEntity: PointSystemEntity
     ): PointBackCreditCard {
         return PointBackCreditCard(
-            this.creditCardInfo.id,
             this.creditCardInfo.toDomainModel(),
             this.purchaseRewards.toDomainModel(),
             pointSystemEntity.toDomainModel()

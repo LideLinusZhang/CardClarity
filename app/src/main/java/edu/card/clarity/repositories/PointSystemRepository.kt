@@ -5,6 +5,7 @@ import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import edu.card.clarity.repositories.utils.toDomainModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,15 +19,15 @@ class PointSystemRepository @Inject constructor(
     private val dataSource: PointSystemDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ) {
-    suspend fun createPointSystem(name: String, conversionRate: Float): UUID {
+    suspend fun addPointSystem(pointSystem: PointSystem): UUID {
         val id = withContext(dispatcher) {
             UUID.randomUUID()
         }
 
         val entity = PointSystemEntity(
-            id = id,
-            name = name,
-            pointToCashConversionRate = conversionRate
+            id,
+            pointSystem.name,
+            pointSystem.pointToCashConversionRate
         )
 
         dataSource.upsert(entity)
@@ -55,20 +56,17 @@ class PointSystemRepository @Inject constructor(
             ?: throw IllegalArgumentException("Point system of ID $pointSystemId does not exist")
     }
 
-    suspend fun updateName(id: UUID, name: String) {
-        val updated = dataSource.getById(id)?.copy(
-            name = name
-        ) ?: throw IllegalArgumentException("Point system of ID $id does not exist")
+    suspend fun updatePointSystem(pointSystem: PointSystem) {
+        require(pointSystem.id != null)
+        require(dataSource.exist(pointSystem.id))
 
-        dataSource.upsert(updated)
-    }
-
-    suspend fun updateConversionRate(id: UUID, rate: Float) {
-        val updated = dataSource.getById(id)?.copy(
-            pointToCashConversionRate = rate
-        ) ?: throw IllegalArgumentException("Point system of ID $id does not exist")
-
-        dataSource.upsert(updated)
+        dataSource.upsert(
+            PointSystemEntity(
+                pointSystem.id,
+                pointSystem.name,
+                pointSystem.pointToCashConversionRate
+            )
+        )
     }
 
     suspend fun removePointSystem(id: UUID) {

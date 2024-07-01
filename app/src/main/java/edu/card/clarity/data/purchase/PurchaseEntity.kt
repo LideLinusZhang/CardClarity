@@ -19,12 +19,13 @@ import java.util.UUID
         )
     ],
     indices = [
-        Index("creditCardId")
+        Index("creditCardId"),
+        Index("time")
     ]
 )
 data class PurchaseEntity(
     @PrimaryKey val id: UUID,
-    val date: Date,
+    val time: Date,
     val merchant: String,
     val type: PurchaseType,
     val total: Float,

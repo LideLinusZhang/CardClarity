@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 import java.util.UUID
 
 @Dao
@@ -24,6 +25,16 @@ interface PurchaseDao {
      */
     @Query("SELECT * FROM purchase WHERE creditCardId = :creditCardId")
     fun observeAllOf(creditCardId: UUID): Flow<List<PurchaseEntity>>
+
+    /**
+     * Observe all purchases made in a time period.
+     *
+     * @param startTime start of the period, inclusive
+     * @param endTime end of the period, inclusive.
+     * @return all purchases made in the specified time period.
+     */
+    @Query("SELECT * FROM purchase WHERE time BETWEEN :startTime AND :endTime")
+    fun observeAllBetween(startTime: Date, endTime: Date): Flow<List<PurchaseEntity>>
 
     /**
      * Observes a single purchase.
@@ -52,6 +63,16 @@ interface PurchaseDao {
     suspend fun getAllOf(creditCardId: UUID): List<PurchaseEntity>
 
     /**
+     * Select all purchases made in a time period.
+     *
+     * @param startTime start of the period, inclusive
+     * @param endTime end of the period, inclusive.
+     * @return all purchases made in the specified time period.
+     */
+    @Query("SELECT * FROM purchase WHERE time BETWEEN :startTime AND :endTime")
+    suspend fun getAllBetween(startTime: Date, endTime: Date): List<PurchaseEntity>
+
+    /**
      * Select a purchase by id.
      *
      * @param id the purchase id.
@@ -67,6 +88,15 @@ interface PurchaseDao {
      */
     @Upsert
     suspend fun upsert(purchase: PurchaseEntity)
+
+    /**
+     * Check if the purchase of a certain id exists.
+     *
+     * @param id id of the purchase.
+     * @return true if exists, false otherwise.
+     */
+    @Query("SELECT EXISTS(SELECT * FROM purchase WHERE id = :id)")
+    suspend fun exist(id: UUID): Boolean
 
     /**
      * Delete a purchase by id.

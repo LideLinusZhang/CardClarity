@@ -1,11 +1,13 @@
-package edu.card.clarity.repositories
+package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
+import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.repositories.utils.toDomainModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,7 +20,7 @@ import javax.inject.Singleton
 class CashBackCreditCardRepository @Inject constructor(
     creditCardDataSource: CreditCardDao,
     purchaseReturnDataSource: PurchaseRewardDao,
-    dispatcher: CoroutineDispatcher,
+    @DefaultDispatcher dispatcher: CoroutineDispatcher,
 ) : CreditCardRepositoryBase(creditCardDataSource, purchaseReturnDataSource, dispatcher),
     ICreditCardRepository {
     override suspend fun addPurchaseReward(
@@ -54,22 +56,22 @@ class CashBackCreditCardRepository @Inject constructor(
         }
     }
 
-    override suspend fun updateCreditCardInfo(id: UUID, info: CreditCardInfo) {
+    override suspend fun updateCreditCardInfo(info: CreditCardInfo) {
+        require(info.id != null)
         require(info.rewardType == RewardType.CashBack) {
             CREDIT_CARD_REWARD_TYPE_IMMUTABLE_ERROR_MESSAGE
         }
-        require(super.getCreditCardRewardType(id) == RewardType.CashBack) {
-            createCreditCardNotExistErrorMessage(id, RewardType.CashBack)
+        require(super.getCreditCardRewardType(info.id) == RewardType.CashBack) {
+            createCreditCardNotExistErrorMessage(info.id, RewardType.CashBack)
         }
 
-        super.updateCreditCardInfo(id, info)
+        super.updateCreditCardInfo(info)
     }
 
     override suspend fun getCreditCard(id: UUID): CashBackCreditCard? {
         return creditCardDataSource.getById(id)?.let {
             if (it.creditCardInfo.rewardType == RewardType.CashBack) {
                 CashBackCreditCard(
-                    it.creditCardInfo.id,
                     it.creditCardInfo.toDomainModel(),
                     it.purchaseRewards.toDomainModel()
                 )
@@ -88,7 +90,6 @@ class CashBackCreditCardRepository @Inject constructor(
     override suspend fun getAllCreditCards(): List<CashBackCreditCard> {
         return creditCardDataSource.getAllOf(RewardType.CashBack).map {
             CashBackCreditCard(
-                it.creditCardInfo.id,
                 it.creditCardInfo.toDomainModel(),
                 it.purchaseRewards.toDomainModel()
             )
@@ -104,7 +105,6 @@ class CashBackCreditCardRepository @Inject constructor(
             withContext(dispatcher) {
                 it.map {
                     CashBackCreditCard(
-                        it.creditCardInfo.id,
                         it.creditCardInfo.toDomainModel(),
                         it.purchaseRewards.toDomainModel()
                     )

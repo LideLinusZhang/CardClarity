@@ -91,4 +91,13 @@ interface PointSystemDao {
      */
     @Query("DELETE FROM pointSystem")
     suspend fun deleteAll()
+
+    /**
+     * Check if the point system of a certain id exists.
+     *
+     * @param id id of the point system.
+     * @return true if exists, false otherwise.
+     */
+    @Query("SELECT EXISTS(SELECT * FROM pointSystem WHERE id = :id)")
+    suspend fun exist(id: UUID): Boolean
 }
