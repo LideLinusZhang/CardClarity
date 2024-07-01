@@ -2,12 +2,15 @@ package edu.card.clarity.data.purchase
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.TypeConverters
 import androidx.room.Upsert
+import edu.card.clarity.data.converters.DateConverter
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import java.util.UUID
 
 @Dao
+@TypeConverters(DateConverter::class)
 interface PurchaseDao {
     /**
      * Observes list of purchases.

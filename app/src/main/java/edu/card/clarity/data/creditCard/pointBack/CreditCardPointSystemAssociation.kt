@@ -7,7 +7,6 @@ import edu.card.clarity.data.pointSystem.PointSystemEntity
 data class CreditCardPointSystemAssociation(
     @Embedded val idPair: CreditCardIdPointSystemIdPairEntity,
     @Relation(
-        entity = CreditCardIdPointSystemIdPairEntity::class,
         parentColumn = "pointSystemId",
         entityColumn = "id"
     )

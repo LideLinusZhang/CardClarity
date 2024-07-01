@@ -1,5 +1,6 @@
 package edu.card.clarity.repositories
 
+import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 
 @Singleton
 class PointSystemRepository @Inject constructor(
-    private val dataSource: PointSystemDao,
+    private val pointSystemDataSource: PointSystemDao,
+    private val creditCardDataSource: CreditCardDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ) {
     suspend fun addPointSystem(pointSystem: PointSystem): UUID {
@@ -30,21 +32,21 @@ class PointSystemRepository @Inject constructor(
             pointSystem.pointToCashConversionRate
         )
 
-        dataSource.upsert(entity)
+        pointSystemDataSource.upsert(entity)
 
         return id
     }
 
     suspend fun getPointSystem(id: UUID): PointSystem? {
-        return dataSource.getById(id)?.toDomainModel()
+        return pointSystemDataSource.getById(id)?.toDomainModel()
     }
 
     suspend fun getAllPointSystems(): List<PointSystem> {
-        return dataSource.getAll().toDomainModel()
+        return pointSystemDataSource.getAll().toDomainModel()
     }
 
     fun getAllPointSystemsStream(): Flow<List<PointSystem>> {
-        return dataSource.observeAll().map {
+        return pointSystemDataSource.observeAll().map {
             withContext(dispatcher) {
                 it.toDomainModel()
             }
@@ -52,15 +54,21 @@ class PointSystemRepository @Inject constructor(
     }
 
     suspend fun getCreditCardsUsingPointSystem(pointSystemId: UUID): List<CreditCardInfo> {
-        return dataSource.getPointSystemWithCreditCards(pointSystemId)?.creditCards?.toDomainModel()
+        val creditCardIds = pointSystemDataSource
+            .getPointSystemWithCreditCards(pointSystemId)
+            ?.creditCardIds
             ?: throw IllegalArgumentException("Point system of ID $pointSystemId does not exist")
+
+        return creditCardIds
+            .mapNotNull { creditCardDataSource.getInfoById(it) }
+            .toDomainModel()
     }
 
     suspend fun updatePointSystem(pointSystem: PointSystem) {
         require(pointSystem.id != null)
-        require(dataSource.exist(pointSystem.id))
+        require(pointSystemDataSource.exist(pointSystem.id))
 
-        dataSource.upsert(
+        pointSystemDataSource.upsert(
             PointSystemEntity(
                 pointSystem.id,
                 pointSystem.name,
@@ -70,10 +78,10 @@ class PointSystemRepository @Inject constructor(
     }
 
     suspend fun removePointSystem(id: UUID) {
-        dataSource.deleteById(id)
+        pointSystemDataSource.deleteById(id)
     }
 
     suspend fun removeAllPointSystems() {
-        dataSource.deleteAll()
+        pointSystemDataSource.deleteAll()
     }
 }
