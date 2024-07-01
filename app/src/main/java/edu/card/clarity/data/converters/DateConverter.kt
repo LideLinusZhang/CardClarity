@@ -5,7 +5,7 @@ import java.util.Date
 
 class DateConverter {
     @TypeConverter
-    fun fromLong(l: Long?): Date? = l?.let { Date(it) }
+    fun toDate(l: Long?): Date? = l?.let { Date(it) }
 
     @TypeConverter
     fun fromDate(d: Date?): Long? = d?.time
