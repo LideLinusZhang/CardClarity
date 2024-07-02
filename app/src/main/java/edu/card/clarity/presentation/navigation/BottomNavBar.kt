@@ -1,4 +1,4 @@
-package edu.card.clarity.presentation
+package edu.card.clarity.presentation.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -12,22 +12,22 @@ sealed class BottomNavBar (
     val title: String,
     val icon: ImageVector
 ) {
-    data object Home: BottomNavBar (
+    data object Home: BottomNavBar(
         route = "home",
         title = "Home",
         icon = Icons.Default.Home
     )
-    data object AddCard: BottomNavBar (
+    data object AddCard: BottomNavBar(
         route = "addCard",
         title = "Add Card",
         icon = Icons.Default.AddCircle
     )
-    data object MyBenefits: BottomNavBar (
+    data object MyBenefits: BottomNavBar(
         route = "Benefits",
         title = "Benefits",
         icon = Icons.Default.Star
     )
-    data object Purchase: BottomNavBar (
+    data object Purchase: BottomNavBar(
         route = "purchase",
         title = "Purchase",
         icon = Icons.Default.Search
