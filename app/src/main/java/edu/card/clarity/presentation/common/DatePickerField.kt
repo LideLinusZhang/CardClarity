@@ -1,9 +1,5 @@
 package edu.card.clarity.presentation.common
 
-import android.content.Context
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
-import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.util.Date
 
 @Composable
 fun DatePickerField(date: String, label: String, onClick: () -> Unit) {
