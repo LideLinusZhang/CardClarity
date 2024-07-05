@@ -1,11 +1,10 @@
-package edu.card.clarity
+package edu.card.clarity.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import edu.card.clarity.presentation.AddCardScreen
-import edu.card.clarity.presentation.BottomNavBar
+import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.HomeScreen
 import edu.card.clarity.presentation.MyBenefitsScreen
 import edu.card.clarity.presentation.MyCardsScreen

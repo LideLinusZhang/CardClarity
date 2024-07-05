@@ -1,6 +1,6 @@
 package edu.card.clarity.enums
 
-enum class RewardType {
-    CashBack,
-    PointBack
+enum class RewardType(val displayText: String) {
+    CashBack("Cash Back"),
+    PointBack("Point Back")
 }

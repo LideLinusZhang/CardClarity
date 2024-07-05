@@ -49,7 +49,6 @@ interface CreditCardDao {
      *
      * @return all credit cards with credit cards associated to them.
      */
-    @Transaction
     @Query("SELECT * FROM creditCardInfo")
     fun observeAll(): Flow<List<CreditCardInfoEntity>>
 
