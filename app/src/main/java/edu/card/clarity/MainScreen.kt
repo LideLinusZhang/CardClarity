@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +50,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation (backgroundColor = Color.White, modifier = Modifier.height(80.dp)) {
+    NavigationBar (containerColor = Color.White, modifier = Modifier.height(80.dp)) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -67,7 +67,7 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
-    BottomNavigationItem(
+    NavigationBarItem(
         label = {
             Text(
                 text = screen.title,
@@ -83,6 +83,6 @@ fun RowScope.AddItem(
         onClick = {
             navController.navigate(screen.route)
         },
-        modifier = Modifier.weight(1f).padding(top = 10.dp, bottom = 10.dp),
+        modifier = Modifier.weight(1f).padding(top = 20.dp),
     )
 }
