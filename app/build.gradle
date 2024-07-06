@@ -44,6 +44,12 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -68,6 +74,10 @@ dependencies {
     androidTestImplementation libs.androidx.core.testing
     testImplementation libs.junit.v4131
     testImplementation libs.androidx.core.testing
+    testImplementation libs.junit.jupiter.api
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.mockito.inline
+    testImplementation libs.mockito.kotlin
 
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)

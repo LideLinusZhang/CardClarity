@@ -16,10 +16,15 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions.*
-import org.mockito.Mockito.*
+import org.mockito.kotlin.*
+import org.mockito.MockedStatic
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
 import java.util.*
 
 class CashBackCreditCardRepositoryTest {
@@ -31,7 +36,10 @@ class CashBackCreditCardRepositoryTest {
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
 
-    @Before
+    private val mockCalendar = mock(Calendar::class.java)
+    private val mockedStaticCalendar: MockedStatic<Calendar> = mockStatic(Calendar::class.java)
+
+    @BeforeEach
     fun setUp() {
         creditCardDao = mock(CreditCardDao::class.java)
         purchaseRewardDao = mock(PurchaseRewardDao::class.java)
@@ -40,6 +48,12 @@ class CashBackCreditCardRepositoryTest {
             purchaseRewardDao,
             testDispatcher
         )
+        mockedStaticCalendar.`when`<Calendar> { Calendar.getInstance() }.thenReturn(mockCalendar)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        mockedStaticCalendar.close()
     }
 
     @Test
@@ -57,7 +71,7 @@ class CashBackCreditCardRepositoryTest {
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.CashBack,
             factor = percentage
-            )
+        )
         )
     }
 
@@ -66,15 +80,15 @@ class CashBackCreditCardRepositoryTest {
         val creditCardId = UUID.randomUUID()
 
         val spyRepository = spy(cashBackCreditCardRepository)
-        doNothing().`when`(spyRepository).addPurchaseReward(
-            eq(creditCardId),
-            anyList(),
-            anyFloat()
+        doReturn(Unit).`when`(spyRepository).addPurchaseReward(
+            any(),
+            any(),
+            any()
         )
 
-        spyRepository.updatePurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 2.0f)
+        spyRepository.updatePurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 0.05f)
 
-        verify(spyRepository, times(1)).addPurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 2.0f)
+        verify(spyRepository, times(1)).addPurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 0.05f)
     }
 
     @Test

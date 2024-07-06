@@ -12,13 +12,18 @@ import edu.card.clarity.enums.RewardType
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions.*
-import org.mockito.Mockito.*
 import java.util.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import org.mockito.kotlin.*
+import org.mockito.MockedStatic
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
 
 class PointSystemRepositoryTest {
 
@@ -29,7 +34,10 @@ class PointSystemRepositoryTest {
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
 
-    @Before
+    private val mockCalendar = mock(Calendar::class.java)
+    private val mockedStaticCalendar: MockedStatic<Calendar> = mockStatic(Calendar::class.java)
+
+    @BeforeEach
     fun setUp() {
         pointSystemDao = mock(PointSystemDao::class.java)
         creditCardDao = mock(CreditCardDao::class.java)
@@ -38,6 +46,12 @@ class PointSystemRepositoryTest {
             creditCardDao,
             testDispatcher
         )
+        mockedStaticCalendar.`when`<Calendar> { Calendar.getInstance() }.thenReturn(mockCalendar)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        mockedStaticCalendar.close()
     }
 
     @Test
@@ -47,12 +61,12 @@ class PointSystemRepositoryTest {
             pointToCashConversionRate = 0.01f
         )
 
-        `when`(pointSystemDao.upsert(any(PointSystemEntity::class.java))).thenReturn(Unit)
+        `when`(pointSystemDao.upsert(any())).thenReturn(Unit)
 
         val result = pointSystemRepository.addPointSystem(pointSystem)
 
         assertNotNull(result)
-        verify(pointSystemDao, times(1)).upsert(any(PointSystemEntity::class.java))
+        verify(pointSystemDao, times(1)).upsert(any())
     }
 
     @Test
@@ -181,7 +195,13 @@ class PointSystemRepositoryTest {
 
         pointSystemRepository.updatePointSystem(pointSystem)
 
-        verify(pointSystemDao, times(1)).upsert(any(PointSystemEntity::class.java))
+        verify(pointSystemDao, times(1)).upsert(
+            PointSystemEntity(
+                id = pointSystemId,
+                name = "Test Point System",
+                pointToCashConversionRate = 0.01f
+            )
+        )
     }
 
     @Test

@@ -1,5 +1,6 @@
 package edu.card.clarity.repositories
 
+import android.icu.util.Calendar
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchase.PurchaseEntity
 import edu.card.clarity.domain.Purchase
@@ -8,9 +9,14 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import org.junit.jupiter.api.Assertions.*
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mockito.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test;
+import org.mockito.kotlin.*
+import org.mockito.MockedStatic
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
 import java.util.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -22,9 +28,19 @@ class PurchaseRepositoryTest {
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
 
-    @Before
+    private val mockCalendar = mock(Calendar::class.java)
+    private val mockedStaticCalendar: MockedStatic<Calendar> = mockStatic(Calendar::class.java)
+
+    @BeforeEach
     fun setUp() {
+        purchaseDao = mock(PurchaseDao::class.java)
         purchaseRepository = PurchaseRepository(purchaseDao, testDispatcher)
+        mockedStaticCalendar.`when`<Calendar> { Calendar.getInstance() }.thenReturn(mockCalendar)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        mockedStaticCalendar.close()
     }
 
     @Test
@@ -38,12 +54,12 @@ class PurchaseRepositoryTest {
             creditCardId = UUID.randomUUID()
         )
 
-        `when`(purchaseDao.upsert(any(PurchaseEntity::class.java))).thenReturn(Unit)
+        `when`(purchaseDao.upsert(any())).thenReturn(Unit)
 
         val result = purchaseRepository.addPurchase(purchase)
 
         assertNotNull(result)
-        verify(purchaseDao, times(1)).upsert(any(PurchaseEntity::class.java))
+        verify(purchaseDao, times(1)).upsert(any())
     }
 
     @Test
@@ -293,7 +309,16 @@ class PurchaseRepositoryTest {
 
         purchaseRepository.updatePurchase(purchase)
 
-        verify(purchaseDao, times(1)).upsert(any(PurchaseEntity::class.java))
+        verify(purchaseDao, times(1)).upsert(
+            PurchaseEntity(
+                id = purchaseId,
+                time = purchase.time,
+                merchant = "T&T",
+                type = PurchaseType.Groceries,
+                total = 100.0f,
+                creditCardId = purchase.creditCardId
+            )
+        )
     }
 
     @Test

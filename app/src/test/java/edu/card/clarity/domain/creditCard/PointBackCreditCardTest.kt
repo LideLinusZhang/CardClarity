@@ -1,14 +1,31 @@
 package edu.card.clarity.domain.creditCard
 
-import org.junit.jupiter.api.Assertions.*
-
-import org.junit.jupiter.api.Test
+import android.icu.util.Calendar
 import edu.card.clarity.domain.*
 import edu.card.clarity.enums.*
-import android.icu.util.Calendar
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.MockedStatic
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
 import java.util.*
 
 class PointBackCreditCardTest {
+
+    private val mockCalendar = mock(Calendar::class.java)
+    private val mockedStaticCalendar: MockedStatic<Calendar> = mockStatic(Calendar::class.java)
+
+    @BeforeEach
+    fun beforeEach() {
+        mockedStaticCalendar.`when`<Calendar> { Calendar.getInstance() }.thenReturn(mockCalendar)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        mockedStaticCalendar.close()
+    }
 
     @Test
     fun getReturnAmountInCash() {
