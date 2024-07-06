@@ -1,4 +1,4 @@
-package edu.card.clarity.presentation
+package edu.card.clarity.presentation.myCardScreen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -28,61 +27,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import edu.card.clarity.ui.theme.CardClarityTheme
-import edu.card.clarity.ui.theme.CardClarityTypography
-
-data class CardInfo(
-    val cardName: String,
-    val dueDate: String,
-    val backgroundColor: Color
-)
 
 @Composable
-fun MyCardsScreen() {
-    val cards = listOf(
-        CardInfo("TD Aeroplan Visa Infinite Card", "2024-05-24", Color(0xFFAED8FF)),
-        CardInfo("American Express Platinum Card", "2024-05-13", Color(0xFFB7FF9E)),
-        CardInfo("CIBC Dividend", "2024-06-03", Color(0xFFFF9EB8)),
-    )
-
-    CardClarityTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(20.dp)
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "My Cards",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = CardClarityTypography.bodyLarge.fontFamily,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn {
-                items(cards.size) { index ->
-                    CardItem(
-                        cardName = cards[index].cardName,
-                        dueDate = cards[index].dueDate,
-                        backgroundColor = cards[index].backgroundColor
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun CardItem(
+fun CreditCardItem(
     cardName: String,
     dueDate: String,
-    backgroundColor: Color
+    backgroundColor: Color,
+    onReceiptButtonClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -91,9 +44,7 @@ fun CardItem(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Row(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .weight(0.50f)
@@ -113,7 +64,7 @@ fun CardItem(
                     Spacer(modifier = Modifier.height(8.dp))
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
-                        onClick = { /* TODO: Handle receipts click */ },
+                        onClick = onReceiptButtonClick,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             contentColor = Color.Black
@@ -156,17 +107,9 @@ fun CardItem(
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Due Date: $dueDate",
-                    )
+                    Text(text = "Due Date: $dueDate")
                 }
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun MyCardsScreenPreview() {
-    MyCardsScreen()
 }
