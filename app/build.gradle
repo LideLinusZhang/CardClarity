@@ -61,6 +61,15 @@ dependencies {
     implementation(libs.androidx.annotation)
 
     implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    testImplementation libs.junit.jupiter
+    testImplementation libs.mockito.core
+    testImplementation libs.kotlinx.coroutines.test
+    androidTestImplementation libs.androidx.core.testing
+    testImplementation libs.junit.v4131
+    testImplementation libs.androidx.core.testing
+
+    implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.androidx.lifecycle.runtimeCompose)

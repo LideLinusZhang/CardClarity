@@ -1,5 +1,7 @@
 [versions]
 agp = "8.5.0"
+coreTesting = "2.1.0"
+junitJunit = "4.13.1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -8,18 +10,22 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.3"
 androidxLifecycle = "2.8.3"
 annotation = "1.8.0"
+kotlinxCoroutinesTest = "1.7.0"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 hilt = "2.51.1"
 hiltExt = "1.2.0"
 ksp = "2.0.0-1.0.22"
+mockitoCore = "3.12.4"
 room = "2.6.1"
 material = "1.6.8"
 navigationCompose = "2.7.7"
 uiTextGoogleFonts = "1.6.8"
+junitJupiter = "5.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
@@ -40,6 +46,9 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 
+junit-v4131 = { module = "junit:junit", version.ref = "junitJunit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -50,6 +59,7 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 hilt-ext-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltExt" }
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
