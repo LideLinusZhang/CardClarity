@@ -1,6 +1,7 @@
 package edu.card.clarity.presentation.utils
 
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 
 private const val StopTimeoutMillis: Long = 5000
 

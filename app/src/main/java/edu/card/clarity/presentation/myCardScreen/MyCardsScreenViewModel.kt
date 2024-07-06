@@ -11,16 +11,10 @@ import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flatMap
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
 @HiltViewModel

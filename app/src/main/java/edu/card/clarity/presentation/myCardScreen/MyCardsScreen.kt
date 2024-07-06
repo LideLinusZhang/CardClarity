@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -16,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 
@@ -27,11 +29,7 @@ data class CardInfo(
 
 @Composable
 fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
-    val cards = listOf(
-        CardInfo("TD Aeroplan Visa Infinite Card", "2024-05-24", Color(0xFFAED8FF)),
-        CardInfo("American Express Platinum Card", "2024-05-13", Color(0xFFB7FF9E)),
-        CardInfo("CIBC Dividend", "2024-06-03", Color(0xFFFF9EB8)),
-    )
+    val creditCardItemUiStates by viewModel.uiState.collectAsStateWithLifecycle()
 
     CardClarityTheme {
         Column(
@@ -50,11 +48,11 @@ fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn {
-                items(cards.size) { index ->
+                items(creditCardItemUiStates.size) { index ->
                     CreditCardItem(
-                        cardName = cards[index].cardName,
-                        dueDate = cards[index].dueDate,
-                        backgroundColor = cards[index].backgroundColor,
+                        cardName = creditCardItemUiStates[index].cardName,
+                        dueDate = creditCardItemUiStates[index].dueDate,
+                        backgroundColor = creditCardItemUiStates[index].backgroundColor,
                         onReceiptButtonClick = {}
                     )
                     Spacer(modifier = Modifier.height(24.dp))
