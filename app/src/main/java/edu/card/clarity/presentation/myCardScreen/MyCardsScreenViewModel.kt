@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
+import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
@@ -44,6 +45,30 @@ class MyCardsScreenViewModel @Inject constructor(
             initialValue = listOf()
         )
 
+    fun addFilter(rewardType: RewardType) {
+        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
+            it.copy(filteredRewardTypes = it.filteredRewardTypes.plus(rewardType))
+        }
+    }
+
+    fun addFilter(cardNetworkType: CardNetworkType) {
+        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
+            it.copy(filteredCardNetworkTypes = it.filteredCardNetworkTypes.plus(cardNetworkType))
+        }
+    }
+
+    fun removeFilter(rewardType: RewardType) {
+        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
+            it.copy(filteredRewardTypes = it.filteredRewardTypes.minus(rewardType))
+        }
+    }
+
+    fun removeFilter(cardNetworkType: CardNetworkType) {
+        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
+            it.copy(filteredCardNetworkTypes = it.filteredCardNetworkTypes.minus(cardNetworkType))
+        }
+    }
+
     companion object {
         private const val MY_CARDS_SCREEN_SAVED_FILTER_KEY = "MY_CARDS_SCREEN_SAVED_FILTER"
 
@@ -53,9 +78,9 @@ class MyCardsScreenViewModel @Inject constructor(
             name,
             dateFormatter.format(paymentDueDate.timeInMillis),
             when (cardNetworkType) {
-                CardNetworkType.Visa -> Color.Green
-                CardNetworkType.MasterCard -> Color.Red
-                CardNetworkType.AMEX -> Color.Blue
+                CardNetworkType.Visa -> Color(0xFFB7FF9E)
+                CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
+                CardNetworkType.AMEX -> Color(0xFFAED8FF)
             }
         )
     }

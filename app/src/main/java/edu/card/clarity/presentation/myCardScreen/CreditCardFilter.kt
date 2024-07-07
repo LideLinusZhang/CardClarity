@@ -1,20 +1,19 @@
 package edu.card.clarity.presentation.myCardScreen
 
+import android.os.Parcelable
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class CreditCardFilter(
-    val rewardType: RewardType? = null,
-    val cardNetworkType: CardNetworkType? = null
-) {
+    val filteredRewardTypes: List<RewardType> = RewardType.entries,
+    val filteredCardNetworkTypes: List<CardNetworkType> = CardNetworkType.entries
+) : Parcelable {
     fun filter(creditCards: List<CreditCardInfo>): List<CreditCardInfo> {
         return creditCards
-            .filter {
-                if (rewardType != null) it.rewardType == rewardType else true
-            }
-            .filter {
-                if (cardNetworkType != null) it.cardNetworkType == cardNetworkType else true
-            }
+            .filter { filteredCardNetworkTypes.contains(it.cardNetworkType) }
+            .filter { filteredRewardTypes.contains(it.rewardType) }
     }
 }
