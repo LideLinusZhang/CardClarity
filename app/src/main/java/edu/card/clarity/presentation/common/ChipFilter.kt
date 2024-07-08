@@ -15,15 +15,15 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ChipFilter(
-    filterItems: List<String>,
-    initiallySelectedItemIndices: List<Int>,
+    filterOptions: List<String>,
+    initiallySelectedOptionIndices: List<Int>,
     onSelectedChanged: (index: Int, selected: Boolean) -> Unit
 ) {
     LazyRow {
-        items(filterItems.size) {
+        items(filterOptions.size) {
             val isFirstChip = it == 0
             var selected by remember {
-                mutableStateOf(initiallySelectedItemIndices.contains(it))
+                mutableStateOf(initiallySelectedOptionIndices.contains(it))
             }
 
             if (!isFirstChip) {
@@ -31,7 +31,7 @@ fun ChipFilter(
             }
             FilterChip(
                 selected = selected,
-                label = { Text(text = filterItems[it]) },
+                label = { Text(text = filterOptions[it]) },
                 onClick = {
                     selected = !selected
                     onSelectedChanged(it, selected)

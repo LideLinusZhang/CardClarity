@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import edu.card.clarity.enums.CardNetworkType
-import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.common.ChipFilter
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
@@ -51,21 +49,15 @@ fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             ChipFilter(
-                filterItems = RewardType.entries.map { it.displayText },
-                initiallySelectedItemIndices = RewardType.entries.map { it.ordinal }
-            ) { index, selected ->
-                RewardType.entries[index].let {
-                    if (selected) viewModel.addFilter(it) else viewModel.removeFilter(it)
-                }
-            }
+                filterOptions = viewModel.rewardTypeFilterOptionStrings,
+                initiallySelectedOptionIndices = viewModel.rewardTypeFilterInitiallySelectedOptionIndices,
+                onSelectedChanged = viewModel::updateRewardTypeFilter
+            )
             ChipFilter(
-                filterItems = CardNetworkType.entries.map { it.name },
-                initiallySelectedItemIndices = CardNetworkType.entries.map { it.ordinal }
-            ) { index, selected ->
-                CardNetworkType.entries[index].let {
-                    if (selected) viewModel.addFilter(it) else viewModel.removeFilter(it)
-                }
-            }
+                filterOptions = viewModel.cardNetworkTypeFilterOptionStrings,
+                initiallySelectedOptionIndices = viewModel.cardNetworkTypeFilterInitiallySelectedOptionIndices,
+                onSelectedChanged = viewModel::updateCardNetworkFilter
+            )
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn {
                 items(creditCardItemUiStates.size) { index ->

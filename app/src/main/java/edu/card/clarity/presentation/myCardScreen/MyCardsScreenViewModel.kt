@@ -10,6 +10,8 @@ import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
+import edu.card.clarity.presentation.utils.displayStrings
+import edu.card.clarity.presentation.utils.ordinals
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.flow.StateFlow
@@ -37,6 +39,12 @@ class MyCardsScreenViewModel @Inject constructor(
         filter.filter(cashBack + pointBack)
     }
 
+    val rewardTypeFilterOptionStrings = RewardType.displayStrings
+    val cardNetworkTypeFilterOptionStrings = CardNetworkType.displayStrings
+
+    val rewardTypeFilterInitiallySelectedOptionIndices = RewardType.ordinals
+    val cardNetworkTypeFilterInitiallySelectedOptionIndices = CardNetworkType.ordinals
+
     val uiState: StateFlow<List<CreditCardItemUiState>> = _filteredCreditCards
         .map { cardList -> cardList.map { it.toUiState() } }
         .stateIn(
@@ -45,32 +53,34 @@ class MyCardsScreenViewModel @Inject constructor(
             initialValue = listOf()
         )
 
-    fun addFilter(rewardType: RewardType) {
-        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
-            it.copy(filteredRewardTypes = it.filteredRewardTypes.plus(rewardType))
+    fun updateRewardTypeFilter(rewardTypeOrdinal: Int, isAddFilter: Boolean) {
+        require(rewardTypeOrdinal in RewardType.ordinals)
+
+        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let { filter ->
+            filter.copy(filteredRewardTypes = filter.filteredRewardTypes.let {
+                val rewardTypeToUpdate = RewardType.entries[rewardTypeOrdinal]
+
+                if (isAddFilter) it.plus(rewardTypeToUpdate)
+                else it.minus(rewardTypeToUpdate)
+            })
         }
     }
 
-    fun addFilter(cardNetworkType: CardNetworkType) {
-        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
-            it.copy(filteredCardNetworkTypes = it.filteredCardNetworkTypes.plus(cardNetworkType))
-        }
-    }
+    fun updateCardNetworkFilter(cardNetworkTypeOrdinal: Int, isAddFilter: Boolean) {
+        require(cardNetworkTypeOrdinal in CardNetworkType.ordinals)
 
-    fun removeFilter(rewardType: RewardType) {
-        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
-            it.copy(filteredRewardTypes = it.filteredRewardTypes.minus(rewardType))
-        }
-    }
+        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let { filter ->
+            filter.copy(filteredCardNetworkTypes = filter.filteredCardNetworkTypes.let {
+                val cardNetworkTypeToUpdate = CardNetworkType.entries[cardNetworkTypeOrdinal]
 
-    fun removeFilter(cardNetworkType: CardNetworkType) {
-        savedStateHandle[MY_CARDS_SCREEN_SAVED_FILTER_KEY] = _savedFilter.value.let {
-            it.copy(filteredCardNetworkTypes = it.filteredCardNetworkTypes.minus(cardNetworkType))
+                if (isAddFilter) it.plus(cardNetworkTypeToUpdate)
+                else it.minus(cardNetworkTypeToUpdate)
+            })
         }
     }
 
     companion object {
-        private const val MY_CARDS_SCREEN_SAVED_FILTER_KEY = "MY_CARDS_SCREEN_SAVED_FILTER"
+        private const val MY_CARDS_SCREEN_SAVED_FILTER_KEY: String = "MY_CARDS_SCREEN_SAVED_FILTER"
 
         private val dateFormatter = SimpleDateFormat.getDateInstance()
 
