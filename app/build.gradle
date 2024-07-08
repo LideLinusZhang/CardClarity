@@ -59,6 +59,9 @@ dependencies {
     implementation libs.androidx.material3
     implementation libs.androidx.navigation.compose
     implementation(libs.androidx.annotation)
+    implementation(libs.android.gms.play.services.location)
+
+    implementation(libs.jetbrains.kotlinx.coroutines.play.services)
 
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
