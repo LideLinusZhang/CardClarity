@@ -1,8 +1,8 @@
 package edu.card.clarity.domain
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class PointSystemTest {
 

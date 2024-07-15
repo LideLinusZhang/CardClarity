@@ -1,9 +1,10 @@
 package edu.card.clarity.domain
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 import edu.card.clarity.enums.PurchaseType
-import java.util.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import java.util.Date
+import java.util.UUID
 
 class PurchaseRewardTest {
 

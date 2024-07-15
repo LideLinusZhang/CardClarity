@@ -5,21 +5,26 @@ import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchase.PurchaseEntity
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.enums.PurchaseType
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import org.junit.jupiter.api.Assertions.*
-import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test;
-import org.mockito.kotlin.*
-import org.mockito.MockedStatic
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.mockStatic
-import java.util.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.MockedStatic
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
+import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import java.util.Date
+import java.util.UUID
 
 class PurchaseRepositoryTest {
     private lateinit var purchaseDao: PurchaseDao
@@ -282,7 +287,12 @@ class PurchaseRepositoryTest {
             purchaseEntity2
         )
 
-        `when`(purchaseDao.observeAllBetween(startTime, endTime)).thenReturn(flowOf(purchaseEntities))
+        `when`(
+            purchaseDao.observeAllBetween(
+                startTime,
+                endTime
+            )
+        ).thenReturn(flowOf(purchaseEntities))
 
         val result = purchaseRepository.getAllPurchasesStreamBetween(startTime, endTime).first()
 

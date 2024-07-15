@@ -21,15 +21,21 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.*
-import org.mockito.kotlin.*
+import org.junit.jupiter.api.Test
 import org.mockito.MockedStatic
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockStatic
-import java.util.*
+import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import java.util.UUID
 
 class PointBackCreditCardRepositoryTest {
 
@@ -96,7 +102,11 @@ class PointBackCreditCardRepositoryTest {
 
         spyRepository.updatePurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 2.0f)
 
-        verify(spyRepository, times(1)).addPurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 2.0f)
+        verify(spyRepository, times(1)).addPurchaseReward(
+            creditCardId,
+            listOf(PurchaseType.Groceries),
+            2.0f
+        )
     }
 
     @Test

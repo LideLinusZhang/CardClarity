@@ -9,21 +9,25 @@ import edu.card.clarity.data.pointSystem.PointSystemWithCreditCardIds
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.*
-import java.util.*
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import org.mockito.kotlin.*
+import org.junit.jupiter.api.Test
 import org.mockito.MockedStatic
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockStatic
+import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import java.util.UUID
 
 class PointSystemRepositoryTest {
 
@@ -128,7 +132,14 @@ class PointSystemRepositoryTest {
             pointToCashConversionRate = 0.01f
         )
 
-        `when`(pointSystemDao.observeAll()).thenReturn(flowOf(listOf(pointSystemEntity1, pointSystemEntity2)))
+        `when`(pointSystemDao.observeAll()).thenReturn(
+            flowOf(
+                listOf(
+                    pointSystemEntity1,
+                    pointSystemEntity2
+                )
+            )
+        )
         val result = pointSystemRepository.getAllPointSystemsStream().first()
 
         assertNotNull(result)
@@ -169,7 +180,9 @@ class PointSystemRepositoryTest {
             creditCardIds = listOf(creditCardId1, creditCardId2)
         )
 
-        `when`(pointSystemDao.getPointSystemWithCreditCards(pointSystemId)).thenReturn(pointSystemWithCreditCardIds )
+        `when`(pointSystemDao.getPointSystemWithCreditCards(pointSystemId)).thenReturn(
+            pointSystemWithCreditCardIds
+        )
         `when`(creditCardDao.getInfoById(creditCardId1)).thenReturn(creditCardInfoEntity1)
         `when`(creditCardDao.getInfoById(creditCardId2)).thenReturn(creditCardInfoEntity2)
 

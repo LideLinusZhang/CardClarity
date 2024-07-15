@@ -1,16 +1,21 @@
 package edu.card.clarity.domain.creditCard
 
 import android.icu.util.Calendar
-import edu.card.clarity.domain.*
-import edu.card.clarity.enums.*
+import edu.card.clarity.domain.PointSystem
+import edu.card.clarity.domain.Purchase
+import edu.card.clarity.domain.PurchaseReward
+import edu.card.clarity.enums.CardNetworkType
+import edu.card.clarity.enums.PurchaseType
+import edu.card.clarity.enums.RewardType
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.MockedStatic
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockStatic
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 class PointBackCreditCardTest {
 
