@@ -19,11 +19,12 @@ class GeolocationInferenceService @Inject constructor(
     suspend fun getPurchaseTypeInference(): List<GeolocationInference> {
         return adapter.getCurrentPlaces().placeLikelihoods.mapNotNull {
             val name: String = it.place.name ?: return@mapNotNull null
-            val placeType: String = it.place.primaryType ?: return@mapNotNull null
-            if (name.isEmpty() or placeType.isEmpty()) return@mapNotNull null
+            val placeTypes: List<String> = it.place.placeTypes ?: return@mapNotNull null
+            if (name.isEmpty() or placeTypes.isEmpty()) return@mapNotNull null
 
-            val inferredPurchaseType = mappingDataSource.getPurchaseTypeByPlaceType(placeType)
-                ?: return@mapNotNull null
+            val inferredPurchaseType = placeTypes.firstNotNullOfOrNull {
+                mappingDataSource.getPurchaseTypeByPlaceType(it)
+            } ?: return@mapNotNull null
 
             GeolocationInference(it.likelihood, name, inferredPurchaseType)
         }
