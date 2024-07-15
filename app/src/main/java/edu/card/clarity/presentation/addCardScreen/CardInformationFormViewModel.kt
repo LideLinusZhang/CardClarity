@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.presentation.utils.displayStrings
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +23,13 @@ class CardInformationFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
 ) : ViewModel() {
-    val cardNetworkTypeStrings = CardNetworkType.entries.map { it.name }
-    val rewardTypeStrings = RewardType.entries.map { it.displayText }
+    val cardNetworkTypeStrings = CardNetworkType.displayStrings
+    val rewardTypeOptionStrings = RewardType.displayStrings
 
     private val _uiState = MutableStateFlow(
         CardInformationFormUiState(
             selectedCardNetworkType = cardNetworkTypeStrings.first(),
-            selectedRewardType = rewardTypeStrings.first()
+            selectedRewardType = rewardTypeOptionStrings.first()
         )
     )
     val uiState: StateFlow<CardInformationFormUiState> = _uiState.asStateFlow()
@@ -58,7 +59,7 @@ class CardInformationFormViewModel @Inject constructor(
         selectedRewardType = RewardType.entries[index]
 
         _uiState.update {
-            it.copy(selectedRewardType = rewardTypeStrings[index])
+            it.copy(selectedRewardType = rewardTypeOptionStrings[index])
         }
     }
 
@@ -108,7 +109,7 @@ class CardInformationFormViewModel @Inject constructor(
         _uiState.update {
             CardInformationFormUiState(
                 selectedCardNetworkType = cardNetworkTypeStrings.first(),
-                selectedRewardType = rewardTypeStrings.first()
+                selectedRewardType = rewardTypeOptionStrings.first()
             )
         }
     }
