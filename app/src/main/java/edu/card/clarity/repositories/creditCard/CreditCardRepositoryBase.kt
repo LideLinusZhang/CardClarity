@@ -4,7 +4,9 @@ import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.repositories.utils.toDomainModel
@@ -89,6 +91,8 @@ abstract class CreditCardRepositoryBase internal constructor(
         return creditCardDataSource.getRewardTypeById(id)
     }
 
+    protected abstract suspend fun getAllCreditCards(): List<ICreditCard>
+
     protected suspend fun getAllCreditCardInfoOf(rewardType: RewardType): List<CreditCardInfo> {
         return withContext(dispatcher) {
             creditCardDataSource.getAllInfoOf(rewardType).toDomainModel()
@@ -109,6 +113,12 @@ abstract class CreditCardRepositoryBase internal constructor(
 
     protected suspend fun deleteAllCreditCardsOf(rewardType: RewardType) {
         creditCardDataSource.deleteAllOf(rewardType)
+    }
+
+    suspend fun findOptimalCreditCard(purchase: Purchase): ICreditCard? {
+        return getAllCreditCards().maxByOrNull {
+            it.getReturnAmountInCash(purchase)
+        }
     }
 
     protected companion object {

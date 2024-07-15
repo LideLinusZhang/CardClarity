@@ -1,5 +1,6 @@
 package edu.card.clarity.repositories.creditCard
 
+import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.enums.PurchaseType
@@ -39,4 +40,11 @@ interface ICreditCardRepository {
 
     suspend fun deleteCreditCard(id: UUID)
     suspend fun deleteAllCreditCards()
+
+    /**
+     * Find the optimal credit card that has the most return in cash for a purchase.
+     *
+     * @return The credit card, or null if there is no credit card in the database.
+     */
+    suspend fun findOptimalCreditCard(purchase: Purchase): ICreditCard?
 }
