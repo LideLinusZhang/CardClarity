@@ -15,7 +15,6 @@ hilt = "2.51.1"
 hiltExt = "1.2.0"
 ksp = "2.0.0-1.0.22"
 room = "2.6.1"
-material = "1.6.8"
 navigationCompose = "2.7.7"
 secretsGradlePlugin = "2.0.1"
 uiTextGoogleFonts = "1.6.8"
@@ -26,7 +25,6 @@ secrets = "2.0.1"
 [libraries]
 # Android
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -77,5 +75,6 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets"}
+jetbrains-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

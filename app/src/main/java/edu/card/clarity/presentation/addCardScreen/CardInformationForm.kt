@@ -90,7 +90,7 @@ fun CardInformationForm(
         )
         DropdownMenu(
             label = "Reward Type",
-            options = viewModel.rewardTypeStrings,
+            options = viewModel.rewardTypeOptionStrings,
             selectedOption = uiState.selectedRewardType,
             onOptionSelected = viewModel::updateSelectedRewardType
         )
