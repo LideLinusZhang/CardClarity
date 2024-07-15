@@ -79,6 +79,7 @@ dependencies {
     implementation libs.androidx.lifecycle.runtimeCompose
     implementation libs.androidx.lifecycle.viewModelCompose
     implementation libs.androidx.annotation
+    implementation libs.android.libraries.places.places
     implementation libs.maps.android.places.places.ktx
 
     // Kotlin Dependencies
