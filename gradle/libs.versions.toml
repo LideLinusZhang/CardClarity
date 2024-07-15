@@ -45,7 +45,7 @@ androidx-annotation = { group = "androidx.annotation", name = "annotation", vers
 
 # Google Mobile Services
 android-libraries-places-places = { group = "com.google.android.libraries.places", name = "places", version.ref = "gms-places" }
-android-libraries-places-places-ktx = { group = "com.google.android.libraries.places", name = "places-ktx", version.ref = "gms-places-ktx" }
+maps-android-places-places-ktx = { group = "com.google.maps.android", name = "places-ktx", version.ref = "gms-places-ktx" }
 
 # Database
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
