@@ -24,7 +24,7 @@ class PlacesAdapter @Inject constructor(
 
     companion object {
         private val currentLocationNameAndTypeRequest = FindCurrentPlaceRequest.newInstance(
-            listOf(Place.Field.NAME, Place.Field.TYPES)
+            listOf(Place.Field.NAME, Place.Field.PRIMARY_TYPE)
         )
     }
 }

@@ -8,6 +8,8 @@ import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairE
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingEntity
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchase.PurchaseEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
@@ -19,7 +21,8 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         CreditCardInfoEntity::class,
         PurchaseRewardEntity::class,
         CreditCardIdPointSystemIdPairEntity::class,
-        PurchaseEntity::class
+        PurchaseEntity::class,
+        PlaceTypeToPurchaseTypeMappingEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -32,4 +35,5 @@ abstract class Database : RoomDatabase() {
     abstract fun purchaseReward(): PurchaseRewardDao
 
     abstract fun purchase(): PurchaseDao
+    abstract fun placeTypeToPurchaseTypeMapping(): PlaceTypeToPurchaseTypeMappingDao
 }
