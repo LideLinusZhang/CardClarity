@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import edu.card.clarity.presentation.BenefitsScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.HomeScreen
 import edu.card.clarity.presentation.MyBenefitsScreen
@@ -27,13 +28,16 @@ fun BottomNavGraph(navController: NavHostController) {
             MyBenefitsScreen()
         }
         composable(route = BottomNavBar.Purchase.route) {
-            PurchaseScreen()
+            PurchaseScreen(navController)
         }
         composable("myCards") {
             MyCardsScreen()
         }
         composable("upcomingPayments") {
             UpcomingPaymentsScreen()
+        }
+        composable("benefits/{category}") { backStackEntry ->
+            BenefitsScreen(navController, category = backStackEntry.arguments?.getString("category") ?: "")
         }
     }
 }
