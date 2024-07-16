@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 
@@ -27,7 +29,7 @@ data class CardInfo(
 )
 
 @Composable
-fun MyCardsScreen() {
+fun MyCardsScreen(navController: NavController) {
     val cards = listOf(
         CardInfo("TD Aeroplan Visa Infinite Card", "2024-05-24", Color(0xFFAED8FF)),
         CardInfo("American Express Platinum Card", "2024-05-13", Color(0xFFB7FF9E)),
@@ -55,7 +57,8 @@ fun MyCardsScreen() {
                     CardItem(
                         cardName = cards[index].cardName,
                         dueDate = cards[index].dueDate,
-                        backgroundColor = cards[index].backgroundColor
+                        backgroundColor = cards[index].backgroundColor,
+                        navController = navController
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -68,7 +71,8 @@ fun MyCardsScreen() {
 fun CardItem(
     cardName: String,
     dueDate: String,
-    backgroundColor: Color
+    backgroundColor: Color,
+    navController: NavController
 ) {
     Card(
         modifier = Modifier
@@ -99,7 +103,7 @@ fun CardItem(
                     Spacer(modifier = Modifier.height(8.dp))
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
-                        onClick = { /* TODO: Handle receipts click */ },
+                        onClick = { navController.navigate("myReceipts/$cardName") },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                         border = BorderStroke(1.5.dp, Color.Black),
                         modifier = Modifier
@@ -151,5 +155,6 @@ fun CardItem(
 @Composable
 @Preview
 fun MyCardsScreenPreview() {
-    MyCardsScreen()
+    val navController = rememberNavController()
+    MyCardsScreen(navController)
 }
