@@ -65,7 +65,9 @@ fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
                         cardName = creditCardItemUiStates[index].cardName,
                         dueDate = creditCardItemUiStates[index].dueDate,
                         backgroundColor = creditCardItemUiStates[index].backgroundColor,
-                        onReceiptButtonClick = {}
+                        isReminderEnabled = creditCardItemUiStates[index].isReminderEnabled,
+                        onReceiptButtonClick = {},
+                        onDeleteButtonClick = {viewModel.deleteCreditCard(creditCardItemUiStates[index].id)},
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }

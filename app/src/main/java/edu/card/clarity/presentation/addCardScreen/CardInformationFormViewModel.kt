@@ -97,7 +97,8 @@ class CardInformationFormViewModel @Inject constructor(
             rewardType = selectedRewardType,
             cardNetworkType = selectedCardNetworkType,
             statementDate = mostRecentStatementDate,
-            paymentDueDate = mostRecentPaymentDueDate
+            paymentDueDate = mostRecentPaymentDueDate,
+            isReminderEnabled = uiState.value.isReminderEnabled,
         )
 
         if (selectedRewardType == RewardType.CashBack) {
