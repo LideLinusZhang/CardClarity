@@ -257,5 +257,5 @@ private fun Calendar.toLocalDate(): LocalDate {
 @Preview(showBackground = true)
 @Composable
 fun PreviewUpcomingPaymentsScreen() {
-    edu.card.clarity.presentation.UpcomingPaymentsScreen()
+    UpcomingPaymentsScreen()
 }
