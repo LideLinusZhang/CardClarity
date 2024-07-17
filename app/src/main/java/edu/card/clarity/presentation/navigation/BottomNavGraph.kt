@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import edu.card.clarity.presentation.BenefitsScreen
+import edu.card.clarity.presentation.purchaseBenefitsScreen.BenefitsScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.HomeScreen
 import edu.card.clarity.presentation.MyBenefitsScreen
