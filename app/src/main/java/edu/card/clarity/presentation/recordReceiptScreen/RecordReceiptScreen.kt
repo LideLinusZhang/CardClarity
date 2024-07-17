@@ -183,18 +183,3 @@ fun ErrorDialog(error: String, onDismiss: () -> Unit) {
         }
     )
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun RecordReceiptScreenPreview() {
-//    // mock data for preview
-//    val mockViewModel = RecordReceiptViewModel().apply {
-//        onDateChange("2024-07-20")
-//        onTotalAmountChange("45.99")
-//        onMerchantChange("Walmart")
-//        onCardSelected("Visa")
-//        onPurchaseTypeSelected("Groceries")
-//    }
-//
-//    RecordReceiptScreen(viewModel = mockViewModel)
-//}
