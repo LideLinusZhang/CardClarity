@@ -1,19 +1,23 @@
 [versions]
 agp = "8.5.1"
+coreTesting = "2.2.0"
 kotlin = "2.0.0"
 kotlin-coroutines = "1.8.1"
 coreKtx = "1.13.1"
-junit = "4.13.2"
-junitVersion = "1.2.1"
+junit = "5.10.2"
+junitTestingExt = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.3"
 androidxLifecycle = "2.8.3"
 annotation = "1.8.0"
+kotlinxCoroutinesTest = "1.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 hilt = "2.51.1"
 hiltExt = "1.2.0"
 ksp = "2.0.0-1.0.22"
+mockito = "5.12.0"
+mockito-kotlin = "5.4.0"
 room = "2.6.1"
 navigationCompose = "2.7.7"
 secretsGradlePlugin = "2.0.1"
@@ -36,8 +40,6 @@ androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 
@@ -62,12 +64,24 @@ jetbrains-kotlinx-coroutines-play-services = {group = "org.jetbrains.kotlinx", n
 jetbrains-kotlin-bom = {group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin"}
 
 # Testing
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitTestingExt" }
+androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitTestingExt" }
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
+room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+
+[bundles]
+mockito = ["mockito-core", "mockito-kotlin"]
+androidx-test-junit = ["androidx-test-ext-junit", "androidx-test-ext-junit-ktx"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -78,3 +92,5 @@ google-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform
 jetbrains-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
+
