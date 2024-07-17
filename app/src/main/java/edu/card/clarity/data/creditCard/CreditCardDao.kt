@@ -105,10 +105,10 @@ interface CreditCardDao {
     suspend fun getAllOf(rewardType: RewardType): List<CreditCardEntity>
 
     /**
-     * Select a credit card with associated purchase returns by id.
+     * Select a credit card with associated purchase rewards by id.
      *
      * @param id the credit card id.
-     * @return the credit card with associated purchase returns with id.
+     * @return the credit card with associated purchase rewards with id.
      */
     @Transaction
     @Query("SELECT * FROM creditCardInfo WHERE id = :id")
