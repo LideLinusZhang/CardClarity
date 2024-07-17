@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.PredefinedCreditCardIdEntity
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
@@ -19,7 +20,8 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         CreditCardInfoEntity::class,
         PurchaseRewardEntity::class,
         CreditCardIdPointSystemIdPairEntity::class,
-        PurchaseEntity::class
+        PurchaseEntity::class,
+        PredefinedCreditCardIdEntity::class
     ],
     version = 1,
     exportSchema = false

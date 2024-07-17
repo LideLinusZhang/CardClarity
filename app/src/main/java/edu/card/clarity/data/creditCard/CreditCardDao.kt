@@ -11,7 +11,7 @@ import java.util.UUID
 @Dao
 interface CreditCardDao {
     /**
-     * Observes list of all credit cards.
+     * Observe list of all credit cards.
      *
      * @return all credit cards.
      */
@@ -19,7 +19,7 @@ interface CreditCardDao {
     fun observeAllInfo(): Flow<List<CreditCardInfoEntity>>
 
     /**
-     * Observes list of all credit cards of a certain reward type.
+     * Observe list of all credit cards of a certain reward type.
      *
      * @return all credit cards of a certain reward type.
      */
@@ -27,7 +27,7 @@ interface CreditCardDao {
     fun observeAllInfoOf(type: RewardType): Flow<List<CreditCardInfoEntity>>
 
     /**
-     * Observes a single credit card's info by id.
+     * Observe a single credit card's info by id.
      *
      * @param id the credit card id.
      * @return the credit card with id.
@@ -36,7 +36,7 @@ interface CreditCardDao {
     fun observeInfoById(id: UUID): Flow<CreditCardInfoEntity>
 
     /**
-     * Observes a single credit card's reward type by id.
+     * Observe a single credit card's reward type by id.
      *
      * @param id the credit card id.
      * @return the credit card's reward type.
@@ -45,7 +45,7 @@ interface CreditCardDao {
     fun observeRewardTypeById(id: UUID): Flow<RewardType>
 
     /**
-     * Observes all credit cards.
+     * Observe all credit cards.
      *
      * @return all credit cards with credit cards associated to them.
      */
@@ -53,13 +53,24 @@ interface CreditCardDao {
     fun observeAll(): Flow<List<CreditCardInfoEntity>>
 
     /**
-     * Observes all credit cards of a certain reward type.
+     * Observe all credit cards of a certain reward type.
      *
      * @return all credit cards of a certain reward type with credit cards associated to them.
      */
     @Transaction
     @Query("SELECT * FROM creditCardInfo WHERE rewardType = :rewardType")
     fun observeAllOf(rewardType: RewardType): Flow<List<CreditCardEntity>>
+
+    /**
+     * Observe all predefined credit cards.
+     *
+     * @return all predefined credit cards with credit cards associated to them.
+     */
+    @Transaction
+    @Query("SELECT creditCardInfo.* FROM creditCardInfo " +
+            "JOIN predefinedCreditCardId " +
+            "ON creditCardInfo.id = predefinedCreditCardId.creditCardId")
+    fun observeAllPredefined(): Flow<List<CreditCardEntity>>
 
     /**
      * Select all credit cards from the credit card table.
@@ -103,6 +114,17 @@ interface CreditCardDao {
     @Transaction
     @Query("SELECT * FROM creditCardInfo WHERE rewardType = :rewardType")
     suspend fun getAllOf(rewardType: RewardType): List<CreditCardEntity>
+
+    /**
+     * Select all predefined credit cards.
+     *
+     * @return all predefined credit cards with credit cards associated to them.
+     */
+    @Transaction
+    @Query("SELECT creditCardInfo.* FROM creditCardInfo " +
+            "JOIN predefinedCreditCardId " +
+            "ON creditCardInfo.id = predefinedCreditCardId.creditCardId")
+    suspend fun getAllPredefined(): List<CreditCardEntity>
 
     /**
      * Select a credit card with associated purchase rewards by id.
