@@ -8,5 +8,5 @@ data class CreditCardItemUiState(
     val dueDate: String,
     val isReminderEnabled: Boolean,
     val backgroundColor: Color,
-    val id: UUID?,
+    val id: UUID,
 )

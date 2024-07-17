@@ -81,12 +81,10 @@ class MyCardsScreenViewModel @Inject constructor(
         }
     }
 
-    fun deleteCreditCard(id: UUID?) {
-        if (id != null) {
-            viewModelScope.launch {
-                cashBackCreditCardRepository.deleteCreditCard(id)
-                pointBackCreditCardRepository.deleteCreditCard(id)
-            }
+    fun deleteCreditCard(id: UUID) {
+        viewModelScope.launch {
+            cashBackCreditCardRepository.deleteCreditCard(id)
+            pointBackCreditCardRepository.deleteCreditCard(id)
         }
     }
 
@@ -104,7 +102,7 @@ class MyCardsScreenViewModel @Inject constructor(
                 CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
                 CardNetworkType.AMEX -> Color(0xFFAED8FF)
             },
-            id,
+            id!!,
         )
     }
 }
