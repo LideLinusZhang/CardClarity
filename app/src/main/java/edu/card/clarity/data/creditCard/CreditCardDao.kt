@@ -62,15 +62,17 @@ interface CreditCardDao {
     fun observeAllOf(rewardType: RewardType): Flow<List<CreditCardEntity>>
 
     /**
-     * Observe all predefined credit cards.
+     * Observe all predefined credit cards of a certain reward type.
      *
-     * @return all predefined credit cards with credit cards associated to them.
+     * @return all such predefined credit cards with credit cards associated to them .
      */
     @Transaction
     @Query("SELECT creditCardInfo.* FROM creditCardInfo " +
             "JOIN predefinedCreditCardId " +
-            "ON creditCardInfo.id = predefinedCreditCardId.creditCardId")
-    fun observeAllPredefined(): Flow<List<CreditCardEntity>>
+            "ON creditCardInfo.id = predefinedCreditCardId.creditCardId " +
+            "WHERE creditCardInfo.rewardType = :rewardType"
+    )
+    fun observeAllPredefinedOf(rewardType: RewardType): Flow<List<CreditCardEntity>>
 
     /**
      * Select all credit cards from the credit card table.
@@ -116,15 +118,17 @@ interface CreditCardDao {
     suspend fun getAllOf(rewardType: RewardType): List<CreditCardEntity>
 
     /**
-     * Select all predefined credit cards.
+     * Select all predefined credit cards of a certain reward type.
      *
-     * @return all predefined credit cards with credit cards associated to them.
+     * @return all such predefined credit cards with credit cards associated to them.
      */
     @Transaction
     @Query("SELECT creditCardInfo.* FROM creditCardInfo " +
             "JOIN predefinedCreditCardId " +
-            "ON creditCardInfo.id = predefinedCreditCardId.creditCardId")
-    suspend fun getAllPredefined(): List<CreditCardEntity>
+            "ON creditCardInfo.id = predefinedCreditCardId.creditCardId " +
+            "WHERE creditCardInfo.rewardType = :rewardType"
+    )
+    suspend fun getAllPredefinedOf(rewardType: RewardType): List<CreditCardEntity>
 
     /**
      * Select a credit card with associated purchase rewards by id.
@@ -164,6 +168,8 @@ interface CreditCardDao {
     /**
      * Delete all credit cards of a certain reward type.
      */
-    @Query("DELETE FROM creditCardInfo WHERE rewardType = :rewardType")
+    @Query("DELETE FROM creditCardInfo " +
+            "WHERE rewardType = :rewardType " +
+            "AND id NOT IN (SELECT * FROM predefinedCreditCardId)")
     suspend fun deleteAllOf(rewardType: RewardType)
 }

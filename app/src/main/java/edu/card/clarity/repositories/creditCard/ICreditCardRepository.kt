@@ -28,13 +28,45 @@ interface ICreditCardRepository {
 
     suspend fun updateCreditCardInfo(info: CreditCardInfo)
 
+    /**
+     * Get a credit card's information and its associated purchase rewards by its ID.
+     */
     suspend fun getCreditCard(id: UUID): ICreditCard?
+    /**
+     * Get only a credit card's information by its ID.
+     */
     suspend fun getCreditCardInfo(id: UUID): CreditCardInfo?
 
+    /**
+     * Get all credit cards' information and their associated purchase rewards.
+     */
     suspend fun getAllCreditCards(): List<ICreditCard>
+    /**
+     * Get all predefined credit cards' information and their associated purchase rewards.
+     * An [ICreditCard] object representing a predefined credit card does
+     * not have an ID associated to it.
+     */
+    suspend fun getAllPredefinedCreditCards(): List<ICreditCard>
+    /**
+     * Get information of all credit cards but without their associated purchase rewards.
+     */
     suspend fun getAllCreditCardInfo(): List<CreditCardInfo>
 
+    /**
+     * Get all credit cards' information and their associated purchase rewards as a stream.
+     */
     fun getAllCreditCardsStream(): Flow<List<ICreditCard>>
+    /**
+     * Get all predefined credit cards' information and their associated
+     * purchase rewards as a stream.
+     * An [ICreditCard] object representing a predefined credit card does
+     * not have an ID associated to it.
+     */
+    fun getAllPredefinedCreditCardsStream(): Flow<List<ICreditCard>>
+    /**
+     * Get information of all credit cards but without their associated
+     * purchase rewards as a stream.
+     */
     fun getAllCreditCardInfoStream(): Flow<List<CreditCardInfo>>
 
     suspend fun deleteCreditCard(id: UUID)
