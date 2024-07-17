@@ -1,5 +1,6 @@
 package edu.card.clarity.presentation.recordReceiptScreen
 
+<<<<<<< HEAD
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -135,3 +136,5 @@ fun RecordReceiptScreenPreview() {
 
     RecordReceiptScreen(viewModel = mockViewModel)
 }
+=======
+>>>>>>> e5294ad (update manifest permissions)
