@@ -26,6 +26,6 @@ class PurchaseRewardTest {
 
         val expectedReturnAmount = purchase.total * purchaseReward.rewardFactor
 
-        assertEquals(expectedReturnAmount, purchaseReward.getReturnAmount(purchase))
+        assertEquals(expectedReturnAmount, purchaseReward.getReturnAmount(purchase.total))
     }
 }

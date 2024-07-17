@@ -50,7 +50,7 @@ class CashBackCreditCardTest {
 
         val purchaseRewards = listOf(
             PurchaseReward(PurchaseType.Groceries, 0.02f),
-            PurchaseReward(PurchaseType.Fuel, 0.03f)
+            PurchaseReward(PurchaseType.Gas, 0.03f)
         )
 
         val cashBackCreditCard = CashBackCreditCard(
