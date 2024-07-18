@@ -1,5 +1,6 @@
 package edu.card.clarity.data.purchase
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -32,6 +33,7 @@ data class PurchaseEntity(
     val merchant: String,
     val type: PurchaseType,
     val total: Float,
+    @ColumnInfo(defaultValue = "0")
     val rewardAmount: Float,
     val creditCardId: UUID
 )

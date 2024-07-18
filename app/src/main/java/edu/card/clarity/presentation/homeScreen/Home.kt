@@ -156,7 +156,7 @@ fun Bar(
     totalBars: Int
 ) {
 
-    val barHeightFraction = 0.15 + (value / maxValue) * 0.85
+    val barHeightFraction = 0.25 + (value / maxValue) * 0.75
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
