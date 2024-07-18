@@ -11,15 +11,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +39,9 @@ fun CreditCardItem(
     cardName: String,
     dueDate: String,
     backgroundColor: Color,
-    onReceiptButtonClick: () -> Unit
+    isReminderEnabled: Boolean,
+    onReceiptButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -83,24 +89,46 @@ fun CreditCardItem(
                     .weight(0.45f)
                     .fillMaxHeight()
                     .background(color = Color(0xFFBFC0C2))
-                    .padding(end = 12.dp)
             ) {
                 Column(
-                    horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Top,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp)
+                        .padding(start = 12.dp)
                 ) {
-                    Spacer(modifier = Modifier.height(100.dp))
-                    Row {
+                    IconButton(
+                        onClick = onDeleteButtonClick,
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
                         Icon(
-                            Icons.Default.CheckCircle,
-                            contentDescription = "Check Circle",
+                            Icons.Default.Delete,
+                            contentDescription = "Delete",
                             modifier = Modifier
-                                .size(16.dp)
-                                .padding(end = 1.dp),
+                                .size(24.dp),
                         )
+                    }
+                    Spacer(modifier = Modifier.height(70.dp))
+                    Row {
+                        if (isReminderEnabled) {
+                            Icon(
+                                Icons.Default.CheckCircle,
+                                contentDescription = "Check Circle",
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .padding(end = 1.dp)
+                                    .offset(y = 3.dp),
+                            )
+                        } else {
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = "Cross",
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .padding(end = 1.dp)
+                                    .offset(y = 3.dp),
+                            )
+                        }
                         Text(
                             text = "Payment Reminder",
                             fontWeight = FontWeight.Bold,

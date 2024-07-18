@@ -33,6 +33,7 @@ abstract class CreditCardRepositoryBase internal constructor(
             info.cardNetworkType,
             info.statementDate,
             info.paymentDueDate,
+            info.isReminderEnabled,
         )
 
         creditCardDataSource.upsert(cardInfoEntity)
