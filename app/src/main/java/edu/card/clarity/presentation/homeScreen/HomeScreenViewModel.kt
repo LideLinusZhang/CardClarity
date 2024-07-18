@@ -2,14 +2,17 @@ package edu.card.clarity.presentation.homeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.repositories.PurchaseRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
 
-class HomeScreenViewModel(
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(
     private val purchaseRepository: PurchaseRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeScreenUiState())

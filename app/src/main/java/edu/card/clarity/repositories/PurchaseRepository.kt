@@ -28,6 +28,7 @@ class PurchaseRepository @Inject constructor(
             purchase.merchant,
             purchase.type,
             purchase.total,
+            purchase.rewardAmount,
             purchase.creditCardId
         )
 
@@ -97,6 +98,7 @@ class PurchaseRepository @Inject constructor(
                 purchase.merchant,
                 purchase.type,
                 purchase.total,
+                purchase.rewardAmount,
                 purchase.creditCardId
             )
         )

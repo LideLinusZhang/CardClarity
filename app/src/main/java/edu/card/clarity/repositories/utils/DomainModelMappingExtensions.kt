@@ -52,5 +52,6 @@ internal fun PurchaseEntity.toDomainModel() = Purchase(
     merchant = merchant,
     type = type,
     total = total,
+    rewardAmount = rewardAmount,
     creditCardId = creditCardId
 )

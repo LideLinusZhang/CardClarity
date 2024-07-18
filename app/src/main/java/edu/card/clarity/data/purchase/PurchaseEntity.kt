@@ -32,5 +32,6 @@ data class PurchaseEntity(
     val merchant: String,
     val type: PurchaseType,
     val total: Float,
+    val rewardAmount: Float,
     val creditCardId: UUID
 )

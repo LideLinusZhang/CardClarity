@@ -38,7 +38,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeScreenViewModel = hiltViewModel(), ) {
+fun HomeScreen(navController: NavController,
+               viewModel: HomeScreenViewModel = hiltViewModel(), ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
