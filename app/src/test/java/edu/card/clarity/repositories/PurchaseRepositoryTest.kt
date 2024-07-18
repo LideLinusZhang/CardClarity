@@ -56,6 +56,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
@@ -76,6 +77,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
@@ -96,6 +98,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntity2 = PurchaseEntity(
@@ -104,6 +107,7 @@ class PurchaseRepositoryTest {
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
@@ -131,6 +135,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
         val purchaseEntity2 = PurchaseEntity(
@@ -139,6 +144,7 @@ class PurchaseRepositoryTest {
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
         val purchaseEntities = listOf(
@@ -167,6 +173,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntity2 = PurchaseEntity(
@@ -175,6 +182,7 @@ class PurchaseRepositoryTest {
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
@@ -201,6 +209,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntity2 = PurchaseEntity(
@@ -209,6 +218,7 @@ class PurchaseRepositoryTest {
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
@@ -236,6 +246,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
         val purchaseEntity2 = PurchaseEntity(
@@ -244,6 +255,7 @@ class PurchaseRepositoryTest {
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
         val purchaseEntities = listOf(
@@ -272,6 +284,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntity2 = PurchaseEntity(
@@ -280,6 +293,7 @@ class PurchaseRepositoryTest {
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
@@ -312,6 +326,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
@@ -326,6 +341,7 @@ class PurchaseRepositoryTest {
                 merchant = "T&T",
                 type = PurchaseType.Groceries,
                 total = 100.0f,
+                rewardAmount = 100.0f,
                 creditCardId = purchase.creditCardId
             )
         )
