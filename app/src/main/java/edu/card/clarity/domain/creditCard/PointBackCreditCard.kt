@@ -4,7 +4,7 @@ import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.PurchaseReward
 
-class PointBackCreditCard(
+data class PointBackCreditCard(
     override val info: CreditCardInfo,
     override val purchaseRewards: List<PurchaseReward>,
     val pointSystem: PointSystem

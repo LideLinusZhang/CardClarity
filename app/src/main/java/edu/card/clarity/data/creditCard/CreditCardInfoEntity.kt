@@ -11,6 +11,9 @@ import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
 import java.util.UUID
 
+/**
+ * A database entity data class that mirrors [edu.card.clarity.domain.creditCard.CreditCardInfo].
+ */
 @Entity(
     tableName = "creditCardInfo",
     indices = [

@@ -7,6 +7,7 @@ import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
@@ -102,6 +103,16 @@ class PointBackCreditCardRepository @Inject constructor(
         }
     }
 
+    override suspend fun getAllPredefinedCreditCards(): List<ICreditCard> {
+        return creditCardDataSource.getAllPredefinedOf(RewardType.PointBack).map {
+            val pointSystemEntity = pointSystemAssociationDataSource
+                .getByCreditCardId(it.creditCardInfo.id)
+                ?.pointSystem!!
+
+            it.toDomainModel(pointSystemEntity).removeId()
+        }
+    }
+
     override suspend fun getAllCreditCardInfo(): List<CreditCardInfo> {
         return super.getAllCreditCardInfoOf(RewardType.PointBack)
     }
@@ -115,6 +126,20 @@ class PointBackCreditCardRepository @Inject constructor(
                         ?.pointSystem!!
 
                     it.toDomainModel(pointSystemEntity)
+                }
+            }
+        }
+    }
+
+    override fun getAllPredefinedCreditCardsStream(): Flow<List<ICreditCard>> {
+        return creditCardDataSource.observeAllPredefinedOf(RewardType.PointBack).map {
+            withContext(dispatcher) {
+                it.map {
+                    val pointSystemEntity = pointSystemAssociationDataSource
+                        .getByCreditCardId(it.creditCardInfo.id)
+                        ?.pointSystem!!
+
+                    it.toDomainModel(pointSystemEntity).removeId()
                 }
             }
         }
@@ -134,13 +159,17 @@ class PointBackCreditCardRepository @Inject constructor(
         }
     }
 
-    private fun CreditCardEntity.toDomainModel(
-        pointSystemEntity: PointSystemEntity
-    ): PointBackCreditCard {
-        return PointBackCreditCard(
+    private companion object {
+        private fun CreditCardEntity.toDomainModel(
+            pointSystemEntity: PointSystemEntity
+        ) = PointBackCreditCard(
             this.creditCardInfo.toDomainModel(),
             this.purchaseRewards.toDomainModel(),
             pointSystemEntity.toDomainModel()
+        )
+
+        private fun PointBackCreditCard.removeId(): PointBackCreditCard = this.copy(
+            info = this.info.copy(id = null)
         )
     }
 }
