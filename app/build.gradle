@@ -45,6 +45,12 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -65,6 +71,8 @@ dependencies {
 
     // Database Dependencies
     implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
 
@@ -75,11 +83,17 @@ dependencies {
     ksp(libs.hilt.ext.compiler)
 
     // Testing Dependencies
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.core.testing
+    androidTestImplementation libs.bundles.androidx.test.junit
     androidTestImplementation libs.androidx.espresso.core
     androidTestImplementation platform(libs.androidx.compose.bom)
     androidTestImplementation libs.androidx.ui.test.junit4
+    testImplementation libs.bundles.mockito
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.androidx.core.testing
+    testImplementation libs.junit.jupiter.api
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.junit.jupiter.params
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest
 }

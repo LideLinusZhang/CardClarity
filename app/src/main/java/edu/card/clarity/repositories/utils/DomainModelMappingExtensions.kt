@@ -15,11 +15,13 @@ internal fun List<CreditCardInfoEntity>.toDomainModel() = map(
 )
 
 internal fun CreditCardInfoEntity.toDomainModel() = CreditCardInfo(
+    id = id,
     name = name,
     rewardType = rewardType,
     cardNetworkType = cardNetworkType,
     statementDate = statementDate,
-    paymentDueDate = paymentDueDate
+    paymentDueDate = paymentDueDate,
+    isReminderEnabled = isReminderEnabled,
 )
 
 @JvmName("pointSystemEntityToDomainModel")

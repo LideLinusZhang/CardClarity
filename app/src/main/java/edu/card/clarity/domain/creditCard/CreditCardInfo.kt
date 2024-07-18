@@ -11,5 +11,6 @@ data class CreditCardInfo(
     val rewardType: RewardType,
     val cardNetworkType: CardNetworkType,
     val statementDate: Calendar,
-    val paymentDueDate: Calendar
+    val paymentDueDate: Calendar,
+    val isReminderEnabled: Boolean,
 )
