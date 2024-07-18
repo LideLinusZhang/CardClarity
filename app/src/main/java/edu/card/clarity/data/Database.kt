@@ -6,6 +6,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.PredefinedCreditCardIdEntity
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
@@ -21,7 +22,8 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         CreditCardInfoEntity::class,
         PurchaseRewardEntity::class,
         CreditCardIdPointSystemIdPairEntity::class,
-        PurchaseEntity::class
+        PurchaseEntity::class,
+        PredefinedCreditCardIdEntity::class
     ],
     version = 2,
     exportSchema = false
