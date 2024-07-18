@@ -106,24 +106,46 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
             color = Color.Black
         )
     }
-    Column(
-        modifier = Modifier
+    if (months == 1) {
+        Column( modifier = Modifier
             .fillMaxHeight(0.45f),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Row(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center) {
+            Text(
+                text = String.format(Locale.CANADA, "+$%.2f", rewardsSummary[0].amount),
+                fontWeight = FontWeight.Normal,
+                fontSize = 80.sp,
+                color = Color.Black
+            )
+            Text(
+                text = "in savings this month!",
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                color = Color.Black
+            )
+        }
+    }
+    else {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 250.dp, max = 324.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
+                .fillMaxHeight(0.45f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            rewardsSummary.forEach { item ->
-                Bar(month = item.month, value = item.amount, maxValue = maxData.toFloat(), totalBars = months)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 250.dp, max = 324.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                rewardsSummary.forEach { item ->
+                    Bar(month = item.month, value = item.amount, maxValue = maxData.toFloat(), totalBars = months)
+                }
             }
         }
     }
+
 }
 
 @Composable
@@ -133,17 +155,6 @@ fun Bar(
     maxValue: Float,
     totalBars: Int
 ) {
-    val barWidth = when (totalBars) {
-        3 -> 100.dp
-        6 -> 50.dp
-        else -> 100.dp
-    }
-
-    val spacingBetweenBars = when (totalBars) {
-        3 -> 4.dp
-        6 -> 2.dp
-        else -> 4.dp
-    }
 
     val barHeightFraction = 0.15 + (value / maxValue) * 0.85
 
@@ -157,7 +168,7 @@ fun Bar(
     ) {
         Box(
             modifier = Modifier
-                .width(barWidth)
+                .width(if (totalBars == 3) 100.dp else 50.dp)
                 .fillMaxHeight(fraction = barHeightFraction.toFloat())
                 .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
         ) {
@@ -170,10 +181,10 @@ fun Bar(
             ) {
                 Text(
                     text = String.format(Locale.CANADA, "+$%.2f", value),
-                    fontSize = 12.sp,
+                    fontSize = if (totalBars == 3) 16.sp else 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.padding(top = if (totalBars == 3) 8.dp else 4.dp)
                 )
                 Text(
                     text = month,
@@ -184,7 +195,7 @@ fun Bar(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(spacingBetweenBars))
+        Spacer(modifier = Modifier.height(if (totalBars == 3) 4.dp else 2.dp))
     }
 }
 

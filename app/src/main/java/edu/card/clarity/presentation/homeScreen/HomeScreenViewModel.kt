@@ -68,7 +68,6 @@ class HomeScreenViewModel @Inject constructor(
         emit(dummyPurchases)
     }
 
-
     private fun fetchLastMonthsRewards(months: Int) {
         viewModelScope.launch {
             val now = Calendar.getInstance()
@@ -78,6 +77,7 @@ class HomeScreenViewModel @Inject constructor(
             val startTime = now.time
 
             // generate dummy data
+            // TODO: remove function and connect to backend once purchase is implemented
             val dummyPurchases = generateDummyPurchasesFlow(startTime, endTime)
             dummyPurchases.map { purchases: List<Purchase> ->
                     val rewardsSummary = calculateRewardsSummary(purchases)
