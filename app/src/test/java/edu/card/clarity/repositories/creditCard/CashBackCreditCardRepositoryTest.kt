@@ -126,7 +126,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
-            paymentDueDate = paymentDueDate
+            paymentDueDate = paymentDueDate,
+            isReminderEnabled = true
         )
 
         val creditCardInfoEntity = CreditCardInfoEntity(
@@ -135,7 +136,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
-            paymentDueDate = paymentDueDate
+            paymentDueDate = paymentDueDate,
+            isReminderEnabled = true
         )
 
         `when`(creditCardDao.getRewardTypeById(creditCardInfo.id!!)).thenReturn(RewardType.CashBack)
@@ -155,7 +157,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val purchaseRewardEntity = PurchaseRewardEntity(
             creditCardId = creditCardId,
@@ -187,7 +190,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
 
         `when`(creditCardDao.getInfoById(creditCardId)).thenReturn(creditCardInfoEntity)
@@ -208,7 +212,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val purchaseRewardEntity1 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity1.id,
@@ -223,7 +228,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val purchaseRewardEntity2 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity2.id,
@@ -262,7 +268,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
 
         val creditCardInfoEntity2 = CreditCardInfoEntity(
@@ -271,7 +278,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
 
         `when`(creditCardDao.getAllInfoOf(RewardType.CashBack)).thenReturn(
@@ -295,7 +303,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val purchaseRewardEntity1 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity1.id,
@@ -310,7 +319,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val purchaseRewardEntity2 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity2.id,
@@ -351,7 +361,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val creditCardInfoEntity2 = CreditCardInfoEntity(
             id = UUID.randomUUID(),
@@ -359,7 +370,8 @@ class CashBackCreditCardRepositoryTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
 
         `when`(creditCardDao.observeAllInfoOf(RewardType.CashBack)).thenReturn(
