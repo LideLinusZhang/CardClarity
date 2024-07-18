@@ -1,6 +1,7 @@
 package edu.card.clarity.data.creditCard
 
 import android.icu.util.Calendar
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -25,5 +26,6 @@ data class CreditCardInfoEntity(
     val cardNetworkType: CardNetworkType,
     val statementDate: Calendar,
     val paymentDueDate: Calendar,
+    @ColumnInfo(defaultValue = "1")
     val isReminderEnabled: Boolean,
 )

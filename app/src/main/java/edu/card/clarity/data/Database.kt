@@ -1,9 +1,8 @@
 package edu.card.clarity.data
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
@@ -26,8 +25,12 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         PurchaseEntity::class,
         PlaceTypeToPurchaseTypeMappingEntity::class
     ],
-    version = 2,
-    exportSchema = false
+    version = 3,
+    autoMigrations = [
+        AutoMigration(1, 2),
+        AutoMigration(2, 3)
+    ],
+    exportSchema = true
 )
 abstract class Database : RoomDatabase() {
     abstract fun pointSystem(): PointSystemDao
@@ -38,12 +41,4 @@ abstract class Database : RoomDatabase() {
 
     abstract fun purchase(): PurchaseDao
     abstract fun placeTypeToPurchaseTypeMapping(): PlaceTypeToPurchaseTypeMappingDao
-
-    companion object {
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE creditCardInfo ADD COLUMN isReminderEnabled INTEGER NOT NULL DEFAULT 0")
-            }
-        }
-    }
 }

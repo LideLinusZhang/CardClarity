@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.secrets.gradle.plugin)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -52,6 +53,10 @@ android {
         unitTests.all {
             useJUnitPlatform()
         }
+    }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
