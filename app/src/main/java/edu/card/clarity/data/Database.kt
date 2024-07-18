@@ -24,7 +24,7 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         PurchaseRewardEntity::class,
         CreditCardIdPointSystemIdPairEntity::class,
         PurchaseEntity::class,
-        PlaceTypeToPurchaseTypeMappingEntity::class
+        PlaceTypeToPurchaseTypeMappingEntity::class,
         PredefinedCreditCardIdEntity::class
     ],
     version = 4,
