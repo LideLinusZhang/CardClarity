@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.secrets.gradle.plugin)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -26,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -39,6 +41,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     packaging {
         resources {
@@ -51,6 +54,25 @@ android {
             useJUnitPlatform()
         }
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+}
+
+secrets {
+    // Optionally specify a different file name containing your secrets.
+    // The plugin defaults to "local.properties"
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+    defaultPropertiesFileName = "local.defaults.properties"
+
+    // Configure which keys should be ignored by the plugin by providing regular expressions.
+    // "sdk.dir" is ignored by default.
+    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
 }
 
 dependencies {
@@ -65,20 +87,24 @@ dependencies {
     implementation libs.androidx.ui.tooling.preview
     implementation libs.androidx.material3
     implementation libs.androidx.navigation.compose
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.lifecycle.runtimeCompose)
-    implementation(libs.androidx.lifecycle.viewModelCompose)
+    implementation libs.androidx.lifecycle.runtimeCompose
+    implementation libs.androidx.lifecycle.viewModelCompose
+    implementation libs.androidx.annotation
+    implementation libs.android.libraries.places.places
+    implementation libs.maps.android.places.places.ktx
+
+    // Kotlin Dependencies
+    implementation platform(libs.jetbrains.kotlin.bom)
+    implementation libs.jetbrains.kotlinx.coroutines.play.services
 
     // Database Dependencies
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    implementation(libs.room.runtime)
+    implementation libs.room.runtime
     ksp(libs.room.compiler)
-    implementation(libs.room.ktx)
+    implementation libs.room.ktx
 
     // Dependency Injection Dependencies
-    implementation(libs.hilt.ext.navigation.compose)
-    implementation(libs.hilt.android.core)
+    implementation libs.hilt.ext.navigation.compose
+    implementation libs.hilt.android.core
     ksp(libs.hilt.compiler)
     ksp(libs.hilt.ext.compiler)
 

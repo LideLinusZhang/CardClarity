@@ -6,7 +6,7 @@ data class PurchaseReward(
     val applicablePurchaseType: PurchaseType,
     val rewardFactor: Float
 ) {
-    fun getReturnAmount(purchase: Purchase): Float {
-        return purchase.total * rewardFactor
+    fun getReturnAmount(purchaseTotal: Float): Float {
+        return purchaseTotal * rewardFactor
     }
 }

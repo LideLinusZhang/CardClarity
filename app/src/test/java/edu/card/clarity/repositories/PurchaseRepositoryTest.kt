@@ -102,7 +102,7 @@ class PurchaseRepositoryTest {
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
-            type = PurchaseType.Fuel,
+            type = PurchaseType.Gas,
             total = 200.0f,
             creditCardId = UUID.randomUUID()
         )
@@ -137,7 +137,7 @@ class PurchaseRepositoryTest {
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
-            type = PurchaseType.Fuel,
+            type = PurchaseType.Gas,
             total = 200.0f,
             creditCardId = creditCardId
         )
@@ -173,7 +173,7 @@ class PurchaseRepositoryTest {
             id = UUID.randomUUID(),
             time = endTime,
             merchant = "Costco",
-            type = PurchaseType.Fuel,
+            type = PurchaseType.Gas,
             total = 200.0f,
             creditCardId = UUID.randomUUID()
         )
@@ -207,7 +207,7 @@ class PurchaseRepositoryTest {
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
-            type = PurchaseType.Fuel,
+            type = PurchaseType.Gas,
             total = 200.0f,
             creditCardId = UUID.randomUUID()
         )
@@ -242,7 +242,7 @@ class PurchaseRepositoryTest {
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
-            type = PurchaseType.Fuel,
+            type = PurchaseType.Gas,
             total = 200.0f,
             creditCardId = creditCardId
         )
@@ -278,7 +278,7 @@ class PurchaseRepositoryTest {
             id = UUID.randomUUID(),
             time = endTime,
             merchant = "Costco",
-            type = PurchaseType.Fuel,
+            type = PurchaseType.Gas,
             total = 200.0f,
             creditCardId = UUID.randomUUID()
         )
