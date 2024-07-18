@@ -34,7 +34,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.hilt.navigation.compose.hiltViewModel
+import java.util.Locale
 
 
 @Composable
@@ -51,10 +53,10 @@ fun HomeScreen(navController: NavController,
         verticalArrangement = Arrangement.Top
     ) {
 
-        RewardsSummary(userName = "Sophie Chan", rewardsSummary = uiState.rewardsSummary)
+        RewardsSummary(months = uiState.selectedMonths, userName = "Sophie Chan", rewardsSummary = uiState.rewardsSummary)
 
         LabelSelectorBar(
-            labelItems = listOf("1 Month", "2 Month", "3 Month"),
+            labelItems = listOf("1 Month", "3 Month", "6 Month"),
             onLabelSelected = { months : Int ->
                 viewModel.setSelectedMonths(months)
             }
@@ -80,7 +82,7 @@ fun HomeScreen(navController: NavController,
 
 
 @Composable
-fun RewardsSummary(userName: String, rewardsSummary: List<RewardsSummaryItem>) {
+fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSummaryItem>) {
     val maxData = rewardsSummary.maxOfOrNull { it.amount } ?: 1
 
     Column(
@@ -106,7 +108,7 @@ fun RewardsSummary(userName: String, rewardsSummary: List<RewardsSummaryItem>) {
     }
     Column(
         modifier = Modifier
-            .fillMaxHeight(0.5f),
+            .fillMaxHeight(0.45f),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -118,25 +120,45 @@ fun RewardsSummary(userName: String, rewardsSummary: List<RewardsSummaryItem>) {
             verticalAlignment = Alignment.Bottom
         ) {
             rewardsSummary.forEach { item ->
-                Bar(month = item.month.toString(), value = item.amount, maxValue = maxData)
+                Bar(month = item.month, value = item.amount, maxValue = maxData.toFloat(), totalBars = months)
             }
         }
     }
 }
 
 @Composable
-fun Bar(month: String, value: Int, maxValue: Int) {
-    val barHeightFraction = value.toFloat() / maxValue.toFloat()
+fun Bar(
+    month: String,
+    value: Float,
+    maxValue: Float,
+    totalBars: Int
+) {
+    val barWidth = when (totalBars) {
+        3 -> 100.dp
+        6 -> 50.dp
+        else -> 100.dp
+    }
+
+    val spacingBetweenBars = when (totalBars) {
+        3 -> 4.dp
+        6 -> 2.dp
+        else -> 4.dp
+    }
+
+    val barHeightFraction = 0.15 + (value / maxValue) * 0.85
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier
+            .fillMaxHeight()
+            .onGloballyPositioned {
+            }
     ) {
         Box(
             modifier = Modifier
-                .widthIn(min = 90.dp, max = 100.dp)
-                .fillMaxHeight(fraction = barHeightFraction)
+                .width(barWidth)
+                .fillMaxHeight(fraction = barHeightFraction.toFloat())
                 .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
         ) {
             Column(
@@ -147,11 +169,11 @@ fun Bar(month: String, value: Int, maxValue: Int) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "+$$value",
-                    fontSize = 16.sp,
+                    text = String.format(Locale.CANADA, "+$%.2f", value),
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier.padding(top = 4.dp)
                 )
                 Text(
                     text = month,
@@ -162,6 +184,7 @@ fun Bar(month: String, value: Int, maxValue: Int) {
                 )
             }
         }
+        Spacer(modifier = Modifier.height(spacingBetweenBars))
     }
 }
 
@@ -260,7 +283,7 @@ fun CardBox(label: String, onClick: () -> Unit) {
     ) {
         Box(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(12.dp)
                 .heightIn(min = 80.dp, max = 80.dp)
         ) {
             Text(
