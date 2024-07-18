@@ -1,5 +1,6 @@
 package edu.card.clarity.data
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
@@ -25,8 +26,9 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         PurchaseEntity::class,
         PredefinedCreditCardIdEntity::class
     ],
-    version = 2,
-    exportSchema = false
+    version = 3,
+    autoMigrations = [AutoMigration(2, 3)],
+    exportSchema = true
 )
 abstract class Database : RoomDatabase() {
     abstract fun pointSystem(): PointSystemDao

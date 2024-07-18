@@ -25,7 +25,10 @@ object DatabaseModule {
             context.applicationContext,
             Database::class.java,
             name = "card_clarity_db"
-        ).addMigrations(Database.MIGRATION_1_2).build()
+        )
+            .createFromAsset("database/predefined_credit_cards.db")
+            .addMigrations(Database.MIGRATION_1_2)
+            .build()
     }
 
     @Provides
