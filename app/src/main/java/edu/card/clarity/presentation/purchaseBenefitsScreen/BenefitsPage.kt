@@ -1,11 +1,10 @@
-
 package edu.card.clarity.presentation.purchaseBenefitsScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,18 +27,20 @@ fun BenefitsScreen(navController: NavController, category: String, viewModel: Be
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(horizontal = 32.dp, vertical = 40.dp),
+            .padding(horizontal = 16.dp, vertical = 20.dp),
     ) {
         Text(
             text = "Benefits for $category",
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            color = Color.Black
+            fontSize = 24.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(vertical = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        LazyColumn {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
             items(creditCards) { card ->
                 CreditCardItem(card)
             }
@@ -49,21 +50,33 @@ fun BenefitsScreen(navController: NavController, category: String, viewModel: Be
 
 @Composable
 fun CreditCardItem(card: CreditCardItemUiState) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text(
-            text = "Card: ${card.name}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Color.Black
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        card.rewards.forEach { reward ->
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+        ) {
             Text(
-                text = "Benefit: ${reward.purchaseType} - ${reward.percentage}%",
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                color = Color.Black
+                text = card.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.primary
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            card.rewards.forEach { reward ->
+                Text(
+                    text = "${reward.purchaseType} - ${reward.percentage}%",
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+            }
         }
     }
 }
