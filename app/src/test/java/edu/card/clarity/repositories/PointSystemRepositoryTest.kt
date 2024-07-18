@@ -159,7 +159,8 @@ class PointSystemRepositoryTest {
             rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val creditCardId2 = UUID.randomUUID()
         val creditCardInfoEntity2 = CreditCardInfoEntity(
@@ -168,7 +169,8 @@ class PointSystemRepositoryTest {
             rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
-            paymentDueDate = Calendar.getInstance()
+            paymentDueDate = Calendar.getInstance(),
+            isReminderEnabled = true
         )
         val pointSystemEntity = PointSystemEntity(
             id = pointSystemId,

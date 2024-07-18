@@ -46,7 +46,8 @@ class PointBackCreditCardTest {
             rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
-            paymentDueDate = paymentDueDate
+            paymentDueDate = paymentDueDate,
+            isReminderEnabled = true,
         )
 
         val purchaseRewards = listOf(
@@ -94,7 +95,8 @@ class PointBackCreditCardTest {
             rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
-            paymentDueDate = paymentDueDate
+            paymentDueDate = paymentDueDate,
+            isReminderEnabled = true,
         )
 
         val purchaseRewards = listOf(

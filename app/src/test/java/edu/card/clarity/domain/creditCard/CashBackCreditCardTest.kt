@@ -45,7 +45,8 @@ class CashBackCreditCardTest {
             rewardType = RewardType.CashBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
-            paymentDueDate = paymentDueDate
+            paymentDueDate = paymentDueDate,
+            isReminderEnabled = true,
         )
 
         val purchaseRewards = listOf(

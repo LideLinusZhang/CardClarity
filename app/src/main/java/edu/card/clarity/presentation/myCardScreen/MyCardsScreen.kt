@@ -1,7 +1,10 @@
 package edu.card.clarity.presentation.myCardScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -59,13 +62,21 @@ fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
                 onSelectedChanged = viewModel::updateCardNetworkFilter
             )
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn {
+            LazyColumn (
+                contentPadding = PaddingValues(bottom = 45.dp)
+            ){
                 items(creditCardItemUiStates.size) { index ->
                     CreditCardItem(
                         cardName = creditCardItemUiStates[index].cardName,
                         dueDate = creditCardItemUiStates[index].dueDate,
                         backgroundColor = creditCardItemUiStates[index].backgroundColor,
-                        onReceiptButtonClick = {}
+                        isReminderEnabled = creditCardItemUiStates[index].isReminderEnabled,
+                        onReceiptButtonClick = {},
+                        onDeleteButtonClick = {
+                            viewModel.deleteCreditCard(
+                                creditCardItemUiStates[index].id
+                            )
+                        },
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
