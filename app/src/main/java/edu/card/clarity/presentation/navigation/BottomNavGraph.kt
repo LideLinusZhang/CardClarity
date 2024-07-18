@@ -2,14 +2,18 @@ package edu.card.clarity.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.HomeScreen
-import edu.card.clarity.presentation.MyBenefitsScreen
+import edu.card.clarity.presentation.MyReceiptsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
 import edu.card.clarity.presentation.PurchaseScreen
 import edu.card.clarity.presentation.UpcomingPaymentsScreen
+import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
+import java.util.UUID
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
@@ -23,17 +27,29 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomNavBar.AddCard.route) {
             AddCardScreen(navController)
         }
-        composable(route = BottomNavBar.MyBenefits.route) {
-            MyBenefitsScreen()
+        composable(route = BottomNavBar.MyReceipts.route) {
+            MyReceiptsScreen()
         }
         composable(route = BottomNavBar.Purchase.route) {
             PurchaseScreen()
         }
         composable("myCards") {
-            MyCardsScreen()
+            MyCardsScreen(navController)
         }
         composable("upcomingPayments") {
             UpcomingPaymentsScreen()
+        }
+        composable(
+            route = "myBenefits/{cardName}/{cardId}",
+            arguments = listOf(
+                navArgument("cardName") { type = NavType.StringType },
+                navArgument("cardId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cardName = backStackEntry.arguments?.getString("cardName") ?: ""
+            val cardIdString = backStackEntry.arguments?.getString("cardId") ?: ""
+            val cardId = cardIdString.takeIf { it.isNotEmpty() }?.let { UUID.fromString(it) }
+            MyBenefitsScreen(cardName = cardName, cardId = cardId)
         }
     }
 }

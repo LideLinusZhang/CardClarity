@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.presentation.common.ChipFilter
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
@@ -32,7 +34,7 @@ data class CardInfo(
 )
 
 @Composable
-fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
+fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenViewModel = hiltViewModel()) {
     val creditCardItemUiStates by viewModel.uiState.collectAsStateWithLifecycle()
 
     CardClarityTheme {
@@ -66,12 +68,16 @@ fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
                 contentPadding = PaddingValues(bottom = 45.dp)
             ){
                 items(creditCardItemUiStates.size) { index ->
+                    val item = creditCardItemUiStates[index]
                     CreditCardItem(
-                        cardName = creditCardItemUiStates[index].cardName,
-                        dueDate = creditCardItemUiStates[index].dueDate,
-                        backgroundColor = creditCardItemUiStates[index].backgroundColor,
-                        isReminderEnabled = creditCardItemUiStates[index].isReminderEnabled,
-                        onReceiptButtonClick = {},
+                        cardId = item.id,
+                        cardName = item.cardName,
+                        dueDate = item.dueDate,
+                        backgroundColor = item.backgroundColor,
+                        isReminderEnabled = item.isReminderEnabled,
+                        onBenefitButtonClick = { cardName, cardId ->
+                            navController.navigate("myBenefits/$cardName/$cardId")
+                        },
                         onDeleteButtonClick = {
                             viewModel.deleteCreditCard(
                                 creditCardItemUiStates[index].id
@@ -88,5 +94,5 @@ fun MyCardsScreen(viewModel: MyCardsScreenViewModel = hiltViewModel()) {
 @Composable
 @Preview
 fun MyCardsScreenPreview() {
-    MyCardsScreen()
+    MyCardsScreen(navController = rememberNavController())
 }

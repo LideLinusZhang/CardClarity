@@ -33,14 +33,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.UUID
 
 @Composable
 fun CreditCardItem(
+    cardId: UUID?,
     cardName: String,
     dueDate: String,
     backgroundColor: Color,
     isReminderEnabled: Boolean,
-    onReceiptButtonClick: () -> Unit,
+    onBenefitButtonClick: (String, UUID?) -> Unit,
     onDeleteButtonClick: () -> Unit
 ) {
     Card(
@@ -70,7 +72,7 @@ fun CreditCardItem(
                     Spacer(modifier = Modifier.height(8.dp))
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
-                        onClick = onReceiptButtonClick,
+                        onClick = { onBenefitButtonClick(cardName, cardId) },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             contentColor = Color.Black
@@ -80,7 +82,7 @@ fun CreditCardItem(
                             .align(Alignment.Start)
                             .padding(bottom = 4.dp)
                     ) {
-                        Text(text = "Receipts")
+                        Text(text = "My Benefits")
                     }
                 }
             }

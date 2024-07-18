@@ -22,9 +22,9 @@ sealed class BottomNavBar (
         title = "Add Card",
         icon = Icons.Default.AddCircle
     )
-    data object MyBenefits: BottomNavBar(
-        route = "Benefits",
-        title = "Benefits",
+    data object MyReceipts: BottomNavBar(
+        route = "Receipts",
+        title = "Receipts",
         icon = Icons.Default.Star
     )
     data object Purchase: BottomNavBar(
