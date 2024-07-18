@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "7969a0a8268df05602a29211a7acf275",
+    "identityHash": "adc9d9f55be21bc120dffb003fc42b5a",
     "entities": [
       {
         "tableName": "pointSystem",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "creditCardInfo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL DEFAULT 1, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -80,7 +80,8 @@
             "fieldPath": "isReminderEnabled",
             "columnName": "isReminderEnabled",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": true,
+            "defaultValue": "1"
           }
         ],
         "primaryKey": {
@@ -330,54 +331,12 @@
             ]
           }
         ]
-      },
-      {
-        "tableName": "predefinedCreditCardId",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`creditCardId` BLOB NOT NULL, PRIMARY KEY(`creditCardId`), FOREIGN KEY(`creditCardId`) REFERENCES `creditCardInfo`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
-        "fields": [
-          {
-            "fieldPath": "creditCardId",
-            "columnName": "creditCardId",
-            "affinity": "BLOB",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "creditCardId"
-          ]
-        },
-        "indices": [
-          {
-            "name": "index_predefinedCreditCardId_creditCardId",
-            "unique": true,
-            "columnNames": [
-              "creditCardId"
-            ],
-            "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_predefinedCreditCardId_creditCardId` ON `${TABLE_NAME}` (`creditCardId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "creditCardInfo",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "creditCardId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7969a0a8268df05602a29211a7acf275')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'adc9d9f55be21bc120dffb003fc42b5a')"
     ]
   }
 }

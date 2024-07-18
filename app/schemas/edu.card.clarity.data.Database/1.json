@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "f4b4029157a56be8ba279a6e4116010d",
+    "version": 1,
+    "identityHash": "11a2319bb409a780cff7373cdaa7ca9c",
     "entities": [
       {
         "tableName": "pointSystem",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "creditCardInfo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL DEFAULT 1, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -75,13 +75,6 @@
             "columnName": "paymentDueDate",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "isReminderEnabled",
-            "columnName": "isReminderEnabled",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "1"
           }
         ],
         "primaryKey": {
@@ -331,38 +324,12 @@
             ]
           }
         ]
-      },
-      {
-        "tableName": "placeTypeToPurchaseTypeMapping",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`placeType` TEXT NOT NULL, `purchaseType` TEXT NOT NULL, PRIMARY KEY(`placeType`))",
-        "fields": [
-          {
-            "fieldPath": "placeType",
-            "columnName": "placeType",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "purchaseType",
-            "columnName": "purchaseType",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "placeType"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f4b4029157a56be8ba279a6e4116010d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '11a2319bb409a780cff7373cdaa7ca9c')"
     ]
   }
 }

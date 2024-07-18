@@ -11,6 +11,7 @@ import edu.card.clarity.data.Database
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import javax.inject.Singleton
@@ -27,7 +28,6 @@ object DatabaseModule {
             name = "card_clarity_db"
         )
             .createFromAsset("database/predefined_credit_cards.db")
-            .addMigrations(Database.MIGRATION_1_2)
             .build()
     }
 
@@ -49,4 +49,8 @@ object DatabaseModule {
 
     @Provides
     fun providePurchaseDao(database: Database): PurchaseDao = database.purchase()
+
+    @Provides
+    fun providePlaceTypeToPurchaseTypeDao(database: Database): PlaceTypeToPurchaseTypeMappingDao =
+        database.placeTypeToPurchaseTypeMapping()
 }

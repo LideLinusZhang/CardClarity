@@ -52,7 +52,7 @@ class PointBackCreditCardTest {
 
         val purchaseRewards = listOf(
             PurchaseReward(PurchaseType.Groceries, 2.0f),
-            PurchaseReward(PurchaseType.Fuel, 3.0f)
+            PurchaseReward(PurchaseType.Gas, 3.0f)
         )
 
         val pointSystem = PointSystem(
@@ -101,7 +101,7 @@ class PointBackCreditCardTest {
 
         val purchaseRewards = listOf(
             PurchaseReward(PurchaseType.Groceries, 2.0f),
-            PurchaseReward(PurchaseType.Fuel, 3.0f)
+            PurchaseReward(PurchaseType.Gas, 3.0f)
         )
 
         val pointSystem = PointSystem(

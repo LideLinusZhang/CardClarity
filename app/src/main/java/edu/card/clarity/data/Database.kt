@@ -3,8 +3,6 @@ package edu.card.clarity.data
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.creditCard.PredefinedCreditCardIdEntity
@@ -12,6 +10,8 @@ import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairE
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingEntity
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchase.PurchaseEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
@@ -24,10 +24,16 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         PurchaseRewardEntity::class,
         CreditCardIdPointSystemIdPairEntity::class,
         PurchaseEntity::class,
+        PlaceTypeToPurchaseTypeMappingEntity::class,
         PredefinedCreditCardIdEntity::class
     ],
-    version = 3,
-    autoMigrations = [AutoMigration(2, 3)],
+    version = 5,
+    autoMigrations = [
+        AutoMigration(1, 2),
+        AutoMigration(2, 3),
+        AutoMigration(3, 4),
+        AutoMigration(4, 5)
+    ],
     exportSchema = true
 )
 abstract class Database : RoomDatabase() {
@@ -38,12 +44,5 @@ abstract class Database : RoomDatabase() {
     abstract fun purchaseReward(): PurchaseRewardDao
 
     abstract fun purchase(): PurchaseDao
-
-    companion object {
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE creditCardInfo ADD COLUMN isReminderEnabled INTEGER NOT NULL DEFAULT 0")
-            }
-        }
-    }
+    abstract fun placeTypeToPurchaseTypeMapping(): PlaceTypeToPurchaseTypeMappingDao
 }
