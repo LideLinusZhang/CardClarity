@@ -27,7 +27,7 @@ fun BenefitsScreen(navController: NavController, category: String, viewModel: Be
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(horizontal = 16.dp, vertical = 20.dp),
+            .padding(horizontal = 16.dp, vertical = 20.dp)
     ) {
         Text(
             text = "Benefits for $category",
@@ -43,6 +43,17 @@ fun BenefitsScreen(navController: NavController, category: String, viewModel: Be
         ) {
             items(creditCards) { card ->
                 CreditCardItem(card)
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { /* Navigate to record receipt screen */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Text(text = "Record a Receipt")
+                }
             }
         }
     }

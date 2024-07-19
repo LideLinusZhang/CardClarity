@@ -22,16 +22,27 @@ class BenefitsPageViewModel @Inject constructor(
     val creditCards: StateFlow<List<CreditCardItemUiState>> = _creditCards
 
     init {
-        fetchCreditCards()
+        val category = savedStateHandle.get<String>("category") ?: ""
+        fetchCreditCards(category)
     }
 
-    private fun fetchCreditCards() {
+    private fun fetchCreditCards(category: String) {
         viewModelScope.launch {
             cashBackCreditCardRepository.getAllCreditCardsStream().collect { cards ->
-                cards.forEach { card ->
-                    Log.d("BenefitsPageViewModel", "Fetched card: $card")
-                }
-                _creditCards.value = cards.map { it.toUiState() }
+                val filteredCards = cards.map { card ->
+                    card.toUiState().copy(
+                        rewards = card.purchaseRewards.filter { reward ->
+                            reward.applicablePurchaseType.toString().equals(category, ignoreCase = true)
+                        }.map { reward ->
+                            RewardUiState(
+                                purchaseType = reward.applicablePurchaseType.toString(),
+                                percentage = reward.rewardFactor * 100
+                            )
+                        }
+                    )
+                }.filter { it.rewards.isNotEmpty() }
+
+                _creditCards.value = filteredCards
             }
         }
     }
