@@ -2,12 +2,17 @@ package edu.card.clarity.repositories.creditCard
 
 import android.icu.util.Calendar
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardEntity
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCard
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
+import edu.card.clarity.data.creditCard.pointBack.CreditCardPointSystemAssociation
+import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
+import edu.card.clarity.data.pointSystem.PointSystemDao
+import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
-import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
@@ -33,11 +38,13 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import java.util.UUID
 
-class CashBackCreditCardRepositoryTest {
+class PointBackUserAddedCreditCardRepositoryTest {
 
     private lateinit var creditCardDao: CreditCardDao
     private lateinit var purchaseRewardDao: PurchaseRewardDao
-    private lateinit var cashBackCreditCardRepository: CashBackCreditCardRepository
+    private lateinit var pointSystemAssociationDao: PointBackCardPointSystemAssociationDao
+    private lateinit var pointSystemDao: PointSystemDao
+    private lateinit var pointBackCreditCardRepository: PointBackCreditCardRepository
 
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher)
@@ -49,9 +56,13 @@ class CashBackCreditCardRepositoryTest {
     fun setUp() {
         creditCardDao = mock(CreditCardDao::class.java)
         purchaseRewardDao = mock(PurchaseRewardDao::class.java)
-        cashBackCreditCardRepository = CashBackCreditCardRepository(
+        pointSystemAssociationDao = mock(PointBackCardPointSystemAssociationDao::class.java)
+        pointSystemDao = mock(PointSystemDao::class.java)
+        pointBackCreditCardRepository = PointBackCreditCardRepository(
             creditCardDao,
             purchaseRewardDao,
+            pointSystemDao,
+            pointSystemAssociationDao,
             testDispatcher
         )
         mockedStaticCalendar.`when`<Calendar> { Calendar.getInstance() }.thenReturn(mockCalendar)
@@ -66,18 +77,18 @@ class CashBackCreditCardRepositoryTest {
     fun addPurchaseReward() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
         val purchaseTypes = listOf(PurchaseType.Groceries)
-        val percentage = 0.05f
+        val multiplier = 2.0f
 
-        `when`(creditCardDao.getRewardTypeById(creditCardId)).thenReturn(RewardType.CashBack)
+        `when`(creditCardDao.getRewardTypeById(creditCardId)).thenReturn(RewardType.PointBack)
 
-        cashBackCreditCardRepository.addPurchaseReward(creditCardId, purchaseTypes, percentage)
+        pointBackCreditCardRepository.addPurchaseReward(creditCardId, purchaseTypes, multiplier)
 
         verify(purchaseRewardDao, times(1)).upsert(
             PurchaseRewardEntity(
                 creditCardId = creditCardId,
                 purchaseType = PurchaseType.Groceries,
-                rewardType = RewardType.CashBack,
-                factor = percentage
+                rewardType = RewardType.PointBack,
+                factor = multiplier
             )
         )
     }
@@ -86,19 +97,19 @@ class CashBackCreditCardRepositoryTest {
     fun updatePurchaseReward() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
 
-        val spyRepository = spy(cashBackCreditCardRepository)
+        val spyRepository = spy(pointBackCreditCardRepository)
         doReturn(Unit).`when`(spyRepository).addPurchaseReward(
             any(),
             any(),
             any()
         )
 
-        spyRepository.updatePurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 0.05f)
+        spyRepository.updatePurchaseReward(creditCardId, listOf(PurchaseType.Groceries), 2.0f)
 
         verify(spyRepository, times(1)).addPurchaseReward(
             creditCardId,
             listOf(PurchaseType.Groceries),
-            0.05f
+            2.0f
         )
     }
 
@@ -107,9 +118,9 @@ class CashBackCreditCardRepositoryTest {
         val creditCardId = UUID.randomUUID()
         val purchaseTypes = listOf(PurchaseType.Groceries)
 
-        `when`(creditCardDao.getRewardTypeById(creditCardId)).thenReturn(RewardType.CashBack)
+        `when`(creditCardDao.getRewardTypeById(creditCardId)).thenReturn(RewardType.PointBack)
 
-        cashBackCreditCardRepository.removePurchaseReward(creditCardId, purchaseTypes)
+        pointBackCreditCardRepository.removePurchaseReward(creditCardId, purchaseTypes)
 
         verify(purchaseRewardDao, times(1)).delete(creditCardId, PurchaseType.Groceries)
     }
@@ -123,27 +134,27 @@ class CashBackCreditCardRepositoryTest {
         val creditCardInfo = CreditCardInfo(
             id = creditCardId,
             name = "Test Card",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
             paymentDueDate = paymentDueDate,
             isReminderEnabled = true
         )
 
-        val creditCardInfoEntity = CreditCardInfoEntity(
+        val creditCardInfoEntity = edu.card.clarity.data.creditCard.CreditCardInfo(
             id = creditCardId,
             name = "Test Card",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = statementDate,
             paymentDueDate = paymentDueDate,
             isReminderEnabled = true
         )
 
-        `when`(creditCardDao.getRewardTypeById(creditCardInfo.id!!)).thenReturn(RewardType.CashBack)
+        `when`(creditCardDao.getRewardTypeById(creditCardInfo.id!!)).thenReturn(RewardType.PointBack)
         `when`(creditCardDao.getInfoById(creditCardInfo.id!!)).thenReturn(creditCardInfoEntity)
 
-        cashBackCreditCardRepository.updateCreditCardInfo(creditCardInfo)
+        pointBackCreditCardRepository.updateCreditCardInfo(creditCardInfo)
 
         verify(creditCardDao, times(1)).upsert(creditCardInfoEntity)
     }
@@ -151,10 +162,11 @@ class CashBackCreditCardRepositoryTest {
     @Test
     fun getCreditCard() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
-        val creditCardInfoEntity = CreditCardInfoEntity(
+        val pointSystemId = UUID.randomUUID()
+        val creditCardInfoEntity = UserAddedCreditCardInfo(
             id = creditCardId,
             name = "Test Card",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
@@ -163,31 +175,46 @@ class CashBackCreditCardRepositoryTest {
         val purchaseRewardEntity = PurchaseRewardEntity(
             creditCardId = creditCardId,
             purchaseType = PurchaseType.Groceries,
-            rewardType = RewardType.CashBack,
-            factor = 0.05f
+            rewardType = RewardType.PointBack,
+            factor = 2.0f
+        )
+        val pointSystemEntity = PointSystemEntity(
+            id = pointSystemId,
+            name = "Test Point System",
+            pointToCashConversionRate = 0.01f
         )
 
         `when`(creditCardDao.getById(creditCardId)).thenReturn(
-            CreditCardEntity(
+            UserAddedCreditCard(
                 creditCardInfo = creditCardInfoEntity,
                 purchaseRewards = listOf(purchaseRewardEntity)
             )
         )
+        `when`(pointSystemAssociationDao.getByCreditCardId(creditCardId)).thenReturn(
+            CreditCardPointSystemAssociation(
+                idPair = CreditCardIdPointSystemIdPairEntity(
+                    creditCardId = creditCardId,
+                    pointSystemId = pointSystemId
+                ),
+                pointSystem = pointSystemEntity
+            )
+        )
 
-        val result = cashBackCreditCardRepository.getCreditCard(creditCardId)
+        val result = pointBackCreditCardRepository.getCreditCard(creditCardId)
 
         assertNotNull(result)
-        assertTrue(result is CashBackCreditCard)
+        assertTrue(result is PointBackCreditCard)
         assertEquals("Test Card", result!!.info.name)
+        assertEquals("Test Point System", result.pointSystem.name)
     }
 
     @Test
     fun getCreditCardInfo() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
-        val creditCardInfoEntity = CreditCardInfoEntity(
+        val creditCardInfoEntity = edu.card.clarity.data.creditCard.CreditCardInfo(
             id = creditCardId,
             name = "Test Card",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
@@ -196,20 +223,19 @@ class CashBackCreditCardRepositoryTest {
 
         `when`(creditCardDao.getInfoById(creditCardId)).thenReturn(creditCardInfoEntity)
 
-        val result = cashBackCreditCardRepository.getCreditCardInfo(creditCardId)
+        val result = pointBackCreditCardRepository.getCreditCardInfo(creditCardId)
 
         assertNotNull(result)
         assertTrue(result is CreditCardInfo)
         assertEquals("Test Card", result!!.name)
     }
 
-
     @Test
     fun getAllCreditCards() = testScope.runTest {
-        val creditCardInfoEntity1 = CreditCardInfoEntity(
+        val creditCardInfoEntity1 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 1",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
@@ -218,14 +244,19 @@ class CashBackCreditCardRepositoryTest {
         val purchaseRewardEntity1 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity1.id,
             purchaseType = PurchaseType.Groceries,
-            rewardType = RewardType.CashBack,
-            factor = 0.05f
+            rewardType = RewardType.PointBack,
+            factor = 2.0f
+        )
+        val pointSystemEntity1 = PointSystemEntity(
+            id = UUID.randomUUID(),
+            name = "Test Point System 1",
+            pointToCashConversionRate = 0.01f
         )
 
-        val creditCardInfoEntity2 = CreditCardInfoEntity(
+        val creditCardInfoEntity2 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 2",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
@@ -234,24 +265,48 @@ class CashBackCreditCardRepositoryTest {
         val purchaseRewardEntity2 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity2.id,
             purchaseType = PurchaseType.Groceries,
-            rewardType = RewardType.CashBack,
-            factor = 0.05f
+            rewardType = RewardType.PointBack,
+            factor = 2.0f
+        )
+        val pointSystemEntity2 = PointSystemEntity(
+            id = UUID.randomUUID(),
+            name = "Test Point System 2",
+            pointToCashConversionRate = 0.01f
         )
 
-        `when`(creditCardDao.getAllOf(RewardType.CashBack)).thenReturn(
+        `when`(creditCardDao.getAllOf(RewardType.PointBack)).thenReturn(
             listOf(
-                CreditCardEntity(
+                UserAddedCreditCard(
                     creditCardInfo = creditCardInfoEntity1,
                     purchaseRewards = listOf(purchaseRewardEntity1)
                 ),
-                CreditCardEntity(
+                UserAddedCreditCard(
                     creditCardInfo = creditCardInfoEntity2,
                     purchaseRewards = listOf(purchaseRewardEntity2)
                 )
             )
         )
 
-        val result = cashBackCreditCardRepository.getAllCreditCards()
+        `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity1.id)).thenReturn(
+            CreditCardPointSystemAssociation(
+                idPair = CreditCardIdPointSystemIdPairEntity(
+                    creditCardId = creditCardInfoEntity1.id,
+                    pointSystemId = pointSystemEntity1.id
+                ),
+                pointSystem = pointSystemEntity1
+            )
+        )
+        `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity2.id)).thenReturn(
+            CreditCardPointSystemAssociation(
+                idPair = CreditCardIdPointSystemIdPairEntity(
+                    creditCardId = creditCardInfoEntity2.id,
+                    pointSystemId = pointSystemEntity2.id
+                ),
+                pointSystem = pointSystemEntity2
+            )
+        )
+
+        val result = pointBackCreditCardRepository.getAllCreditCards()
 
         assertNotNull(result)
         assertTrue(result.isNotEmpty())
@@ -262,31 +317,31 @@ class CashBackCreditCardRepositoryTest {
 
     @Test
     fun getAllCreditCardInfo() = testScope.runTest {
-        val creditCardInfoEntity1 = CreditCardInfoEntity(
+        val creditCardInfoEntity1 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 1",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
 
-        val creditCardInfoEntity2 = CreditCardInfoEntity(
+        val creditCardInfoEntity2 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 2",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
 
-        `when`(creditCardDao.getAllInfoOf(RewardType.CashBack)).thenReturn(
+        `when`(creditCardDao.getAllInfoOf(RewardType.PointBack)).thenReturn(
             listOf(creditCardInfoEntity1, creditCardInfoEntity2)
         )
 
-        val result = cashBackCreditCardRepository.getAllCreditCardInfo()
+        val result = pointBackCreditCardRepository.getAllCreditCardInfo()
 
         assertNotNull(result)
         assertTrue(result.isNotEmpty())
@@ -297,10 +352,10 @@ class CashBackCreditCardRepositoryTest {
 
     @Test
     fun getAllCreditCardsStream() = testScope.runTest {
-        val creditCardInfoEntity1 = CreditCardInfoEntity(
+        val creditCardInfoEntity1 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 1",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
@@ -309,14 +364,19 @@ class CashBackCreditCardRepositoryTest {
         val purchaseRewardEntity1 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity1.id,
             purchaseType = PurchaseType.Groceries,
-            rewardType = RewardType.CashBack,
-            factor = 0.05f
+            rewardType = RewardType.PointBack,
+            factor = 2.0f
+        )
+        val pointSystemEntity1 = PointSystemEntity(
+            id = UUID.randomUUID(),
+            name = "Test Point System 1",
+            pointToCashConversionRate = 0.01f
         )
 
-        val creditCardInfoEntity2 = CreditCardInfoEntity(
+        val creditCardInfoEntity2 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 2",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
@@ -325,26 +385,49 @@ class CashBackCreditCardRepositoryTest {
         val purchaseRewardEntity2 = PurchaseRewardEntity(
             creditCardId = creditCardInfoEntity2.id,
             purchaseType = PurchaseType.Groceries,
-            rewardType = RewardType.CashBack,
-            factor = 0.05f
+            rewardType = RewardType.PointBack,
+            factor = 2.0f
+        )
+        val pointSystemEntity2 = PointSystemEntity(
+            id = UUID.randomUUID(),
+            name = "Test Point System 2",
+            pointToCashConversionRate = 0.01f
         )
 
-        `when`(creditCardDao.observeAllOf(RewardType.CashBack)).thenReturn(
+        `when`(creditCardDao.observeAllOf(RewardType.PointBack)).thenReturn(
             flowOf(
                 listOf(
-                    CreditCardEntity(
+                    UserAddedCreditCard(
                         creditCardInfo = creditCardInfoEntity1,
                         purchaseRewards = listOf(purchaseRewardEntity1)
                     ),
-                    CreditCardEntity(
+                    UserAddedCreditCard(
                         creditCardInfo = creditCardInfoEntity2,
                         purchaseRewards = listOf(purchaseRewardEntity2)
                     )
                 )
             )
         )
+        `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity1.id)).thenReturn(
+            CreditCardPointSystemAssociation(
+                idPair = CreditCardIdPointSystemIdPairEntity(
+                    creditCardId = creditCardInfoEntity1.id,
+                    pointSystemId = pointSystemEntity1.id
+                ),
+                pointSystem = pointSystemEntity1
+            )
+        )
+        `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity2.id)).thenReturn(
+            CreditCardPointSystemAssociation(
+                idPair = CreditCardIdPointSystemIdPairEntity(
+                    creditCardId = creditCardInfoEntity2.id,
+                    pointSystemId = pointSystemEntity2.id
+                ),
+                pointSystem = pointSystemEntity2
+            )
+        )
 
-        val result = cashBackCreditCardRepository.getAllCreditCardsStream().first()
+        val result = pointBackCreditCardRepository.getAllCreditCardsStream().first()
 
         assertNotNull(result)
         assertTrue(result.isNotEmpty())
@@ -355,30 +438,30 @@ class CashBackCreditCardRepositoryTest {
 
     @Test
     fun getAllCreditCardInfoStream() = testScope.runTest {
-        val creditCardInfoEntity1 = CreditCardInfoEntity(
+        val creditCardInfoEntity1 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 1",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val creditCardInfoEntity2 = CreditCardInfoEntity(
+        val creditCardInfoEntity2 = UserAddedCreditCardInfo(
             id = UUID.randomUUID(),
             name = "Test Card 2",
-            rewardType = RewardType.CashBack,
+            rewardType = RewardType.PointBack,
             cardNetworkType = CardNetworkType.Visa,
             statementDate = Calendar.getInstance(),
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
 
-        `when`(creditCardDao.observeAllInfoOf(RewardType.CashBack)).thenReturn(
+        `when`(creditCardDao.observeAllInfoOf(RewardType.PointBack)).thenReturn(
             flowOf(listOf(creditCardInfoEntity1, creditCardInfoEntity2))
         )
 
-        val result = cashBackCreditCardRepository.getAllCreditCardInfoStream().first()
+        val result = pointBackCreditCardRepository.getAllCreditCardInfoStream().first()
 
         assertNotNull(result)
         assertTrue(result.isNotEmpty())
@@ -389,18 +472,18 @@ class CashBackCreditCardRepositoryTest {
 
     @Test
     fun deleteAllCreditCards() = testScope.runTest {
-        cashBackCreditCardRepository.deleteAllCreditCards()
+        pointBackCreditCardRepository.deleteAllCreditCards()
 
-        verify(creditCardDao, times(1)).deleteAllOf(RewardType.CashBack)
+        verify(creditCardDao, times(1)).deleteAllOf(RewardType.PointBack)
     }
 
     @Test
     fun deleteCreditCard() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
 
-        `when`(creditCardDao.getRewardTypeById(creditCardId)).thenReturn(RewardType.CashBack)
+        `when`(creditCardDao.getRewardTypeById(creditCardId)).thenReturn(RewardType.PointBack)
 
-        cashBackCreditCardRepository.deleteCreditCard(creditCardId)
+        pointBackCreditCardRepository.deleteCreditCard(creditCardId)
 
         verify(creditCardDao, times(1)).deleteById(creditCardId)
     }

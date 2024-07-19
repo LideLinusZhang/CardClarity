@@ -1,7 +1,6 @@
 package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
 import edu.card.clarity.domain.creditCard.CreditCardInfo
@@ -24,7 +23,7 @@ abstract class CreditCardRepositoryBase internal constructor(
             UUID.randomUUID()
         }
 
-        val cardInfoEntity = CreditCardInfoEntity(
+        val cardInfoEntity = edu.card.clarity.data.creditCard.CreditCardInfo(
             id,
             info.name,
             info.rewardType,

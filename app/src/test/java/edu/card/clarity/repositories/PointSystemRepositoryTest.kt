@@ -2,7 +2,7 @@ package edu.card.clarity.repositories
 
 import android.icu.util.Calendar
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.pointSystem.PointSystemWithCreditCardIds
@@ -153,7 +153,7 @@ class PointSystemRepositoryTest {
     fun getCreditCardsUsingPointSystem() = testScope.runTest {
         val pointSystemId = UUID.randomUUID()
         val creditCardId1 = UUID.randomUUID()
-        val creditCardInfoEntity1 = CreditCardInfoEntity(
+        val creditCardInfoEntity1 = CreditCardInfo(
             id = creditCardId1,
             name = "Test Card 1",
             rewardType = RewardType.PointBack,
@@ -163,7 +163,7 @@ class PointSystemRepositoryTest {
             isReminderEnabled = true
         )
         val creditCardId2 = UUID.randomUUID()
-        val creditCardInfoEntity2 = CreditCardInfoEntity(
+        val creditCardInfoEntity2 = CreditCardInfo(
             id = creditCardId2,
             name = "Test Card 2",
             rewardType = RewardType.PointBack,

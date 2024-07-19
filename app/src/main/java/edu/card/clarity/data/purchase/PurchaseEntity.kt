@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import edu.card.clarity.data.converters.DateConverter
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import java.util.Date
 import java.util.UUID
@@ -16,7 +16,7 @@ import java.util.UUID
     tableName = "purchase",
     foreignKeys = [
         ForeignKey(
-            entity = CreditCardInfoEntity::class,
+            entity = CreditCardInfo::class,
             parentColumns = ["id"],
             childColumns = ["creditCardId"]
         )

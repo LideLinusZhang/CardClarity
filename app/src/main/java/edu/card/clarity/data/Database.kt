@@ -4,10 +4,12 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
-import edu.card.clarity.data.creditCard.PredefinedCreditCardIdEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
+import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardId
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardInfo
+import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
@@ -20,20 +22,25 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
 @Database(
     entities = [
         PointSystemEntity::class,
-        CreditCardInfoEntity::class,
+        CreditCardInfo::class,
         PurchaseRewardEntity::class,
         CreditCardIdPointSystemIdPairEntity::class,
         PurchaseEntity::class,
         PlaceTypeToPurchaseTypeMappingEntity::class,
-        PredefinedCreditCardIdEntity::class
+        PredefinedCreditCardId::class
     ],
-    version = 6,
+    views = [
+        UserAddedCreditCardInfo::class,
+        PredefinedCreditCardInfo::class
+    ],
+    version = 7,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
         AutoMigration(3, 4),
         AutoMigration(4, 5),
-        AutoMigration(5, 6)
+        AutoMigration(5, 6),
+        AutoMigration(6, 7)
     ],
     exportSchema = true
 )

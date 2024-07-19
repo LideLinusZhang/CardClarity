@@ -16,7 +16,7 @@ import org.mockito.Mockito.mockStatic
 import java.util.Date
 import java.util.UUID
 
-class CashBackCreditCardTest {
+class CashBackUserAddedCreditCardTest {
 
     private val mockCalendar = mock(Calendar::class.java)
     private val mockedStaticCalendar: MockedStatic<Calendar> = mockStatic(Calendar::class.java)

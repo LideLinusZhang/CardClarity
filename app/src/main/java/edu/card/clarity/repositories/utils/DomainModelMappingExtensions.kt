@@ -1,6 +1,6 @@
 package edu.card.clarity.repositories.utils
 
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.ICreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchase.PurchaseEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
@@ -10,11 +10,11 @@ import edu.card.clarity.domain.PurchaseReward
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 
 @JvmName("creditCardInfoEntityToDomainModel")
-internal fun List<CreditCardInfoEntity>.toDomainModel() = map(
-    CreditCardInfoEntity::toDomainModel
+internal fun List<ICreditCardInfo>.toDomainModel() = map(
+    ICreditCardInfo::toDomainModel
 )
 
-internal fun CreditCardInfoEntity.toDomainModel() = CreditCardInfo(
+internal fun ICreditCardInfo.toDomainModel() = CreditCardInfo(
     id = id,
     name = name,
     rewardType = rewardType,

@@ -3,7 +3,7 @@ package edu.card.clarity.data.creditCard.pointBack
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import java.util.UUID
 
@@ -12,7 +12,7 @@ import java.util.UUID
     primaryKeys = ["creditCardId", "pointSystemId"],
     foreignKeys = [
         ForeignKey(
-            entity = CreditCardInfoEntity::class,
+            entity = CreditCardInfo::class,
             parentColumns = ["id"],
             childColumns = ["creditCardId"],
             onDelete = ForeignKey.CASCADE

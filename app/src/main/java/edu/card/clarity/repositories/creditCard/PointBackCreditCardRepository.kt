@@ -1,7 +1,7 @@
 package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardEntity
+import edu.card.clarity.data.creditCard.ICreditCard
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
@@ -187,7 +187,7 @@ class PointBackCreditCardRepository @Inject constructor(
     }
 
     private companion object {
-        private fun CreditCardEntity.toDomainModel(
+        private fun ICreditCard.toDomainModel(
             pointSystemEntity: PointSystemEntity
         ) = PointBackCreditCard(
             this.creditCardInfo.toDomainModel(),
