@@ -53,6 +53,10 @@ interface ICreditCardRepository {
     suspend fun getAllCreditCardInfo(): List<CreditCardInfo>
 
     /**
+     * Get a credit card's information and its associated purchase rewards by its ID as a stream.
+     */
+    fun getCreditCardStream(id: UUID): Flow<ICreditCard>
+    /**
      * Get all credit cards' information and their associated purchase rewards as a stream.
      */
     fun getAllCreditCardsStream(): Flow<List<ICreditCard>>

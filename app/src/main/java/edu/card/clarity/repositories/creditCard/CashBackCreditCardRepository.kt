@@ -6,13 +6,13 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
-import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.repositories.utils.toDomainModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
@@ -92,7 +92,7 @@ class CashBackCreditCardRepository @Inject constructor(
         }
     }
 
-    override suspend fun getAllPredefinedCreditCards(): List<ICreditCard> {
+    override suspend fun getAllPredefinedCreditCards(): List<CashBackCreditCard> {
         return creditCardDataSource.getAllPredefinedOf(RewardType.CashBack).map {
             it.toDomainModel().removeId()
         }
@@ -100,6 +100,14 @@ class CashBackCreditCardRepository @Inject constructor(
 
     override suspend fun getAllCreditCardInfo(): List<CreditCardInfo> {
         return super.getAllCreditCardInfoOf(RewardType.CashBack)
+    }
+
+    override fun getCreditCardStream(id: UUID): Flow<CashBackCreditCard> {
+        return creditCardDataSource.observeById(id).mapNotNull {
+            if (it.creditCardInfo.rewardType == RewardType.CashBack) {
+                it.toDomainModel()
+            } else null
+        }
     }
 
     override fun getAllCreditCardsStream(): Flow<List<CashBackCreditCard>> {
@@ -110,7 +118,7 @@ class CashBackCreditCardRepository @Inject constructor(
         }
     }
 
-    override fun getAllPredefinedCreditCardsStream(): Flow<List<ICreditCard>> {
+    override fun getAllPredefinedCreditCardsStream(): Flow<List<CashBackCreditCard>> {
         return creditCardDataSource.observeAllPredefinedOf(RewardType.CashBack).map {
             withContext(dispatcher) {
                 it.map { it.toDomainModel().removeId() }
