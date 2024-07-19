@@ -3,6 +3,7 @@ package edu.card.clarity.presentation.myBenefitsScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -52,8 +53,7 @@ fun MyBenefitsScreen(navController: NavHostController, viewModel: MyBenefitsScre
             LazyColumn(
                 contentPadding = PaddingValues(bottom = 45.dp)
             ) {
-                items(benefitItemUiStates.size) { index ->
-                    val item = benefitItemUiStates[index]
+                items(benefitItemUiStates) { item ->
                     BenefitItem(
                         purchaseType = item.purchaseType,
                         benefit = item.benefit

@@ -70,13 +70,11 @@ class MyBenefitsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val cardRewardType = getCardRewardType(cardId)
             if (cardRewardType == "CashBack") {
-                val card = cashBackCreditCardRepository.getCreditCard(cardId)
-                card?.let {
-                    val existingRewards = it.purchaseRewards.toMutableList()
-                    existingRewards.add(PurchaseReward(purchaseType, rewardValue))
-                    cashBackCreditCardRepository.addPurchaseReward(cardId, listOf(purchaseType), rewardValue)
-                    loadBenefits(cardId)
-                }
+                cashBackCreditCardRepository.addPurchaseReward(cardId, listOf(purchaseType), rewardValue)
+                val updatedBenefits = _benefitItems.value.toMutableList()
+                updatedBenefits.add(BenefitInfo(purchaseType.name, "${(rewardValue * 100).toInt()}% cashback"))
+                _benefitItems.value = updatedBenefits
+                Log.d("MyBenefitsScreenVM", "New benefit added: ${purchaseType.name} - ${(rewardValue * 100).toInt()}% cashback")
             }
         }
     }
