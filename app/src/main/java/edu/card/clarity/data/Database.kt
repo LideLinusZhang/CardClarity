@@ -27,12 +27,13 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
         PlaceTypeToPurchaseTypeMappingEntity::class,
         PredefinedCreditCardIdEntity::class
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
         AutoMigration(3, 4),
-        AutoMigration(4, 5)
+        AutoMigration(4, 5),
+        AutoMigration(5, 6)
     ],
     exportSchema = true
 )
