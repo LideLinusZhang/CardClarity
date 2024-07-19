@@ -29,6 +29,5 @@ data class CreditCardInfo(
     override val cardNetworkType: CardNetworkType,
     override val statementDate: Calendar,
     override val paymentDueDate: Calendar,
-    @ColumnInfo(defaultValue = "0")
     override val isReminderEnabled: Boolean,
 ): ICreditCardInfo
