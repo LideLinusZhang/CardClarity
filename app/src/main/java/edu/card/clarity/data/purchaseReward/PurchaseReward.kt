@@ -23,7 +23,7 @@ import java.util.UUID
         Index("creditCardId"),
     ]
 )
-data class PurchaseRewardEntity(
+data class PurchaseReward(
     val creditCardId: UUID,
     val purchaseType: PurchaseType,
     val rewardType: RewardType,

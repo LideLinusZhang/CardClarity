@@ -4,8 +4,8 @@ import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.ICreditCard
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CreditCardInfo
@@ -188,11 +188,11 @@ class PointBackCreditCardRepository @Inject constructor(
 
     private companion object {
         private fun ICreditCard.toDomainModel(
-            pointSystemEntity: PointSystemEntity
+            pointSystem: PointSystem
         ) = PointBackCreditCard(
             this.creditCardInfo.toDomainModel(),
             this.purchaseRewards.toDomainModel(),
-            pointSystemEntity.toDomainModel()
+            pointSystem.toDomainModel()
         )
 
         private fun PointBackCreditCard.removeId(): PointBackCreditCard = this.copy(

@@ -6,27 +6,27 @@ import androidx.room.RoomDatabase
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardId
-import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardInfo
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
-import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingEntity
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMapping
 import edu.card.clarity.data.purchase.PurchaseDao
-import edu.card.clarity.data.purchase.PurchaseEntity
+import edu.card.clarity.data.purchase.Purchase
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 
 @Database(
     entities = [
-        PointSystemEntity::class,
+        PointSystem::class,
         CreditCardInfo::class,
-        PurchaseRewardEntity::class,
-        CreditCardIdPointSystemIdPairEntity::class,
-        PurchaseEntity::class,
-        PlaceTypeToPurchaseTypeMappingEntity::class,
+        PurchaseReward::class,
+        CreditCardIdPointSystemIdPair::class,
+        Purchase::class,
+        PlaceTypeToPurchaseTypeMapping::class,
         PredefinedCreditCardId::class
     ],
     views = [

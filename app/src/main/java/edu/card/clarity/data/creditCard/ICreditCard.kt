@@ -1,6 +1,6 @@
 package edu.card.clarity.data.creditCard
 
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 
 /**
  * A database interface that mirrors [edu.card.clarity.domain.creditCard.ICreditCard],
@@ -8,5 +8,5 @@ import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
  */
 interface ICreditCard {
     val creditCardInfo: ICreditCardInfo
-    val purchaseRewards: List<PurchaseRewardEntity>
+    val purchaseRewards: List<PurchaseReward>
 }

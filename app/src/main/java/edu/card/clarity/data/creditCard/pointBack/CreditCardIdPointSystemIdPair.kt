@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import edu.card.clarity.data.creditCard.CreditCardInfo
-import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.pointSystem.PointSystem
 import java.util.UUID
 
 @Entity(
@@ -18,7 +18,7 @@ import java.util.UUID
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = PointSystemEntity::class,
+            entity = PointSystem::class,
             parentColumns = ["id"],
             childColumns = ["pointSystemId"],
             onDelete = ForeignKey.CASCADE
@@ -29,7 +29,7 @@ import java.util.UUID
         Index("pointSystemId", unique = true)
     ]
 )
-data class CreditCardIdPointSystemIdPairEntity(
+data class CreditCardIdPointSystemIdPair(
     val creditCardId: UUID,
     val pointSystemId: UUID,
 )

@@ -2,7 +2,7 @@ package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
@@ -47,7 +47,7 @@ abstract class CreditCardRepositoryBase internal constructor(
         withContext(dispatcher) {
             for (purchaseType in purchaseTypes) {
                 purchaseRewardDataSource.upsert(
-                    PurchaseRewardEntity(
+                    PurchaseReward(
                         creditCardId = creditCardId,
                         purchaseType = purchaseType,
                         rewardType = rewardType,

@@ -3,14 +3,14 @@ package edu.card.clarity.repositories.creditCard
 import android.icu.util.Calendar
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCard
-import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.CreditCardPointSystemAssociation
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
+import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.CardNetworkType
@@ -84,7 +84,7 @@ class PointBackUserAddedCreditCardRepositoryTest {
         pointBackCreditCardRepository.addPurchaseReward(creditCardId, purchaseTypes, multiplier)
 
         verify(purchaseRewardDao, times(1)).upsert(
-            PurchaseRewardEntity(
+            PurchaseReward(
                 creditCardId = creditCardId,
                 purchaseType = PurchaseType.Groceries,
                 rewardType = RewardType.PointBack,
@@ -172,13 +172,13 @@ class PointBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity = PurchaseRewardEntity(
+        val purchaseReward = PurchaseReward(
             creditCardId = creditCardId,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.PointBack,
             factor = 2.0f
         )
-        val pointSystemEntity = PointSystemEntity(
+        val pointSystem = PointSystem(
             id = pointSystemId,
             name = "Test Point System",
             pointToCashConversionRate = 0.01f
@@ -187,16 +187,16 @@ class PointBackUserAddedCreditCardRepositoryTest {
         `when`(creditCardDao.getById(creditCardId)).thenReturn(
             UserAddedCreditCard(
                 creditCardInfo = creditCardInfoEntity,
-                purchaseRewards = listOf(purchaseRewardEntity)
+                purchaseRewards = listOf(purchaseReward)
             )
         )
         `when`(pointSystemAssociationDao.getByCreditCardId(creditCardId)).thenReturn(
             CreditCardPointSystemAssociation(
-                idPair = CreditCardIdPointSystemIdPairEntity(
+                idPair = CreditCardIdPointSystemIdPair(
                     creditCardId = creditCardId,
                     pointSystemId = pointSystemId
                 ),
-                pointSystem = pointSystemEntity
+                pointSystem = pointSystem
             )
         )
 
@@ -241,13 +241,13 @@ class PointBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity1 = PurchaseRewardEntity(
+        val purchaseReward1 = PurchaseReward(
             creditCardId = creditCardInfoEntity1.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.PointBack,
             factor = 2.0f
         )
-        val pointSystemEntity1 = PointSystemEntity(
+        val pointSystem1 = PointSystem(
             id = UUID.randomUUID(),
             name = "Test Point System 1",
             pointToCashConversionRate = 0.01f
@@ -262,13 +262,13 @@ class PointBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity2 = PurchaseRewardEntity(
+        val purchaseReward2 = PurchaseReward(
             creditCardId = creditCardInfoEntity2.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.PointBack,
             factor = 2.0f
         )
-        val pointSystemEntity2 = PointSystemEntity(
+        val pointSystem2 = PointSystem(
             id = UUID.randomUUID(),
             name = "Test Point System 2",
             pointToCashConversionRate = 0.01f
@@ -278,31 +278,31 @@ class PointBackUserAddedCreditCardRepositoryTest {
             listOf(
                 UserAddedCreditCard(
                     creditCardInfo = creditCardInfoEntity1,
-                    purchaseRewards = listOf(purchaseRewardEntity1)
+                    purchaseRewards = listOf(purchaseReward1)
                 ),
                 UserAddedCreditCard(
                     creditCardInfo = creditCardInfoEntity2,
-                    purchaseRewards = listOf(purchaseRewardEntity2)
+                    purchaseRewards = listOf(purchaseReward2)
                 )
             )
         )
 
         `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity1.id)).thenReturn(
             CreditCardPointSystemAssociation(
-                idPair = CreditCardIdPointSystemIdPairEntity(
+                idPair = CreditCardIdPointSystemIdPair(
                     creditCardId = creditCardInfoEntity1.id,
-                    pointSystemId = pointSystemEntity1.id
+                    pointSystemId = pointSystem1.id
                 ),
-                pointSystem = pointSystemEntity1
+                pointSystem = pointSystem1
             )
         )
         `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity2.id)).thenReturn(
             CreditCardPointSystemAssociation(
-                idPair = CreditCardIdPointSystemIdPairEntity(
+                idPair = CreditCardIdPointSystemIdPair(
                     creditCardId = creditCardInfoEntity2.id,
-                    pointSystemId = pointSystemEntity2.id
+                    pointSystemId = pointSystem2.id
                 ),
-                pointSystem = pointSystemEntity2
+                pointSystem = pointSystem2
             )
         )
 
@@ -361,13 +361,13 @@ class PointBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity1 = PurchaseRewardEntity(
+        val purchaseReward1 = PurchaseReward(
             creditCardId = creditCardInfoEntity1.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.PointBack,
             factor = 2.0f
         )
-        val pointSystemEntity1 = PointSystemEntity(
+        val pointSystem1 = PointSystem(
             id = UUID.randomUUID(),
             name = "Test Point System 1",
             pointToCashConversionRate = 0.01f
@@ -382,13 +382,13 @@ class PointBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity2 = PurchaseRewardEntity(
+        val purchaseReward2 = PurchaseReward(
             creditCardId = creditCardInfoEntity2.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.PointBack,
             factor = 2.0f
         )
-        val pointSystemEntity2 = PointSystemEntity(
+        val pointSystem2 = PointSystem(
             id = UUID.randomUUID(),
             name = "Test Point System 2",
             pointToCashConversionRate = 0.01f
@@ -399,31 +399,31 @@ class PointBackUserAddedCreditCardRepositoryTest {
                 listOf(
                     UserAddedCreditCard(
                         creditCardInfo = creditCardInfoEntity1,
-                        purchaseRewards = listOf(purchaseRewardEntity1)
+                        purchaseRewards = listOf(purchaseReward1)
                     ),
                     UserAddedCreditCard(
                         creditCardInfo = creditCardInfoEntity2,
-                        purchaseRewards = listOf(purchaseRewardEntity2)
+                        purchaseRewards = listOf(purchaseReward2)
                     )
                 )
             )
         )
         `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity1.id)).thenReturn(
             CreditCardPointSystemAssociation(
-                idPair = CreditCardIdPointSystemIdPairEntity(
+                idPair = CreditCardIdPointSystemIdPair(
                     creditCardId = creditCardInfoEntity1.id,
-                    pointSystemId = pointSystemEntity1.id
+                    pointSystemId = pointSystem1.id
                 ),
-                pointSystem = pointSystemEntity1
+                pointSystem = pointSystem1
             )
         )
         `when`(pointSystemAssociationDao.getByCreditCardId(creditCardInfoEntity2.id)).thenReturn(
             CreditCardPointSystemAssociation(
-                idPair = CreditCardIdPointSystemIdPairEntity(
+                idPair = CreditCardIdPointSystemIdPair(
                     creditCardId = creditCardInfoEntity2.id,
-                    pointSystemId = pointSystemEntity2.id
+                    pointSystemId = pointSystem2.id
                 ),
-                pointSystem = pointSystemEntity2
+                pointSystem = pointSystem2
             )
         )
 

@@ -5,7 +5,7 @@ import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCard
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
@@ -73,7 +73,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
         cashBackCreditCardRepository.addPurchaseReward(creditCardId, purchaseTypes, percentage)
 
         verify(purchaseRewardDao, times(1)).upsert(
-            PurchaseRewardEntity(
+            PurchaseReward(
                 creditCardId = creditCardId,
                 purchaseType = PurchaseType.Groceries,
                 rewardType = RewardType.CashBack,
@@ -160,7 +160,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity = PurchaseRewardEntity(
+        val purchaseReward = PurchaseReward(
             creditCardId = creditCardId,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.CashBack,
@@ -170,7 +170,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
         `when`(creditCardDao.getById(creditCardId)).thenReturn(
             UserAddedCreditCard(
                 creditCardInfo = creditCardInfoEntity,
-                purchaseRewards = listOf(purchaseRewardEntity)
+                purchaseRewards = listOf(purchaseReward)
             )
         )
 
@@ -215,7 +215,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity1 = PurchaseRewardEntity(
+        val purchaseReward1 = PurchaseReward(
             creditCardId = creditCardInfoEntity1.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.CashBack,
@@ -231,7 +231,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity2 = PurchaseRewardEntity(
+        val purchaseReward2 = PurchaseReward(
             creditCardId = creditCardInfoEntity2.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.CashBack,
@@ -242,11 +242,11 @@ class CashBackUserAddedCreditCardRepositoryTest {
             listOf(
                 UserAddedCreditCard(
                     creditCardInfo = creditCardInfoEntity1,
-                    purchaseRewards = listOf(purchaseRewardEntity1)
+                    purchaseRewards = listOf(purchaseReward1)
                 ),
                 UserAddedCreditCard(
                     creditCardInfo = creditCardInfoEntity2,
-                    purchaseRewards = listOf(purchaseRewardEntity2)
+                    purchaseRewards = listOf(purchaseReward2)
                 )
             )
         )
@@ -306,7 +306,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity1 = PurchaseRewardEntity(
+        val purchaseReward1 = PurchaseReward(
             creditCardId = creditCardInfoEntity1.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.CashBack,
@@ -322,7 +322,7 @@ class CashBackUserAddedCreditCardRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val purchaseRewardEntity2 = PurchaseRewardEntity(
+        val purchaseReward2 = PurchaseReward(
             creditCardId = creditCardInfoEntity2.id,
             purchaseType = PurchaseType.Groceries,
             rewardType = RewardType.CashBack,
@@ -334,11 +334,11 @@ class CashBackUserAddedCreditCardRepositoryTest {
                 listOf(
                     UserAddedCreditCard(
                         creditCardInfo = creditCardInfoEntity1,
-                        purchaseRewards = listOf(purchaseRewardEntity1)
+                        purchaseRewards = listOf(purchaseReward1)
                     ),
                     UserAddedCreditCard(
                         creditCardInfo = creditCardInfoEntity2,
-                        purchaseRewards = listOf(purchaseRewardEntity2)
+                        purchaseRewards = listOf(purchaseReward2)
                     )
                 )
             )

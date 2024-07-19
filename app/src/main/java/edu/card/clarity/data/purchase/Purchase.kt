@@ -27,7 +27,7 @@ import java.util.UUID
     ]
 )
 @TypeConverters(DateConverter::class)
-data class PurchaseEntity(
+data class Purchase(
     @PrimaryKey val id: UUID,
     val time: Date,
     val merchant: String,

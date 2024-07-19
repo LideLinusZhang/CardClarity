@@ -3,7 +3,7 @@ package edu.card.clarity.data.creditCard.predefined
 import androidx.room.Embedded
 import androidx.room.Relation
 import edu.card.clarity.data.creditCard.ICreditCard
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 
 data class PredefinedCreditCard(
     @Embedded override val creditCardInfo: PredefinedCreditCardInfo,
@@ -11,5 +11,5 @@ data class PredefinedCreditCard(
         parentColumn = "id",
         entityColumn = "creditCardId"
     )
-    override val purchaseRewards: List<PurchaseRewardEntity>
+    override val purchaseRewards: List<PurchaseReward>
 ): ICreditCard
