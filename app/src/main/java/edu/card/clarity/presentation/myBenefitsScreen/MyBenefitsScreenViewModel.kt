@@ -1,6 +1,7 @@
 package edu.card.clarity.presentation.myBenefitsScreen
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,12 +17,26 @@ import javax.inject.Inject
 @HiltViewModel
 class MyBenefitsScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _benefitItems = MutableStateFlow<List<BenefitInfo>>(emptyList())
     val benefitItems: StateFlow<List<BenefitInfo>> = _benefitItems
 
-    fun loadBenefits(cardId: UUID?) {
+    val cardId: UUID? = savedStateHandle.get<String>("cardId")?.let { UUID.fromString(it) }
+    val cardName: String? = savedStateHandle["cardName"]
+
+    var cardRewardType: String? = null
+        private set
+
+    init {
+        loadBenefits(cardId)
+        viewModelScope.launch {
+            cardRewardType = getCardRewardType(cardId)
+        }
+    }
+
+    private fun loadBenefits(cardId: UUID?) {
         if (cardId == null) {
             _benefitItems.value = emptyList()
             Log.d("MyBenefitsScreenVM", "No cardId provided, setting empty benefit items.")
@@ -29,12 +44,9 @@ class MyBenefitsScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val card = cashBackCreditCardRepository.getCreditCard(cardId)
-            if (card != null) {
+            cashBackCreditCardRepository.getCreditCardStream(cardId).collect { card ->
                 Log.d("MyBenefitsScreenVM", "Card fetched purchaseRewards: ${card.purchaseRewards}")
-            }
-            card?.let {
-                val benefits = it.purchaseRewards.map { reward ->
+                val benefits = card.purchaseRewards.map { reward ->
                     BenefitInfo(
                         purchaseType = reward.applicablePurchaseType.name,
                         benefit = "${(reward.rewardFactor * 100).toInt()}% cashback"
@@ -42,8 +54,6 @@ class MyBenefitsScreenViewModel @Inject constructor(
                 }
                 _benefitItems.value = benefits
                 Log.d("MyBenefitsScreenVM", "Benefits loaded: $benefits")
-            } ?: run {
-                Log.d("MyBenefitsScreenVM", "No card found for cardId: $cardId")
             }
         }
     }

@@ -17,10 +17,9 @@ import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
-import java.util.UUID
 
 @Composable
-fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewModel: MyBenefitsScreenViewModel = hiltViewModel()) {
+fun AddBenefitScreen(viewModel: MyBenefitsScreenViewModel = hiltViewModel()) {
     var selectedPurchaseTypeIndex by remember { mutableIntStateOf(0) }
     var percentage by remember { mutableStateOf("") }
     var multiplier by remember { mutableStateOf("") }
@@ -58,7 +57,7 @@ fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewMo
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = cardName.uppercase(),
+                        text = viewModel.cardName?.uppercase() ?: "",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = CardClarityTypography.bodyLarge.fontFamily,
@@ -66,7 +65,7 @@ fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewMo
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = rewardType,
+                        text = viewModel.cardRewardType ?: "",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         fontFamily = CardClarityTypography.bodyLarge.fontFamily,
@@ -87,7 +86,7 @@ fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewMo
             // Conditionally display input fields based on RewardType:
             // Cashback: percentage.
             // PointsBack: multiplier and points system.
-            if (rewardType.equals("Cashback", ignoreCase = true)) {
+            if (viewModel.cardRewardType.equals("Cashback", ignoreCase = true)) {
                 OutlinedTextField(
                     value = percentage,
                     onValueChange = {
@@ -108,7 +107,7 @@ fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewMo
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
-            } else if (rewardType.equals("PointBack", ignoreCase = true)) {
+            } else if (viewModel.cardRewardType.equals("PointBack", ignoreCase = true)) {
                 OutlinedTextField(
                     value = multiplier,
                     onValueChange = {
@@ -133,16 +132,16 @@ fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewMo
 
             Button(
                 onClick = {
-                    val rewardValue = if (rewardType.equals("Cashback", ignoreCase = true)) {
+                    val rewardValue = if (viewModel.cardRewardType.equals("Cashback", ignoreCase = true)) {
                         (percentage.toFloatOrNull() ?: 0f) / 100f
                     } else {
                         multiplier.toFloatOrNull() ?: 0f
                     }
-                    viewModel.addBenefit(cardId, PurchaseType.entries[selectedPurchaseTypeIndex], rewardValue)
+                    viewModel.addBenefit(viewModel.cardId, PurchaseType.entries[selectedPurchaseTypeIndex], rewardValue)
                 },
                 modifier = Modifier.padding(top = 16.dp),
-                enabled = (rewardType.equals("Cashback", ignoreCase = true) && isValidPercentage) ||
-                        (rewardType.equals("PointBack", ignoreCase = true) && isValidMultiplier)
+                enabled = (viewModel.cardRewardType.equals("Cashback", ignoreCase = true) && isValidPercentage) ||
+                        (viewModel.cardRewardType.equals("PointBack", ignoreCase = true) && isValidMultiplier)
             ) {
                 Text(text = "Add Benefit")
             }
@@ -153,5 +152,5 @@ fun AddBenefitScreen(cardName: String, rewardType: String, cardId: UUID?, viewMo
 @Composable
 @Preview
 fun AddBenefitScreenPreview() {
-    AddBenefitScreen(cardName = "CIBC Dividend", rewardType = "Cashback", cardId = null)
+    AddBenefitScreen()
 }

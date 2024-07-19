@@ -19,16 +19,11 @@ import edu.card.clarity.presentation.common.ChipFilter
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 @Composable
-fun MyBenefitsScreen(cardName: String, cardId: UUID?, navController: NavHostController, viewModel: MyBenefitsScreenViewModel = hiltViewModel()) {
+fun MyBenefitsScreen(navController: NavHostController, viewModel: MyBenefitsScreenViewModel = hiltViewModel()) {
     val benefitItemUiStates by viewModel.benefitItems.collectAsState()
     val scope = rememberCoroutineScope()
-
-    LaunchedEffect(cardId) {
-        viewModel.loadBenefits(cardId)
-    }
 
     val purchaseTypes = PurchaseType.entries.map { it.name }
 
@@ -41,7 +36,7 @@ fun MyBenefitsScreen(cardName: String, cardId: UUID?, navController: NavHostCont
         ) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "My Benefits for $cardName",
+                text = "My Benefits for ${viewModel.cardName}",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = CardClarityTypography.bodyLarge.fontFamily,
@@ -70,8 +65,8 @@ fun MyBenefitsScreen(cardName: String, cardId: UUID?, navController: NavHostCont
             OutlinedButton(
                 onClick = {
                     scope.launch {
-                        val rewardType = viewModel.getCardRewardType(cardId)
-                        navController.navigate("addBenefit/${cardName.uppercase()}/$rewardType/$cardId")
+                        val rewardType = viewModel.getCardRewardType(viewModel.cardId)
+                        navController.navigate("addBenefit/${viewModel.cardName?.uppercase()}/$rewardType/${viewModel.cardId}")
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -101,5 +96,5 @@ fun BenefitItem(purchaseType: String, benefit: String) {
 @Composable
 @Preview
 fun MyBenefitsScreenPreview() {
-    MyBenefitsScreen(cardName = "CIBC Dividend", cardId = null, navController = rememberNavController())
+    MyBenefitsScreen(navController = rememberNavController())
 }
