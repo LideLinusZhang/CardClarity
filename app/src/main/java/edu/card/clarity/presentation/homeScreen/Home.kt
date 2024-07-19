@@ -295,7 +295,7 @@ fun CardBox(label: String, onClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .padding(12.dp)
-                .heightIn(min = 80.dp, max = 80.dp)
+                .heightIn(min = 100.dp, max = 100.dp)
         ) {
             Text(
                 text = label,
