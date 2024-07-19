@@ -6,6 +6,6 @@ data class CardInformationFormUiState(
     val selectedCardNetworkType: String = "",
     val mostRecentStatementDate: String = "",
     val mostRecentPaymentDueDate: String = "",
-    val isReminderEnabled: Boolean = false
+    val isReminderEnabled: Boolean = true
 )
 

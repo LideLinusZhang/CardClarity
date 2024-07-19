@@ -20,8 +20,7 @@ import java.util.UUID
         )
     ],
     indices = [
-        Index("creditCardId", unique = true),
-        Index("rewardType", unique = false),
+        Index("creditCardId"),
     ]
 )
 data class PurchaseRewardEntity(
