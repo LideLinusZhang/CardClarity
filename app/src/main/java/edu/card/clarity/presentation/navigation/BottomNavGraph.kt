@@ -12,6 +12,7 @@ import edu.card.clarity.presentation.MyReceiptsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
 import edu.card.clarity.presentation.PurchaseScreen
 import edu.card.clarity.presentation.UpcomingPaymentsScreen
+import edu.card.clarity.presentation.myBenefitsScreen.AddBenefitScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import java.util.UUID
 
@@ -49,7 +50,21 @@ fun BottomNavGraph(navController: NavHostController) {
             val cardName = backStackEntry.arguments?.getString("cardName") ?: ""
             val cardIdString = backStackEntry.arguments?.getString("cardId") ?: ""
             val cardId = cardIdString.takeIf { it.isNotEmpty() }?.let { UUID.fromString(it) }
-            MyBenefitsScreen(cardName = cardName, cardId = cardId)
+            MyBenefitsScreen(cardName = cardName, cardId = cardId, navController)
+        }
+        composable(
+            route = "addBenefit/{cardName}/{rewardType}/{cardId}",
+            arguments = listOf(
+                navArgument("cardName") { type = NavType.StringType },
+                navArgument("rewardType") { type = NavType.StringType },
+                navArgument("cardId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cardName = backStackEntry.arguments?.getString("cardName") ?: ""
+            val rewardType = backStackEntry.arguments?.getString("rewardType") ?: ""
+            val cardIdString = backStackEntry.arguments?.getString("cardId") ?: ""
+            val cardId = cardIdString.takeIf { it.isNotEmpty() }?.let { UUID.fromString(it) }
+            AddBenefitScreen(cardName = cardName, rewardType = rewardType, cardId = cardId)
         }
     }
 }

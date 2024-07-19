@@ -12,15 +12,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.common.ChipFilter
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
-fun MyBenefitsScreen(cardName: String, cardId: UUID?, viewModel: MyBenefitsScreenViewModel = hiltViewModel()) {
+fun MyBenefitsScreen(cardName: String, cardId: UUID?, navController: NavHostController, viewModel: MyBenefitsScreenViewModel = hiltViewModel()) {
     val benefitItemUiStates by viewModel.benefitItems.collectAsState()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(cardId) {
         viewModel.loadBenefits(cardId)
@@ -64,7 +68,12 @@ fun MyBenefitsScreen(cardName: String, cardId: UUID?, viewModel: MyBenefitsScree
             }
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedButton(
-                onClick = { /* Handle add new benefit action */ },
+                onClick = {
+                    scope.launch {
+                        val rewardType = viewModel.getCardRewardType(cardId)
+                        navController.navigate("addBenefit/${cardName.uppercase()}/$rewardType/$cardId")
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Discovered a new benefit for this card? Add it here!")
@@ -92,5 +101,5 @@ fun BenefitItem(purchaseType: String, benefit: String) {
 @Composable
 @Preview
 fun MyBenefitsScreenPreview() {
-    MyBenefitsScreen(cardName = "CIBC Dividend", cardId = null)
+    MyBenefitsScreen(cardName = "CIBC Dividend", cardId = null, navController = rememberNavController())
 }
