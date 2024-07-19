@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 interface ICreditCardRepository {
-    suspend fun createCreditCard(info: CreditCardInfo): UUID
-
     suspend fun addPurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,

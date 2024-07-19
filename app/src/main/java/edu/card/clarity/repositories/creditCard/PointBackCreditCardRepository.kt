@@ -2,7 +2,9 @@ package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardEntity
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
@@ -24,10 +26,23 @@ import javax.inject.Singleton
 class PointBackCreditCardRepository @Inject constructor(
     creditCardDataSource: CreditCardDao,
     purchaseReturnDataSource: PurchaseRewardDao,
+    private val pointSystemDataSource: PointSystemDao,
     private val pointSystemAssociationDataSource: PointBackCardPointSystemAssociationDao,
     @DefaultDispatcher dispatcher: CoroutineDispatcher,
 ) : CreditCardRepositoryBase(creditCardDataSource, purchaseReturnDataSource, dispatcher),
     ICreditCardRepository {
+    suspend fun createCreditCard(info: CreditCardInfo, pointSystemId: UUID): UUID {
+        require(pointSystemDataSource.exist(pointSystemId))
+
+        val id = super.createCreditCard(info)
+
+        pointSystemAssociationDataSource.upsert(
+            CreditCardIdPointSystemIdPairEntity(id, pointSystemId)
+        )
+
+        return id
+    }
+
     override suspend fun addPurchaseReward(
         creditCardId: UUID,
         purchaseTypes: List<PurchaseType>,
