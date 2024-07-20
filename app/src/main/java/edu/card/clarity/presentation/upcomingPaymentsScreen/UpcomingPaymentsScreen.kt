@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import edu.card.clarity.presentation.myCardScreen.CardInfo
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 import java.time.LocalDate
@@ -39,6 +38,7 @@ fun UpcomingPaymentsScreen(viewModel: PaymentDueDateViewModel = viewModel()) {
         ) {
             Header()
             CalendarPager(cards)
+            PaymentLegend(cards)
             UpcomingPayment(cards)
         }
     }
