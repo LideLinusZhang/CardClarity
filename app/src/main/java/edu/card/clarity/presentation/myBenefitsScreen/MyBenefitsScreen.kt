@@ -37,7 +37,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyBenefitsScreen(
     creditCardName: String,
-    creditCardRewardType: RewardType,
     navController: NavHostController,
     viewModel: MyBenefitsScreenViewModel = hiltViewModel()
 ) {
@@ -83,7 +82,7 @@ fun MyBenefitsScreen(
             OutlinedButton(
                 onClick = {
                     scope.launch {
-                        navController.navigate("addBenefit/$creditCardName/$creditCardRewardType")
+                        navController.navigate("addBenefit/${viewModel.cardIdString}/$creditCardName/${viewModel.cardRewardTypeOrdinal}")
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -115,7 +114,6 @@ fun BenefitItem(purchaseType: String, benefit: String) {
 fun MyBenefitsScreenPreview() {
     MyBenefitsScreen(
         creditCardName = "AMEX Cobalt Card",
-        creditCardRewardType = RewardType.PointBack,
         navController = rememberNavController()
     )
 }

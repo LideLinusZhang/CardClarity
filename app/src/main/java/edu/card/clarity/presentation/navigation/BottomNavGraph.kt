@@ -41,7 +41,7 @@ fun BottomNavGraph(navController: NavHostController) {
             UpcomingPaymentsScreen()
         }
         composable(
-            route = "myBenefits/{cardId}/{cardName}/{creditRewardType}",
+            route = "myBenefits/{cardId}/{cardName}/{cardRewardType}",
             arguments = listOf(
                 navArgument("cardId") { type = NavType.StringType },
                 navArgument("cardName") { type = NavType.StringType },
@@ -50,24 +50,29 @@ fun BottomNavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val cardId = backStackEntry.arguments?.getString("cardId")!!
             val cardName = backStackEntry.arguments?.getString("cardName")!!
-            val cardRewardType = RewardType.entries[backStackEntry.arguments?.getInt("cardRewardType")!!]
+            val cardRewardTypeOrdinal = backStackEntry.arguments?.getInt("cardRewardType")!!
 
             navController.previousBackStackEntry?.savedStateHandle?.set("cardId", cardId)
-            navController.previousBackStackEntry?.savedStateHandle?.set("cardRewardType", cardRewardType)
+            navController.previousBackStackEntry?.savedStateHandle?.set("cardRewardType", cardRewardTypeOrdinal)
 
-            MyBenefitsScreen(cardName, cardRewardType, navController)
+            MyBenefitsScreen(cardName, navController)
         }
         composable(
-            route = "addBenefit/{cardName}/{cardRewardType}",
+            route = "addBenefit/{cardId}/{cardName}/{cardRewardType}",
             arguments = listOf(
+                navArgument("cardId") { type = NavType.StringType },
                 navArgument("cardName") { type = NavType.StringType },
                 navArgument("cardRewardType") { type = NavType.IntType },
             )
         ) { backStackEntry ->
+            val cardId = backStackEntry.arguments?.getString("cardId")!!
             val cardName = backStackEntry.arguments?.getString("cardName")!!
-            val cardRewardType = RewardType.entries[backStackEntry.arguments?.getInt("cardRewardType")!!]
+            val cardRewardTypeOrdinal = backStackEntry.arguments?.getInt("cardRewardType")!!
 
-            AddBenefitScreen(cardName, cardRewardType)
+            navController.previousBackStackEntry?.savedStateHandle?.set("cardId", cardId)
+            navController.previousBackStackEntry?.savedStateHandle?.set("cardRewardType", cardRewardTypeOrdinal)
+
+            AddBenefitScreen(cardName)
         }
     }
 }

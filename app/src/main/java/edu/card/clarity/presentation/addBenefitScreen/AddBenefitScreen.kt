@@ -33,10 +33,10 @@ import edu.card.clarity.ui.theme.CardClarityTypography
 @Composable
 fun AddBenefitScreen(
     creditCardName: String,
-    creditCardRewardType: RewardType,
     viewModel: AddBenefitScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val creditCardRewardType = viewModel.cardRewardType
 
     CardClarityTheme {
         Column(
@@ -99,7 +99,7 @@ fun AddBenefitScreen(
             // Cashback: percentage.
             // PointsBack: multiplier and points system.
             OutlinedTextField(
-                value = uiState.factor,
+                value = uiState.displayedFactor,
                 onValueChange = viewModel::updateFactor,
                 label = {
                     Text(
@@ -140,5 +140,5 @@ fun AddBenefitScreen(
 @Composable
 @Preview
 fun AddBenefitScreenPreview() {
-    AddBenefitScreen("AMEX Cobalt Card", RewardType.PointBack)
+    AddBenefitScreen("AMEX Cobalt Card")
 }

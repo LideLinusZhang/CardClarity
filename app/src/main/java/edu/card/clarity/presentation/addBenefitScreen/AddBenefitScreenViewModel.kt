@@ -21,20 +21,23 @@ class AddBenefitScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val cardId: UUID = savedStateHandle["cardId"]!!
-    private val cardRewardType: RewardType = savedStateHandle["cardRewardType"]!!
+    private val cardIdString: String = savedStateHandle["cardId"]!!
+    private val cardRewardTypeOrdinal: Int = savedStateHandle["cardRewardType"]!!
+
+    private val cardId: UUID = UUID.fromString(cardIdString)
+    val cardRewardType = RewardType.entries[cardRewardTypeOrdinal]
 
     val purchaseTypeOptionStrings = PurchaseType.entries.map { it.name }
 
     private var selectedPurchaseType: PurchaseType = PurchaseType.entries.first()
     private var isFactorValid: Boolean = true
-    private var factor: Float? = null
+    private var displayedFactor: Float? = null
 
     private val _uiState = MutableStateFlow(
         AddBenefitScreenUiState(
             selectedPurchaseType = purchaseTypeOptionStrings.first(),
             isFactorValid = true,
-            factor = ""
+            displayedFactor = ""
         )
     )
     val uiState: StateFlow<AddBenefitScreenUiState> = _uiState.asStateFlow()
@@ -48,13 +51,13 @@ class AddBenefitScreenViewModel @Inject constructor(
     }
 
     fun updateFactor(factorInString: String) {
-        factor = factorInString.toFloatOrNull()
+        displayedFactor = factorInString.toFloatOrNull()
         isFactorValid = when (cardRewardType) {
-            RewardType.CashBack -> factor?.let { percentage ->
+            RewardType.CashBack -> displayedFactor?.let { percentage ->
                 percentage > 0.0 && percentage <= 100.0
             } ?: false
 
-            RewardType.PointBack -> factor?.let { multiplier ->
+            RewardType.PointBack -> displayedFactor?.let { multiplier ->
                 multiplier >= 1.0
             } ?: false
         }
@@ -62,7 +65,7 @@ class AddBenefitScreenViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 isFactorValid = isFactorValid,
-                factor = factorInString
+                displayedFactor = factorInString
             )
         }
     }
@@ -73,11 +76,11 @@ class AddBenefitScreenViewModel @Inject constructor(
                 cashBackCreditCardRepository.addPurchaseReward(
                     cardId,
                     listOf(selectedPurchaseType),
-                    factor!!
+                    percentage = displayedFactor!! / 100.0f
                 )
                 Log.d(
                     "MyBenefitsScreenVM",
-                    "New benefit added: ${selectedPurchaseType.name} - ${(factor!! * 100).toInt()}% cashback"
+                    "New benefit added: ${selectedPurchaseType.name} - ${(displayedFactor!!).toInt()}% cashback"
                 )
             }
         }
