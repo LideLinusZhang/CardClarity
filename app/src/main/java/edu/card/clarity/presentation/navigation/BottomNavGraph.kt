@@ -42,7 +42,7 @@ fun BottomNavGraph(navController: NavHostController) {
             UpcomingPaymentsScreen()
         }
         composable(
-            route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
+            route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
             arguments = listOf(
                 navArgument(ArgumentNames.CREDIT_CARD_ID) { type = NavType.StringType },
                 navArgument(ArgumentNames.CREDIT_CARD_NAME) { type = NavType.StringType },
@@ -66,7 +66,7 @@ fun BottomNavGraph(navController: NavHostController) {
             MyBenefitsScreen(cardName, navController)
         }
         composable(
-            route = "${Destinations.ADD_BENEFIT}/{${ArgumentNames.CREDIT_CARD_ID}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
+            route = "${Destinations.ADD_BENEFIT}/{${ArgumentNames.CREDIT_CARD_ID}}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
             arguments = listOf(
                 navArgument(ArgumentNames.CREDIT_CARD_ID) { type = NavType.StringType },
                 navArgument(ArgumentNames.CREDIT_CARD_NAME) { type = NavType.StringType },
