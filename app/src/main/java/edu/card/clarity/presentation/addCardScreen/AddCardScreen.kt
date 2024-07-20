@@ -1,12 +1,9 @@
 package edu.card.clarity.presentation.addCardScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,14 +13,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.card.clarity.presentation.common.DropdownMenu
 
 @Composable
 fun AddCardScreen(navController: NavController) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var selectedTemplateIndex by remember { mutableIntStateOf(-1) }
+    val dummyTemplates = listOf(
+        Template("Template 1", "Visa", "Cash Back"),
+        Template("Template 2", "MasterCard", "Points Back"),
+        Template("Template 3", "Amex", "Points Back")
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(horizontal = 32.dp, vertical = 40.dp),
+            .padding(horizontal = 16.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
@@ -41,6 +47,48 @@ fun AddCardScreen(navController: NavController) {
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Tab(
+                selected = selectedTabIndex == 0,
+                onClick = { selectedTabIndex = 0 },
+                text = { Text("Use a Template") }
+            )
+            Tab(
+                selected = selectedTabIndex == 1,
+                onClick = { selectedTabIndex = 1 },
+                text = { Text("Add Custom Card") }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (selectedTabIndex == 0) {
+            Column {
+                DropdownMenu(
+                    label = "Credit Card",
+                    options = dummyTemplates.map { it.name },
+                    selectedOption = if (selectedTemplateIndex != -1) dummyTemplates[selectedTemplateIndex].name else "Select a template",
+                    onOptionSelected = { selectedTemplateIndex = it }
+                )
+                if (selectedTemplateIndex != -1) {
+                    val template = dummyTemplates[selectedTemplateIndex]
+                    UseTemplateCardInformationForm(template)
+                }
+            }
+        } else {
+            AddCustomCardContent(navController)
+        }
+    }
+}
+
+@Composable
+fun AddCustomCardContent(navController: NavController) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         CardInformationForm(navController)
     }
 }
@@ -51,3 +99,9 @@ fun AddCardScreenPreview() {
     val navController = rememberNavController()
     AddCardScreen(navController)
 }
+
+data class Template(
+    val name: String,
+    val cardNetwork: String,
+    val rewardType: String
+)

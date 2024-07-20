@@ -18,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,6 +81,13 @@ class MyCardsScreenViewModel @Inject constructor(
         }
     }
 
+    fun deleteCreditCard(id: UUID) {
+        viewModelScope.launch {
+            cashBackCreditCardRepository.deleteCreditCard(id)
+            pointBackCreditCardRepository.deleteCreditCard(id)
+        }
+    }
+
     companion object {
         private const val MY_CARDS_SCREEN_SAVED_FILTER_KEY: String = "MY_CARDS_SCREEN_SAVED_FILTER"
 
@@ -87,11 +96,13 @@ class MyCardsScreenViewModel @Inject constructor(
         private fun CreditCardInfo.toUiState() = CreditCardItemUiState(
             name,
             dateFormatter.format(paymentDueDate.timeInMillis),
+            isReminderEnabled,
             when (cardNetworkType) {
                 CardNetworkType.Visa -> Color(0xFFB7FF9E)
                 CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
                 CardNetworkType.AMEX -> Color(0xFFAED8FF)
-            }
+            },
+            id!!,
         )
     }
 }

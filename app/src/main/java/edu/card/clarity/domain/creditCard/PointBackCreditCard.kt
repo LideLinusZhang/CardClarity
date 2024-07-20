@@ -4,7 +4,7 @@ import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.PurchaseReward
 
-class PointBackCreditCard(
+data class PointBackCreditCard(
     override val info: CreditCardInfo,
     override val purchaseRewards: List<PurchaseReward>,
     val pointSystem: PointSystem
@@ -17,6 +17,6 @@ class PointBackCreditCard(
         val purchaseReturn =
             purchaseRewards.first { it.applicablePurchaseType == purchase.type }
 
-        return purchaseReturn.getReturnAmount(purchase).toInt()
+        return purchaseReturn.getReturnAmount(purchase.total).toInt()
     }
 }

@@ -12,6 +12,6 @@ data class CashBackCreditCard(
             it.applicablePurchaseType == purchase.type
         }
 
-        return purchaseReward.getReturnAmount(purchase)
+        return purchaseReward.getReturnAmount(purchase.total)
     }
 }
