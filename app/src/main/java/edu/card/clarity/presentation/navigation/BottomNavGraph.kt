@@ -6,7 +6,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.HomeScreen
 import edu.card.clarity.presentation.MyReceiptsScreen
 import edu.card.clarity.presentation.PurchaseScreen
@@ -15,62 +14,78 @@ import edu.card.clarity.presentation.addBenefitScreen.AddBenefitScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
+import edu.card.clarity.presentation.utils.ArgumentNames
+import edu.card.clarity.presentation.utils.Destinations
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavBar.Home.route
+        startDestination = Destinations.HOME
     ) {
-        composable(BottomNavBar.Home.route) {
+        composable(Destinations.HOME) {
             HomeScreen(navController)
         }
-        composable(route = BottomNavBar.AddCard.route) {
+        composable(Destinations.ADD_CARD) {
             AddCardScreen(navController)
         }
-        composable(route = BottomNavBar.MyReceipts.route) {
+        composable(Destinations.MY_RECEIPTS) {
             MyReceiptsScreen()
         }
-        composable(route = BottomNavBar.Purchase.route) {
+        composable(Destinations.PURCHASE) {
             PurchaseScreen()
         }
-        composable("myCards") {
+        composable(Destinations.MY_CARDS) {
             MyCardsScreen(navController)
         }
-        composable("upcomingPayments") {
+        composable(Destinations.UPCOMING_PAYMENTS) {
             UpcomingPaymentsScreen()
         }
         composable(
-            route = "myBenefits/{cardId}/{cardName}/{cardRewardType}",
+            route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
             arguments = listOf(
-                navArgument("cardId") { type = NavType.StringType },
-                navArgument("cardName") { type = NavType.StringType },
-                navArgument("cardRewardType") { type = NavType.IntType }
+                navArgument(ArgumentNames.CREDIT_CARD_ID) { type = NavType.StringType },
+                navArgument(ArgumentNames.CREDIT_CARD_NAME) { type = NavType.StringType },
+                navArgument(ArgumentNames.CREDIT_CARD_REWARD_TYPE) { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val cardId = backStackEntry.arguments?.getString("cardId")!!
-            val cardName = backStackEntry.arguments?.getString("cardName")!!
-            val cardRewardTypeOrdinal = backStackEntry.arguments?.getInt("cardRewardType")!!
+            val cardId = backStackEntry.arguments?.getString(ArgumentNames.CREDIT_CARD_ID)!!
+            val cardName = backStackEntry.arguments?.getString(ArgumentNames.CREDIT_CARD_NAME)!!
+            val cardRewardTypeOrdinal =
+                backStackEntry.arguments?.getInt(ArgumentNames.CREDIT_CARD_REWARD_TYPE)!!
 
-            navController.previousBackStackEntry?.savedStateHandle?.set("cardId", cardId)
-            navController.previousBackStackEntry?.savedStateHandle?.set("cardRewardType", cardRewardTypeOrdinal)
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+                ArgumentNames.CREDIT_CARD_ID,
+                cardId
+            )
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+                ArgumentNames.CREDIT_CARD_REWARD_TYPE,
+                cardRewardTypeOrdinal
+            )
 
             MyBenefitsScreen(cardName, navController)
         }
         composable(
-            route = "addBenefit/{cardId}/{cardName}/{cardRewardType}",
+            route = "${Destinations.ADD_BENEFIT}/{${ArgumentNames.CREDIT_CARD_ID}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
             arguments = listOf(
-                navArgument("cardId") { type = NavType.StringType },
-                navArgument("cardName") { type = NavType.StringType },
-                navArgument("cardRewardType") { type = NavType.IntType },
+                navArgument(ArgumentNames.CREDIT_CARD_ID) { type = NavType.StringType },
+                navArgument(ArgumentNames.CREDIT_CARD_NAME) { type = NavType.StringType },
+                navArgument(ArgumentNames.CREDIT_CARD_REWARD_TYPE) { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val cardId = backStackEntry.arguments?.getString("cardId")!!
-            val cardName = backStackEntry.arguments?.getString("cardName")!!
-            val cardRewardTypeOrdinal = backStackEntry.arguments?.getInt("cardRewardType")!!
+            val cardId = backStackEntry.arguments?.getString(ArgumentNames.CREDIT_CARD_ID)!!
+            val cardName = backStackEntry.arguments?.getString(ArgumentNames.CREDIT_CARD_NAME)!!
+            val cardRewardTypeOrdinal =
+                backStackEntry.arguments?.getInt(ArgumentNames.CREDIT_CARD_REWARD_TYPE)!!
 
-            navController.previousBackStackEntry?.savedStateHandle?.set("cardId", cardId)
-            navController.previousBackStackEntry?.savedStateHandle?.set("cardRewardType", cardRewardTypeOrdinal)
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+                ArgumentNames.CREDIT_CARD_ID,
+                cardId
+            )
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+                ArgumentNames.CREDIT_CARD_REWARD_TYPE,
+                cardRewardTypeOrdinal
+            )
 
             AddBenefitScreen(cardName)
         }

@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.presentation.common.ChipFilter
+import edu.card.clarity.presentation.utils.Destinations
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 
@@ -75,7 +76,7 @@ fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenView
                         backgroundColor = item.backgroundColor,
                         isReminderEnabled = item.isReminderEnabled,
                         onBenefitButtonClick = { cardId, cardName, cardRewardType ->
-                            navController.navigate("myBenefits/$cardId/$cardName/$cardRewardType")
+                            navController.navigate("${Destinations.MY_BENEFITS}/$cardId/$cardName/$cardRewardType")
                         },
                         onDeleteButtonClick = {
                             viewModel.deleteCreditCard(
