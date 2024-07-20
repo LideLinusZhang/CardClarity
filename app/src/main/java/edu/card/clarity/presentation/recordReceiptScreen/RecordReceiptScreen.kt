@@ -1,13 +1,14 @@
 package edu.card.clarity.presentation.recordReceiptScreen
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,11 +17,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.CardNetworkType
-
+import edu.card.clarity.presentation.common.TextField
+import edu.card.clarity.presentation.common.DropdownMenu
+import edu.card.clarity.presentation.common.DatePickerField
+import java.util.Calendar
 
 @Composable
 fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                viewModel.onDateChange("$year-${month + 1}-$dayOfMonth")
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
 
     CardClarityTheme {
         Column(
@@ -29,7 +47,6 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                 .background(Color.White)
                 .padding(20.dp)
         ) {
-
             Text(
                 text = "Record a Receipt",
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -48,43 +65,46 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                     Text("Detected information:")
                 }
                 item {
-                    OutlinedTextField(
-                        value = uiState.date,
-                        onValueChange = viewModel::onDateChange,
-                        label = { Text("Date") },
-                        modifier = Modifier.fillMaxWidth()
+                    DatePickerField(
+                        date = uiState.date,
+                        label = "Date",
+                        onClick = { datePickerDialog.show() }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    OutlinedTextField(
-                        value = uiState.totalAmount,
-                        onValueChange = viewModel::onTotalAmountChange,
-                        label = { Text("Total Amount") },
-                        modifier = Modifier.fillMaxWidth()
+                    TextField(
+                        label = "Total Amount",
+                        text = uiState.totalAmount,
+                        placeholderText = "Enter total amount",
+                        onTextChange = viewModel::onTotalAmountChange
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    OutlinedTextField(
-                        value = uiState.merchant,
-                        onValueChange = viewModel::onMerchantChange,
-                        label = { Text("Merchant") },
-                        modifier = Modifier.fillMaxWidth()
+                    TextField(
+                        label = "Merchant",
+                        text = uiState.merchant,
+                        placeholderText = "Enter merchant",
+                        onTextChange = viewModel::onMerchantChange
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    DropdownMenuCardSelector(
-                        selectedCard = uiState.selectedCard,
-                        onCardSelected = viewModel::onCardSelected
+                    DropdownMenu(
+                        label = "Card Type",
+                        options = CardNetworkType.entries.map { it.name },
+                        selectedOption = uiState.selectedCard,
+                        onOptionSelected = { viewModel.onCardSelected(CardNetworkType.entries[it].name) }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 item {
-                    DropdownMenuPurchaseType(
-                        selectedPurchaseType = uiState.selectedPurchaseType,
-                        onPurchaseTypeSelected = viewModel::onPurchaseTypeSelected
+                    DropdownMenu(
+                        label = "Purchase Type",
+                        options = PurchaseType.entries.map { it.name },
+                        selectedOption = uiState.selectedPurchaseType,
+                        onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -96,80 +116,6 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                         Text("Add Receipt")
                     }
                 }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DropdownMenuCardSelector(selectedCard: String, onCardSelected: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    val cardOptions = CardNetworkType.entries.map { it.name }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
-    ) {
-        OutlinedTextField(
-            value = selectedCard,
-            onValueChange = { },
-            readOnly = true,
-            label = { Text("Select Card") },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-            },
-            modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded }
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            cardOptions.forEach { card ->
-                DropdownMenuItem(
-                    text = { Text(card) },
-                    onClick = {
-                        onCardSelected(card)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DropdownMenuPurchaseType(selectedPurchaseType: String, onPurchaseTypeSelected: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    val purchaseTypes = PurchaseType.entries.map { it.name }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
-    ) {
-        OutlinedTextField(
-            value = selectedPurchaseType,
-            onValueChange = { },
-            readOnly = true,
-            label = { Text("Select Purchase Type") },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-            },
-            modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded }
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            purchaseTypes.forEach { type ->
-                DropdownMenuItem(
-                    text = { Text(type) },
-                    onClick = {
-                        onPurchaseTypeSelected(type)
-                        expanded = false
-                    }
-                )
             }
         }
     }
