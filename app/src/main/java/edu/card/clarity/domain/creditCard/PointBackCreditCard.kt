@@ -17,6 +17,6 @@ data class PointBackCreditCard(
         val purchaseReturn =
             purchaseRewards.first { it.applicablePurchaseType == purchase.type }
 
-        return purchaseReturn.getReturnAmount(purchase).toInt()
+        return purchaseReturn.getReturnAmount(purchase.total).toInt()
     }
 }
