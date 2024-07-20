@@ -19,7 +19,7 @@ class MyBenefitsScreenViewModel @Inject constructor(
     cashBackCreditCardRepository: CashBackCreditCardRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val cardId: UUID = savedStateHandle["cardId"]!!
+    private val cardId: UUID = UUID.fromString(savedStateHandle["cardId"]!!)
     private val cardRewardType: RewardType = savedStateHandle["cardRewardType"]!!
 
     val uiState: StateFlow<List<RewardInfo>> = cashBackCreditCardRepository
