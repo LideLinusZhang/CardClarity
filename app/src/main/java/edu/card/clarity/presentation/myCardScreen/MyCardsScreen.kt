@@ -1,8 +1,6 @@
 package edu.card.clarity.presentation.myCardScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -72,11 +70,12 @@ fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenView
                     CreditCardItem(
                         cardId = item.id,
                         cardName = item.cardName,
+                        creditCardRewardTypeOrdinal = item.rewardTypeOrdinal,
                         dueDate = item.dueDate,
                         backgroundColor = item.backgroundColor,
                         isReminderEnabled = item.isReminderEnabled,
-                        onBenefitButtonClick = { cardName, cardId ->
-                            navController.navigate("myBenefits/$cardName/$cardId")
+                        onBenefitButtonClick = { cardId, cardName, cardRewardType ->
+                            navController.navigate("myBenefits/$cardId/$cardName/$cardRewardType")
                         },
                         onDeleteButtonClick = {
                             viewModel.deleteCreditCard(

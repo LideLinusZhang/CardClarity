@@ -104,7 +104,7 @@ class CardInformationFormViewModel @Inject constructor(
         if (selectedRewardType == RewardType.CashBack) {
             cashBackCreditCardRepository.createCreditCard(creditCardInfo)
         } else {
-            pointBackCreditCardRepository.createCreditCard(creditCardInfo)
+            //pointBackCreditCardRepository.createCreditCard(creditCardInfo)
         }
 
         _uiState.update {

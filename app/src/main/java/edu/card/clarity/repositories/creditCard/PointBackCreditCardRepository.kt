@@ -34,13 +34,13 @@ class PointBackCreditCardRepository @Inject constructor(
     suspend fun createCreditCard(info: CreditCardInfo, pointSystemId: UUID): UUID {
         require(pointSystemDataSource.exist(pointSystemId))
 
-        val id = super.createCreditCard(info)
+        val creditCardId = super.createCreditCard(info)
 
         pointSystemAssociationDataSource.upsert(
-            CreditCardIdPointSystemIdPairEntity(id, pointSystemId)
+            CreditCardIdPointSystemIdPairEntity(creditCardId, pointSystemId)
         )
 
-        return id
+        return creditCardId
     }
 
     override suspend fun addPurchaseReward(

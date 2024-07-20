@@ -25,7 +25,8 @@ class CashBackCreditCardRepository @Inject constructor(
     @DefaultDispatcher dispatcher: CoroutineDispatcher,
 ) : CreditCardRepositoryBase(creditCardDataSource, purchaseReturnDataSource, dispatcher),
     ICreditCardRepository {
-    override suspend fun createCreditCard(info: CreditCardInfo): UUID = super.createCreditCard(info)
+    public override suspend fun createCreditCard(info: CreditCardInfo): UUID =
+        super.createCreditCard(info)
 
     override suspend fun addPurchaseReward(
         creditCardId: UUID,

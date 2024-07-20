@@ -37,12 +37,13 @@ import java.util.UUID
 
 @Composable
 fun CreditCardItem(
-    cardId: UUID?,
+    cardId: UUID,
     cardName: String,
+    creditCardRewardTypeOrdinal: Int,
     dueDate: String,
     backgroundColor: Color,
     isReminderEnabled: Boolean,
-    onBenefitButtonClick: (String, UUID?) -> Unit,
+    onBenefitButtonClick: (creditCardId: UUID, creditCardName: String, creditCardRewardTypeOrdinal: Int) -> Unit,
     onDeleteButtonClick: () -> Unit
 ) {
     Card(
@@ -72,7 +73,9 @@ fun CreditCardItem(
                     Spacer(modifier = Modifier.height(8.dp))
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
-                        onClick = { onBenefitButtonClick(cardName, cardId) },
+                        onClick = {
+                            onBenefitButtonClick(cardId, cardName, creditCardRewardTypeOrdinal)
+                        },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             contentColor = Color.Black

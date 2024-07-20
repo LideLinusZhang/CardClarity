@@ -1,6 +1,6 @@
 package edu.card.clarity.presentation.myBenefitsScreen
 
-data class BenefitInfo(
+data class RewardInfo(
     val purchaseType: String,
-    val benefit: String
+    val rewardDescription: String
 )
