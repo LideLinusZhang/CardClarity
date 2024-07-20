@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.enums.PurchaseType
+import edu.card.clarity.enums.CardNetworkType
 
 
 @Composable
@@ -104,7 +105,7 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
 @Composable
 fun DropdownMenuCardSelector(selectedCard: String, onCardSelected: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    val cardOptions = listOf("Visa", "MasterCard", "Amex") // Add more card options here
+    val cardOptions = CardNetworkType.entries.map { it.name }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
