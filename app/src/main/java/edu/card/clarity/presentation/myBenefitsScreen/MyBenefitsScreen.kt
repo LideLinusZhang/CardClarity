@@ -10,11 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,8 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.PurchaseType
-import edu.card.clarity.enums.RewardType
-import edu.card.clarity.presentation.common.ChipFilter
+import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.utils.Destinations
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
@@ -40,7 +41,8 @@ fun MyBenefitsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
 
-    val purchaseTypes = PurchaseType.entries.map { it.name }
+    val purchaseTypes = listOf("ALL") + PurchaseType.entries.map { it.name }
+    var selectedFilter by remember { mutableStateOf(purchaseTypes[0]) }
 
     CardClarityTheme {
         Column(
@@ -58,10 +60,14 @@ fun MyBenefitsScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            ChipFilter(
-                filterOptions = purchaseTypes,
-                initiallySelectedOptionIndices = listOf(0),
-                onSelectedChanged = { _, _ -> /* Handle filter change */ }
+            DropdownMenu(
+                label = "Filter by Your Purchase Type",
+                options = purchaseTypes,
+                selectedOption = selectedFilter,
+                onOptionSelected = { index ->
+                    selectedFilter = purchaseTypes[index]
+                    viewModel.updateFilter(selectedFilter)
+                }
             )
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(
