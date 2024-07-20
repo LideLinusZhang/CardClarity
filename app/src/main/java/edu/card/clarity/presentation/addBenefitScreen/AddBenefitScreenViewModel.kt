@@ -9,6 +9,7 @@ import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
+import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddBenefitScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
+    private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val cardIdString: String = savedStateHandle[ArgumentNames.CREDIT_CARD_ID]!!
@@ -82,6 +84,16 @@ class AddBenefitScreenViewModel @Inject constructor(
                 Log.d(
                     "MyBenefitsScreenVM",
                     "New benefit added: ${selectedPurchaseType.name} - ${(displayedFactor!!).toInt()}% cashback"
+                )
+            } else if (cardRewardType == RewardType.PointBack) {
+                pointBackCreditCardRepository.addPurchaseReward(
+                    cardId,
+                    listOf(selectedPurchaseType),
+                    multiplier = displayedFactor!!
+                )
+                Log.d(
+                    "AddBenefitScreenVM",
+                    "New benefit added: ${selectedPurchaseType.name} - ${displayedFactor!!}x points"
                 )
             }
         }

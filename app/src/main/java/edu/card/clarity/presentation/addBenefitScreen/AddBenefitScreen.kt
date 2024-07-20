@@ -97,7 +97,7 @@ fun AddBenefitScreen(
 
             // Conditionally display input fields based on RewardType:
             // Cashback: percentage.
-            // PointsBack: multiplier and points system.
+            // PointsBack: multiplier.
             OutlinedTextField(
                 value = uiState.displayedFactor,
                 onValueChange = viewModel::updateFactor,
