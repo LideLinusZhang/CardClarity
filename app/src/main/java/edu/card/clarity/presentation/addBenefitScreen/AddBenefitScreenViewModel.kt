@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +22,8 @@ class AddBenefitScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val cardIdString: String = savedStateHandle["cardId"]!!
-    private val cardRewardTypeOrdinal: Int = savedStateHandle["cardRewardType"]!!
+    private val cardIdString: String = savedStateHandle[ArgumentNames.CREDIT_CARD_ID]!!
+    private val cardRewardTypeOrdinal: Int = savedStateHandle[ArgumentNames.CREDIT_CARD_REWARD_TYPE]!!
 
     private val cardId: UUID = UUID.fromString(cardIdString)
     val cardRewardType = RewardType.entries[cardRewardTypeOrdinal]

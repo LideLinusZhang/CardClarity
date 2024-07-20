@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.common.ChipFilter
+import edu.card.clarity.presentation.utils.Destinations
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 import kotlinx.coroutines.launch
@@ -82,7 +83,7 @@ fun MyBenefitsScreen(
             OutlinedButton(
                 onClick = {
                     scope.launch {
-                        navController.navigate("addBenefit/${viewModel.cardIdString}/$creditCardName/${viewModel.cardRewardTypeOrdinal}")
+                        navController.navigate("${Destinations.ADD_BENEFIT}/${viewModel.cardIdString}/$creditCardName/${viewModel.cardRewardTypeOrdinal}")
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
