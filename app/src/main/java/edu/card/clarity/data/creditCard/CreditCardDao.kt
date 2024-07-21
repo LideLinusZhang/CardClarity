@@ -7,7 +7,6 @@ import androidx.room.Upsert
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCard
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCard
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
-import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.RewardType
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
@@ -38,7 +37,7 @@ interface CreditCardDao {
      */
     @Transaction
     @Query("SELECT * FROM creditCardInfo WHERE id = :id")
-    fun observeById(id: UUID): Flow<ICreditCard>
+    fun observeById(id: UUID): Flow<UserAddedCreditCard>
 
     /**
      * Observe a single credit card's info by id.
