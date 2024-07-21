@@ -19,7 +19,7 @@ abstract class CreditCardRepositoryBase internal constructor(
     private val purchaseRewardDataSource: PurchaseRewardDao,
     protected val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun createCreditCard(info: CreditCardInfo): UUID {
+    protected open suspend fun createCreditCard(info: CreditCardInfo): UUID {
         val id = withContext(dispatcher) {
             UUID.randomUUID()
         }
