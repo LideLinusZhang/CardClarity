@@ -1,20 +1,20 @@
 package edu.card.clarity.repositories.utils
 
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
-import edu.card.clarity.data.pointSystem.PointSystemEntity
-import edu.card.clarity.data.purchase.PurchaseEntity
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.creditCard.ICreditCardInfo
+import edu.card.clarity.data.pointSystem.PointSystem as PointSystemInDB
+import edu.card.clarity.data.purchase.Purchase as PurchaseInDB
+import edu.card.clarity.data.purchaseReward.PurchaseReward as PurchaseRewardInDB
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.PurchaseReward
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 
 @JvmName("creditCardInfoEntityToDomainModel")
-internal fun List<CreditCardInfoEntity>.toDomainModel() = map(
-    CreditCardInfoEntity::toDomainModel
+internal fun List<ICreditCardInfo>.toDomainModel() = map(
+    ICreditCardInfo::toDomainModel
 )
 
-internal fun CreditCardInfoEntity.toDomainModel() = CreditCardInfo(
+internal fun ICreditCardInfo.toDomainModel() = CreditCardInfo(
     id = id,
     name = name,
     rewardType = rewardType,
@@ -25,32 +25,33 @@ internal fun CreditCardInfoEntity.toDomainModel() = CreditCardInfo(
 )
 
 @JvmName("pointSystemEntityToDomainModel")
-internal fun List<PointSystemEntity>.toDomainModel() = map(PointSystemEntity::toDomainModel)
+internal fun List<PointSystemInDB>.toDomainModel() = map(PointSystemInDB::toDomainModel)
 
-internal fun PointSystemEntity.toDomainModel() = PointSystem(
+internal fun PointSystemInDB.toDomainModel() = PointSystem(
     id = id,
     name = name,
     pointToCashConversionRate = pointToCashConversionRate
 )
 
 @JvmName("purchaseRewardEntityToDomainModel")
-internal fun List<PurchaseRewardEntity>.toDomainModel() =
-    map(PurchaseRewardEntity::toDomainModel)
+internal fun List<PurchaseRewardInDB>.toDomainModel() =
+    map(PurchaseRewardInDB::toDomainModel)
 
-internal fun PurchaseRewardEntity.toDomainModel() = PurchaseReward(
+internal fun PurchaseRewardInDB.toDomainModel() = PurchaseReward(
     applicablePurchaseType = purchaseType,
     rewardFactor = factor
 )
 
 @JvmName("purchaseEntityToDomainModel")
-internal fun List<PurchaseEntity>.toDomainModel() =
-    map(PurchaseEntity::toDomainModel)
+internal fun List<PurchaseInDB>.toDomainModel() =
+    map(PurchaseInDB::toDomainModel)
 
-internal fun PurchaseEntity.toDomainModel() = Purchase(
+internal fun PurchaseInDB.toDomainModel() = Purchase(
     id = id,
     time = time,
     merchant = merchant,
     type = type,
     total = total,
+    rewardAmount = rewardAmount,
     creditCardId = creditCardId
 )

@@ -1,9 +1,10 @@
-package edu.card.clarity.data.creditCard
+package edu.card.clarity.data.creditCard.predefined
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import edu.card.clarity.data.creditCard.CreditCardInfo
 import java.util.UUID
 
 /**
@@ -13,7 +14,7 @@ import java.util.UUID
     tableName = "predefinedCreditCardId",
     foreignKeys = [
         ForeignKey(
-            entity = CreditCardInfoEntity::class,
+            entity = CreditCardInfo::class,
             parentColumns = ["id"],
             childColumns = ["creditCardId"]
         )
@@ -22,6 +23,6 @@ import java.util.UUID
         Index("creditCardId", unique = true)
     ]
 )
-data class PredefinedCreditCardIdEntity(
+data class PredefinedCreditCardId(
     @PrimaryKey val creditCardId: UUID
 )

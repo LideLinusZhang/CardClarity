@@ -2,7 +2,7 @@ package edu.card.clarity.repositories
 
 import android.icu.util.Calendar
 import edu.card.clarity.data.purchase.PurchaseDao
-import edu.card.clarity.data.purchase.PurchaseEntity
+import edu.card.clarity.data.purchase.Purchase as PurchaseInDB
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.enums.PurchaseType
 import kotlinx.coroutines.flow.first
@@ -56,6 +56,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
@@ -70,16 +71,17 @@ class PurchaseRepositoryTest {
     @Test
     fun getPurchase() = testScope.runTest {
         val purchaseId = UUID.randomUUID()
-        val purchaseEntity = PurchaseEntity(
+        val purchase = PurchaseInDB(
             id = purchaseId,
             time = Date(),
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
-        `when`(purchaseDao.getById(purchaseId)).thenReturn(purchaseEntity)
+        `when`(purchaseDao.getById(purchaseId)).thenReturn(purchase)
 
         val result = purchaseRepository.getPurchase(purchaseId)
 
@@ -90,25 +92,27 @@ class PurchaseRepositoryTest {
 
     @Test
     fun getAllPurchases() = testScope.runTest {
-        val purchaseEntity1 = PurchaseEntity(
+        val purchase1 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
-        val purchaseEntity2 = PurchaseEntity(
+        val purchase2 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
-            purchaseEntity1,
-            purchaseEntity2
+            purchase1,
+            purchase2
         )
 
         `when`(purchaseDao.getAll()).thenReturn(purchaseEntities)
@@ -125,25 +129,27 @@ class PurchaseRepositoryTest {
     @Test
     fun getAllPurchasesOf() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
-        val purchaseEntity1 = PurchaseEntity(
+        val purchase1 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
-        val purchaseEntity2 = PurchaseEntity(
+        val purchase2 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
         val purchaseEntities = listOf(
-            purchaseEntity1,
-            purchaseEntity2
+            purchase1,
+            purchase2
         )
 
         `when`(purchaseDao.getAllOf(creditCardId)).thenReturn(purchaseEntities)
@@ -161,25 +167,27 @@ class PurchaseRepositoryTest {
     fun getAllPurchasesBetween() = testScope.runTest {
         val startTime = Date()
         val endTime = Date(startTime.time + 100000)
-        val purchaseEntity1 = PurchaseEntity(
+        val purchase1 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = startTime,
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
-        val purchaseEntity2 = PurchaseEntity(
+        val purchase2 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = endTime,
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
-            purchaseEntity1,
-            purchaseEntity2
+            purchase1,
+            purchase2
         )
 
         `when`(purchaseDao.getAllBetween(startTime, endTime)).thenReturn(purchaseEntities)
@@ -195,25 +203,27 @@ class PurchaseRepositoryTest {
 
     @Test
     fun getAllPurchasesStream() = testScope.runTest {
-        val purchaseEntity1 = PurchaseEntity(
+        val purchase1 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
-        val purchaseEntity2 = PurchaseEntity(
+        val purchase2 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
-            purchaseEntity1,
-            purchaseEntity2
+            purchase1,
+            purchase2
         )
 
         `when`(purchaseDao.observeAll()).thenReturn(flowOf(purchaseEntities))
@@ -230,25 +240,27 @@ class PurchaseRepositoryTest {
     @Test
     fun getAllPurchasesStreamOf() = testScope.runTest {
         val creditCardId = UUID.randomUUID()
-        val purchaseEntity1 = PurchaseEntity(
+        val purchase1 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
-        val purchaseEntity2 = PurchaseEntity(
+        val purchase2 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = Date(),
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = creditCardId
         )
         val purchaseEntities = listOf(
-            purchaseEntity1,
-            purchaseEntity2
+            purchase1,
+            purchase2
         )
 
         `when`(purchaseDao.observeAllOf(creditCardId)).thenReturn(flowOf(purchaseEntities))
@@ -266,25 +278,27 @@ class PurchaseRepositoryTest {
     fun getAllPurchasesStreamBetween() = testScope.runTest {
         val startTime = Date()
         val endTime = Date(startTime.time + 100000)
-        val purchaseEntity1 = PurchaseEntity(
+        val purchase1 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = startTime,
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
-        val purchaseEntity2 = PurchaseEntity(
+        val purchase2 = PurchaseInDB(
             id = UUID.randomUUID(),
             time = endTime,
             merchant = "Costco",
             type = PurchaseType.Gas,
             total = 200.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
         val purchaseEntities = listOf(
-            purchaseEntity1,
-            purchaseEntity2
+            purchase1,
+            purchase2
         )
 
         `when`(
@@ -312,6 +326,7 @@ class PurchaseRepositoryTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
@@ -320,12 +335,13 @@ class PurchaseRepositoryTest {
         purchaseRepository.updatePurchase(purchase)
 
         verify(purchaseDao, times(1)).upsert(
-            PurchaseEntity(
+            PurchaseInDB(
                 id = purchaseId,
                 time = purchase.time,
                 merchant = "T&T",
                 type = PurchaseType.Groceries,
                 total = 100.0f,
+                rewardAmount = 100.0f,
                 creditCardId = purchase.creditCardId
             )
         )

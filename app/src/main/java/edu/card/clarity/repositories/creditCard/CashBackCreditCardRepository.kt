@@ -1,7 +1,7 @@
 package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardEntity
+import edu.card.clarity.data.creditCard.ICreditCard
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
@@ -144,7 +144,7 @@ class CashBackCreditCardRepository @Inject constructor(
     }
 
     private companion object {
-        private fun CreditCardEntity.toDomainModel() = CashBackCreditCard(
+        private fun ICreditCard.toDomainModel() = CashBackCreditCard(
             this.creditCardInfo.toDomainModel(),
             this.purchaseRewards.toDomainModel()
         )

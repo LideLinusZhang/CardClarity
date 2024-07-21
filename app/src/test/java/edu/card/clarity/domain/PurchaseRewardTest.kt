@@ -21,6 +21,7 @@ class PurchaseRewardTest {
             merchant = "T&T",
             type = PurchaseType.Groceries,
             total = 100.0f,
+            rewardAmount = 100.0f,
             creditCardId = UUID.randomUUID()
         )
 
