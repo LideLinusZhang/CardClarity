@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "e0d385877fbc36da684a74a06a784b47",
+    "identityHash": "baafa2705b74dac8c64497c81a78e867",
     "entities": [
       {
         "tableName": "pointSystem",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "creditCardInfo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL DEFAULT 1, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -404,7 +404,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0d385877fbc36da684a74a06a784b47')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'baafa2705b74dac8c64497c81a78e867')"
     ]
   }
 }

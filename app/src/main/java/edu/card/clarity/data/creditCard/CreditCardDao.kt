@@ -27,6 +27,16 @@ interface CreditCardDao {
     fun observeAllInfoOf(type: RewardType): Flow<List<CreditCardInfoEntity>>
 
     /**
+     * Observe a single credit card's info and its associated benefits by id.
+     *
+     * @param id the credit card id.
+     * @return the credit card with the id and its associated benefits.
+     */
+    @Transaction
+    @Query("SELECT * FROM creditCardInfo WHERE id = :id")
+    fun observeById(id: UUID): Flow<CreditCardEntity>
+
+    /**
      * Observe a single credit card's info by id.
      *
      * @param id the credit card id.

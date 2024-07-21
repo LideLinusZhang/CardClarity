@@ -7,6 +7,7 @@ import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
 import edu.card.clarity.data.creditCard.pointBack.CreditCardPointSystemAssociation
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
@@ -42,6 +43,7 @@ class PointBackCreditCardRepositoryTest {
     private lateinit var creditCardDao: CreditCardDao
     private lateinit var purchaseRewardDao: PurchaseRewardDao
     private lateinit var pointSystemAssociationDao: PointBackCardPointSystemAssociationDao
+    private lateinit var pointSystemDao: PointSystemDao
     private lateinit var pointBackCreditCardRepository: PointBackCreditCardRepository
 
     private val testDispatcher = StandardTestDispatcher()
@@ -55,9 +57,11 @@ class PointBackCreditCardRepositoryTest {
         creditCardDao = mock(CreditCardDao::class.java)
         purchaseRewardDao = mock(PurchaseRewardDao::class.java)
         pointSystemAssociationDao = mock(PointBackCardPointSystemAssociationDao::class.java)
+        pointSystemDao = mock(PointSystemDao::class.java)
         pointBackCreditCardRepository = PointBackCreditCardRepository(
             creditCardDao,
             purchaseRewardDao,
+            pointSystemDao,
             pointSystemAssociationDao,
             testDispatcher
         )
