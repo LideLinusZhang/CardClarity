@@ -2,7 +2,7 @@ package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.ICreditCard
-import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.pointSystem.PointSystemDao
@@ -37,7 +37,7 @@ class PointBackCreditCardRepository @Inject constructor(
         val creditCardId = super.createCreditCard(info)
 
         pointSystemAssociationDataSource.upsert(
-            CreditCardIdPointSystemIdPairEntity(creditCardId, pointSystemId)
+            CreditCardIdPointSystemIdPair(creditCardId, pointSystemId)
         )
 
         return creditCardId
