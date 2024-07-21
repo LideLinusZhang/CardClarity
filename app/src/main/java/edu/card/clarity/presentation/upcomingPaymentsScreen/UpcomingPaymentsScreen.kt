@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
@@ -24,7 +25,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
-fun UpcomingPaymentsScreen(viewModel: PaymentDueDateViewModel = viewModel()) {
+fun UpcomingPaymentsScreen(viewModel: PaymentDueDateViewModel = hiltViewModel()) {
     val cards by viewModel.uiState.collectAsState()
 
     CardClarityTheme {
