@@ -11,19 +11,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.presentation.common.DropdownMenu
 
 @Composable
-fun AddCardScreen(navController: NavController) {
+fun AddCardScreen(navController: NavController, viewModel: AddCardViewModel = hiltViewModel()) {
+    val templates by viewModel.templates.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var selectedTemplateIndex by remember { mutableIntStateOf(-1) }
-    val dummyTemplates = listOf(
-        Template("Template 1", "Visa", "Cash Back"),
-        Template("Template 2", "MasterCard", "Points Back"),
-        Template("Template 3", "Amex", "Points Back")
-    )
 
     Column(
         modifier = Modifier
@@ -69,12 +66,12 @@ fun AddCardScreen(navController: NavController) {
             Column {
                 DropdownMenu(
                     label = "Credit Card",
-                    options = dummyTemplates.map { it.name },
-                    selectedOption = if (selectedTemplateIndex != -1) dummyTemplates[selectedTemplateIndex].name else "Select a template",
+                    options = templates.map { it.name },
+                    selectedOption = if (selectedTemplateIndex != -1) templates[selectedTemplateIndex].name else "Select a template",
                     onOptionSelected = { selectedTemplateIndex = it }
                 )
                 if (selectedTemplateIndex != -1) {
-                    val template = dummyTemplates[selectedTemplateIndex]
+                    val template = templates[selectedTemplateIndex]
                     UseTemplateCardInformationForm(template)
                 }
             }
@@ -99,9 +96,3 @@ fun AddCardScreenPreview() {
     val navController = rememberNavController()
     AddCardScreen(navController)
 }
-
-data class Template(
-    val name: String,
-    val cardNetwork: String,
-    val rewardType: String
-)

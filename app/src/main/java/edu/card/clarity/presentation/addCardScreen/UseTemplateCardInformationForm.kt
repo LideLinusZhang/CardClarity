@@ -13,11 +13,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.presentation.common.DatePickerField
 import java.util.Calendar
 
 @Composable
-fun UseTemplateCardInformationForm(template: Template) {
+fun UseTemplateCardInformationForm(template: CreditCardInfo) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
@@ -62,7 +63,7 @@ fun UseTemplateCardInformationForm(template: Template) {
             modifier = Modifier.padding(vertical = 4.dp)
         )
         Text(
-            text = "Card Network: ${template.cardNetwork}",
+            text = "Card Network: ${template.cardNetworkType}",
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             modifier = Modifier.padding(vertical = 4.dp)
