@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.card.clarity.AndroidAlarmScheduler
+import edu.card.clarity.data.alarmItem.AndroidAlarmScheduler
 import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.alarmItem.toSchedulerAlarmItem
 import edu.card.clarity.data.creditCard.CreditCardDao

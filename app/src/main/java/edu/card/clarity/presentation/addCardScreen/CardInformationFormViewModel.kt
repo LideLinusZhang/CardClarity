@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import edu.card.clarity.AndroidAlarmScheduler
+import edu.card.clarity.data.alarmItem.AndroidAlarmScheduler
 import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.alarmItem.toSchedulerAlarmItem

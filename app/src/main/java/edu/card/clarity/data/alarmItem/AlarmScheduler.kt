@@ -1,4 +1,4 @@
-package edu.card.clarity
+package edu.card.clarity.data.alarmItem
 
 interface AlarmScheduler {
     fun schedule(item: SchedulerAlarmItem)
