@@ -10,9 +10,11 @@ import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayString
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
+import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -21,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TemplateSelectionFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
+    private val pointBackCreditCardRepository: PointBackCreditCardRepository
 ) : ViewModel() {
     private val cashBackTemplates = cashBackCreditCardRepository
         .getAllPredefinedCreditCardsStream()
@@ -30,7 +33,23 @@ class TemplateSelectionFormViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    val templateOptionStrings: StateFlow<List<String>> = cashBackTemplates
+    private val pointBackTemplates = pointBackCreditCardRepository
+        .getAllPredefinedCreditCardsStream()
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileUiSubscribed,
+            initialValue = emptyList()
+        )
+
+    private val allTemplates = combine(cashBackTemplates, pointBackTemplates) { cashBacks, pointBacks ->
+        cashBacks + pointBacks
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileUiSubscribed,
+        initialValue = emptyList()
+    )
+
+    val templateOptionStrings: StateFlow<List<String>> = allTemplates
         .map { it.map { card -> card.info.name } }
         .stateIn(
             scope = viewModelScope,
@@ -49,9 +68,8 @@ class TemplateSelectionFormViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun updateTemplateSelection(selectedIndex: Int) {
-
-        selectedTemplate = cashBackTemplates.value[selectedIndex]
-        (selectedTemplate as CashBackCreditCard).info.let {
+        selectedTemplate = allTemplates.value[selectedIndex]
+        selectedTemplate?.info?.let {
             _uiState.value = _uiState.value.copy(
                 selectedTemplateName = it.name,
                 showCardInfo = true,
@@ -59,7 +77,7 @@ class TemplateSelectionFormViewModel @Inject constructor(
                 rewardType = it.rewardType.displayString,
                 cardNetworkType = it.cardNetworkType.name
             )
-            }
+        }
     }
 
     fun updateMostRecentStatementDate(year: Int, month: Int, dayOfMonth: Int) {
