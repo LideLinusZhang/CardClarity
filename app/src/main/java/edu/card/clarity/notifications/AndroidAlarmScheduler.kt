@@ -4,11 +4,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
 import javax.inject.Inject
 
 class AndroidAlarmScheduler @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ): AlarmScheduler {
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
