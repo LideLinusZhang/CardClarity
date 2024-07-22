@@ -1,10 +1,14 @@
 package edu.card.clarity.presentation.addCardScreen
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import edu.card.clarity.AlarmItem
+import edu.card.clarity.AndroidAlarmScheduler
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
@@ -18,6 +22,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,9 +32,12 @@ class CardInformationFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val pointSystemRepository: PointSystemRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     val cardNetworkTypeStrings = CardNetworkType.displayStrings
     val rewardTypeOptionStrings = RewardType.displayStrings
+    val scheduler = AndroidAlarmScheduler(context)
+    var alarmItem: AlarmItem? = null
 
     private val _uiState = MutableStateFlow(
         CardInformationFormUiState(
@@ -106,6 +116,11 @@ class CardInformationFormViewModel @Inject constructor(
         }
     }
 
+    fun Calendar.toLocalDateTime(): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.timeInMillis), ZoneId.systemDefault())
+    }
+
+
     fun addCreditCard() = viewModelScope.launch {
         val creditCardInfo = CreditCardInfo(
             name = uiState.value.cardName,
@@ -126,6 +141,16 @@ class CardInformationFormViewModel @Inject constructor(
             val pointSystemId = pointSystemRepository.addPointSystem(pointSystem)
             pointBackCreditCardRepository.createCreditCard(creditCardInfo, pointSystemId)
         }
+
+        if (uiState.value.isReminderEnabled) {
+            alarmItem = AlarmItem(
+                time = mostRecentPaymentDueDate.toLocalDateTime(),
+                message = "Your payment for ${uiState.value.cardName} is due today"
+            )
+            alarmItem?.let(scheduler::schedule)
+        }
+
+
 
         _uiState.update {
             CardInformationFormUiState(
