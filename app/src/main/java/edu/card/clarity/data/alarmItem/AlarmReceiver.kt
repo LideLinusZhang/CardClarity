@@ -19,7 +19,6 @@ class AlarmReceiver : BroadcastReceiver() {
         context ?: return
         val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: return
 
-        // Create notification channel if needed
         val channelId = "alarm_channel_id"
         val channelName = "Alarm Notifications"
         val channelImportance = NotificationManager.IMPORTANCE_HIGH
@@ -27,7 +26,6 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
 
-        // Create the notification
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_alert) // Use a built-in Android icon
             .setContentTitle("Payment Reminder")
@@ -35,7 +33,6 @@ class AlarmReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
-        // Show the notification
         with(NotificationManagerCompat.from(context)) {
             if (ActivityCompat.checkSelfPermission(
                     context,

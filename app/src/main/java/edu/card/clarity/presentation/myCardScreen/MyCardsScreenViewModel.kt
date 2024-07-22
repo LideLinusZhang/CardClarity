@@ -90,16 +90,13 @@ class MyCardsScreenViewModel @Inject constructor(
 
     fun deleteCreditCard(id: UUID) {
         viewModelScope.launch {
-            // Fetch the alarm item associated with the credit card
             val alarmItem = creditCardDao.getAlarmItemByCreditCardId(id)
 
-            // Cancel the alarm if it exists
             alarmItem?.let {
                 scheduler.cancel(it.toSchedulerAlarmItem())
                 alarmItemDao.deleteById(it.id)
             }
 
-            // Delete the credit card
             cashBackCreditCardRepository.deleteCreditCard(id)
             pointBackCreditCardRepository.deleteCreditCard(id)
         }

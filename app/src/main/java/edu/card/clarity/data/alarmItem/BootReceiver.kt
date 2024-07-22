@@ -3,6 +3,7 @@ package edu.card.clarity.data.alarmItem
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,13 +23,11 @@ class BootReceiver : BroadcastReceiver() {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             context ?: return
 
-            // Using a coroutine scope to perform database operations
             CoroutineScope(Dispatchers.IO).launch {
-                // Fetch all alarm items
                 val allAlarms = alarmItemDao.getAllAlarms()
 
-                // Reschedule each alarm
                 allAlarms.forEach { alarmItem ->
+                    Log.d("boot", alarmItem.message)
                     alarmScheduler.schedule(alarmItem.toSchedulerAlarmItem())
                 }
             }
