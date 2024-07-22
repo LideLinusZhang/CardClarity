@@ -2,11 +2,14 @@ package edu.card.clarity.presentation.addCardScreen
 
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
+import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
+import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayString
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
@@ -18,6 +21,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +53,7 @@ class TemplateSelectionFormViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
-    val templateOptionStrings: StateFlow<List<String>> = allTemplates
+    val templateOptionStrings: StateFlow<List<String>> = cashBackTemplates
         .map { it.map { card -> card.info.name } }
         .stateIn(
             scope = viewModelScope,
@@ -68,7 +72,9 @@ class TemplateSelectionFormViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun updateTemplateSelection(selectedIndex: Int) {
-        selectedTemplate = allTemplates.value[selectedIndex]
+        selectedTemplate = cashBackTemplates.value[selectedIndex]
+        Log.d("selected template", selectedTemplate?.info.toString())
+        Log.d("selected template", selectedTemplate?.purchaseRewards.toString())
         selectedTemplate?.info?.let {
             _uiState.value = _uiState.value.copy(
                 selectedTemplateName = it.name,
@@ -105,6 +111,30 @@ class TemplateSelectionFormViewModel @Inject constructor(
             it.copy(
                 isReminderEnabled = isEnabled
             )
+        }
+    }
+
+    fun createCreditCard() {
+        val selectedCard = selectedTemplate
+        if (selectedCard is CashBackCreditCard) {
+            viewModelScope.launch {
+                val cardInfo = CreditCardInfo(
+                    name = _uiState.value.cardName,
+                    rewardType = RewardType.CashBack,
+                    cardNetworkType = selectedCard.info.cardNetworkType,
+                    statementDate = mostRecentStatementDate,
+                    paymentDueDate = mostRecentPaymentDueDate,
+                    isReminderEnabled = _uiState.value.isReminderEnabled
+                )
+                val newCardId = cashBackCreditCardRepository.createCreditCard(cardInfo)
+                selectedCard.purchaseRewards.forEach{ reward ->
+                    cashBackCreditCardRepository.addPurchaseReward(
+                        creditCardId = newCardId,
+                        purchaseTypes = listOf(reward.applicablePurchaseType),
+                        percentage = reward.rewardFactor
+                    )
+                }
+            }
         }
     }
 }

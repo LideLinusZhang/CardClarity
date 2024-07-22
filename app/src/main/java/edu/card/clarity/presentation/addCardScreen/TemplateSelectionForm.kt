@@ -133,7 +133,7 @@ fun UseTemplateCardInformationForm(
 
             Button(
                 onClick = {
-                    // ADD CARD ACTION
+                    viewModel.createCreditCard()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
