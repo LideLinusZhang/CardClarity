@@ -1,4 +1,4 @@
-package edu.card.clarity.data.alarmItem
+package edu.card.clarity.notifications
 
 import android.Manifest
 import android.app.NotificationChannel

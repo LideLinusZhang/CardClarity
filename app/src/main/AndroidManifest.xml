@@ -29,9 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".data.alarmItem.AlarmReceiver"/>
+        <receiver android:name=".notifications.AlarmReceiver"/>
         <receiver
-            android:name=".data.alarmItem.BootReceiver"
+            android:name=".notifications.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

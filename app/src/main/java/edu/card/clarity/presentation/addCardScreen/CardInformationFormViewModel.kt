@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import edu.card.clarity.data.alarmItem.AndroidAlarmScheduler
+import edu.card.clarity.notifications.AndroidAlarmScheduler
 import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.alarmItem.AlarmItemDao
-import edu.card.clarity.data.alarmItem.toSchedulerAlarmItem
+import edu.card.clarity.data.converters.toSchedulerAlarmItem
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType

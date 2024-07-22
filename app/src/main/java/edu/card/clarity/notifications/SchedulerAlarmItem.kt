@@ -1,4 +1,4 @@
-package edu.card.clarity.data.alarmItem
+package edu.card.clarity.notifications
 
 import java.time.LocalDateTime
 import java.util.UUID
