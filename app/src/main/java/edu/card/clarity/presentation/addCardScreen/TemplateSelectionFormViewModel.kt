@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
+import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayString
@@ -53,7 +54,7 @@ class TemplateSelectionFormViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
-    val templateOptionStrings: StateFlow<List<String>> = cashBackTemplates
+    val templateOptionStrings: StateFlow<List<String>> = allTemplates
         .map { it.map { card -> card.info.name } }
         .stateIn(
             scope = viewModelScope,
@@ -72,7 +73,7 @@ class TemplateSelectionFormViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun updateTemplateSelection(selectedIndex: Int) {
-        selectedTemplate = cashBackTemplates.value[selectedIndex]
+        selectedTemplate = allTemplates.value[selectedIndex]
         Log.d("selected template", selectedTemplate?.info.toString())
         Log.d("selected template", selectedTemplate?.purchaseRewards.toString())
         selectedTemplate?.info?.let {
@@ -135,6 +136,8 @@ class TemplateSelectionFormViewModel @Inject constructor(
                     )
                 }
             }
+        } else if (selectedCard is PointBackCreditCard) {
+
         }
     }
 }
