@@ -29,6 +29,6 @@ data class CreditCardInfoEntity(
     val cardNetworkType: CardNetworkType,
     val statementDate: Calendar,
     val paymentDueDate: Calendar,
-    @ColumnInfo(defaultValue = "1")
+    @ColumnInfo(defaultValue = "0")
     val isReminderEnabled: Boolean,
 )

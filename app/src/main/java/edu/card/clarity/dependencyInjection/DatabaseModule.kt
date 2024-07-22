@@ -26,7 +26,9 @@ object DatabaseModule {
             context.applicationContext,
             Database::class.java,
             name = "card_clarity_db"
-        ).build()
+        )
+            .createFromAsset("database/predefined_credit_cards.db")
+            .build()
     }
 
     @Provides
