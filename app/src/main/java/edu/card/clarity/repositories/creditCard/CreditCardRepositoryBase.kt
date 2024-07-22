@@ -1,10 +1,8 @@
 package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
-import edu.card.clarity.domain.Purchase
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.enums.PurchaseType
@@ -21,12 +19,12 @@ abstract class CreditCardRepositoryBase internal constructor(
     private val purchaseRewardDataSource: PurchaseRewardDao,
     protected val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun createCreditCard(info: CreditCardInfo): UUID {
+    protected open suspend fun createCreditCard(info: CreditCardInfo): UUID {
         val id = withContext(dispatcher) {
             UUID.randomUUID()
         }
 
-        val cardInfoEntity = CreditCardInfoEntity(
+        val cardInfoEntity = edu.card.clarity.data.creditCard.CreditCardInfo(
             id,
             info.name,
             info.rewardType,
@@ -50,7 +48,7 @@ abstract class CreditCardRepositoryBase internal constructor(
         withContext(dispatcher) {
             for (purchaseType in purchaseTypes) {
                 purchaseRewardDataSource.upsert(
-                    PurchaseRewardEntity(
+                    PurchaseReward(
                         creditCardId = creditCardId,
                         purchaseType = purchaseType,
                         rewardType = rewardType,

@@ -18,7 +18,7 @@ interface PurchaseDao {
      * @return all purchases.
      */
     @Query("SELECT * FROM purchase")
-    fun observeAll(): Flow<List<PurchaseEntity>>
+    fun observeAll(): Flow<List<Purchase>>
 
     /**
      * Observes list of purchases made with a certain credit card.
@@ -27,7 +27,7 @@ interface PurchaseDao {
      * @return all purchases made with a certain credit card.
      */
     @Query("SELECT * FROM purchase WHERE creditCardId = :creditCardId")
-    fun observeAllOf(creditCardId: UUID): Flow<List<PurchaseEntity>>
+    fun observeAllOf(creditCardId: UUID): Flow<List<Purchase>>
 
     /**
      * Observe all purchases made in a time period.
@@ -37,7 +37,7 @@ interface PurchaseDao {
      * @return all purchases made in the specified time period.
      */
     @Query("SELECT * FROM purchase WHERE time BETWEEN :startTime AND :endTime")
-    fun observeAllBetween(startTime: Date, endTime: Date): Flow<List<PurchaseEntity>>
+    fun observeAllBetween(startTime: Date, endTime: Date): Flow<List<Purchase>>
 
     /**
      * Observes a single purchase.
@@ -46,7 +46,7 @@ interface PurchaseDao {
      * @return the purchase with id.
      */
     @Query("SELECT * FROM purchase WHERE id = :id")
-    fun observeById(id: UUID): Flow<PurchaseEntity>
+    fun observeById(id: UUID): Flow<Purchase>
 
     /**
      * Select all purchases.
@@ -54,7 +54,7 @@ interface PurchaseDao {
      * @return all purchases.
      */
     @Query("SELECT * FROM purchase")
-    suspend fun getAll(): List<PurchaseEntity>
+    suspend fun getAll(): List<Purchase>
 
     /**
      * Select all purchases made with a certain credit card.
@@ -63,7 +63,7 @@ interface PurchaseDao {
      * @return all purchases made with a certain credit card.
      */
     @Query("SELECT * FROM purchase WHERE creditCardId = :creditCardId")
-    suspend fun getAllOf(creditCardId: UUID): List<PurchaseEntity>
+    suspend fun getAllOf(creditCardId: UUID): List<Purchase>
 
     /**
      * Select all purchases made in a time period.
@@ -73,7 +73,7 @@ interface PurchaseDao {
      * @return all purchases made in the specified time period.
      */
     @Query("SELECT * FROM purchase WHERE time BETWEEN :startTime AND :endTime")
-    suspend fun getAllBetween(startTime: Date, endTime: Date): List<PurchaseEntity>
+    suspend fun getAllBetween(startTime: Date, endTime: Date): List<Purchase>
 
     /**
      * Select a purchase by id.
@@ -82,7 +82,7 @@ interface PurchaseDao {
      * @return the purchase with id.
      */
     @Query("SELECT * FROM purchase WHERE id = :id")
-    suspend fun getById(id: UUID): PurchaseEntity?
+    suspend fun getById(id: UUID): Purchase?
 
     /**
      * Insert or update a purchase in the database. If a purchase already exists, replace it.
@@ -90,7 +90,7 @@ interface PurchaseDao {
      * @param purchase the purchase to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(purchase: PurchaseEntity)
+    suspend fun upsert(purchase: Purchase)
 
     /**
      * Check if the purchase of a certain id exists.
