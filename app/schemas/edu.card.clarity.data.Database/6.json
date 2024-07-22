@@ -1,0 +1,407 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 6,
+    "identityHash": "3b2083487a915fc1b9552750077d1d8e",
+    "entities": [
+      {
+        "tableName": "pointSystem",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `pointToCashConversionRate` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pointToCashConversionRate",
+            "columnName": "pointToCashConversionRate",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "creditCardInfo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `name` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `cardNetworkType` TEXT NOT NULL, `statementDate` INTEGER NOT NULL, `paymentDueDate` INTEGER NOT NULL, `isReminderEnabled` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rewardType",
+            "columnName": "rewardType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardNetworkType",
+            "columnName": "cardNetworkType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statementDate",
+            "columnName": "statementDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paymentDueDate",
+            "columnName": "paymentDueDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isReminderEnabled",
+            "columnName": "isReminderEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_creditCardInfo_rewardType",
+            "unique": false,
+            "columnNames": [
+              "rewardType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_creditCardInfo_rewardType` ON `${TABLE_NAME}` (`rewardType`)"
+          },
+          {
+            "name": "index_creditCardInfo_cardNetworkType",
+            "unique": false,
+            "columnNames": [
+              "cardNetworkType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_creditCardInfo_cardNetworkType` ON `${TABLE_NAME}` (`cardNetworkType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "purchaseReward",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`creditCardId` BLOB NOT NULL, `purchaseType` TEXT NOT NULL, `rewardType` TEXT NOT NULL, `factor` REAL NOT NULL, PRIMARY KEY(`creditCardId`, `purchaseType`), FOREIGN KEY(`creditCardId`) REFERENCES `creditCardInfo`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "creditCardId",
+            "columnName": "creditCardId",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purchaseType",
+            "columnName": "purchaseType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rewardType",
+            "columnName": "rewardType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "factor",
+            "columnName": "factor",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "creditCardId",
+            "purchaseType"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_purchaseReward_creditCardId",
+            "unique": false,
+            "columnNames": [
+              "creditCardId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchaseReward_creditCardId` ON `${TABLE_NAME}` (`creditCardId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "creditCardInfo",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "creditCardId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "pointBackCardPointSystemAssociation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`creditCardId` BLOB NOT NULL, `pointSystemId` BLOB NOT NULL, PRIMARY KEY(`creditCardId`, `pointSystemId`), FOREIGN KEY(`creditCardId`) REFERENCES `creditCardInfo`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`pointSystemId`) REFERENCES `pointSystem`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "creditCardId",
+            "columnName": "creditCardId",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pointSystemId",
+            "columnName": "pointSystemId",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "creditCardId",
+            "pointSystemId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pointBackCardPointSystemAssociation_creditCardId",
+            "unique": true,
+            "columnNames": [
+              "creditCardId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_pointBackCardPointSystemAssociation_creditCardId` ON `${TABLE_NAME}` (`creditCardId`)"
+          },
+          {
+            "name": "index_pointBackCardPointSystemAssociation_pointSystemId",
+            "unique": true,
+            "columnNames": [
+              "pointSystemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_pointBackCardPointSystemAssociation_pointSystemId` ON `${TABLE_NAME}` (`pointSystemId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "creditCardInfo",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "creditCardId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "pointSystem",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pointSystemId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "purchase",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` BLOB NOT NULL, `time` INTEGER NOT NULL, `merchant` TEXT NOT NULL, `type` TEXT NOT NULL, `total` REAL NOT NULL, `rewardAmount` REAL NOT NULL DEFAULT 0, `creditCardId` BLOB NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`creditCardId`) REFERENCES `creditCardInfo`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "merchant",
+            "columnName": "merchant",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "total",
+            "columnName": "total",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rewardAmount",
+            "columnName": "rewardAmount",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "creditCardId",
+            "columnName": "creditCardId",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_purchase_creditCardId",
+            "unique": false,
+            "columnNames": [
+              "creditCardId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchase_creditCardId` ON `${TABLE_NAME}` (`creditCardId`)"
+          },
+          {
+            "name": "index_purchase_time",
+            "unique": false,
+            "columnNames": [
+              "time"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_purchase_time` ON `${TABLE_NAME}` (`time`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "creditCardInfo",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "creditCardId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "placeTypeToPurchaseTypeMapping",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`placeType` TEXT NOT NULL, `purchaseType` TEXT NOT NULL, PRIMARY KEY(`placeType`))",
+        "fields": [
+          {
+            "fieldPath": "placeType",
+            "columnName": "placeType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purchaseType",
+            "columnName": "purchaseType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "placeType"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "predefinedCreditCardId",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`creditCardId` BLOB NOT NULL, PRIMARY KEY(`creditCardId`), FOREIGN KEY(`creditCardId`) REFERENCES `creditCardInfo`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "creditCardId",
+            "columnName": "creditCardId",
+            "affinity": "BLOB",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "creditCardId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_predefinedCreditCardId_creditCardId",
+            "unique": true,
+            "columnNames": [
+              "creditCardId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_predefinedCreditCardId_creditCardId` ON `${TABLE_NAME}` (`creditCardId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "creditCardInfo",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "creditCardId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3b2083487a915fc1b9552750077d1d8e')"
+    ]
+  }
+}

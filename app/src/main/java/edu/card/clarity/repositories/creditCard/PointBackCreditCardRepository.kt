@@ -1,11 +1,11 @@
 package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardEntity
-import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
+import edu.card.clarity.data.creditCard.ICreditCard
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.creditCard.CreditCardInfo
@@ -37,7 +37,7 @@ class PointBackCreditCardRepository @Inject constructor(
         val creditCardId = super.createCreditCard(info)
 
         pointSystemAssociationDataSource.upsert(
-            CreditCardIdPointSystemIdPairEntity(creditCardId, pointSystemId)
+            CreditCardIdPointSystemIdPair(creditCardId, pointSystemId)
         )
 
         return creditCardId
@@ -187,12 +187,12 @@ class PointBackCreditCardRepository @Inject constructor(
     }
 
     private companion object {
-        private fun CreditCardEntity.toDomainModel(
-            pointSystemEntity: PointSystemEntity
+        private fun ICreditCard.toDomainModel(
+            pointSystem: PointSystem
         ) = PointBackCreditCard(
             this.creditCardInfo.toDomainModel(),
             this.purchaseRewards.toDomainModel(),
-            pointSystemEntity.toDomainModel()
+            pointSystem.toDomainModel()
         )
 
         private fun PointBackCreditCard.removeId(): PointBackCreditCard = this.copy(

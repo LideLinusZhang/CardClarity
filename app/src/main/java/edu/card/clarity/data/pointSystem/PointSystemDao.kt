@@ -15,7 +15,7 @@ interface PointSystemDao {
      * @return all point systems.
      */
     @Query("SELECT * FROM pointSystem")
-    fun observeAll(): Flow<List<PointSystemEntity>>
+    fun observeAll(): Flow<List<PointSystem>>
 
     /**
      * Observes a single point system.
@@ -24,7 +24,7 @@ interface PointSystemDao {
      * @return the point system with id.
      */
     @Query("SELECT * FROM pointSystem WHERE id = :id")
-    fun observeById(id: UUID): Flow<PointSystemEntity>
+    fun observeById(id: UUID): Flow<PointSystem>
 
     /**
      * Observes all point systems with credit card IDs associated to them from the point system table.
@@ -41,7 +41,7 @@ interface PointSystemDao {
      * @return all point systems.
      */
     @Query("SELECT * FROM pointSystem")
-    suspend fun getAll(): List<PointSystemEntity>
+    suspend fun getAll(): List<PointSystem>
 
     /**
      * Select a point system by id.
@@ -50,7 +50,7 @@ interface PointSystemDao {
      * @return the point system with id.
      */
     @Query("SELECT * FROM pointSystem WHERE id = :id")
-    suspend fun getById(id: UUID): PointSystemEntity?
+    suspend fun getById(id: UUID): PointSystem?
 
     /**
      * Select all point systems with credit card IDs associated to them from the point system table.
@@ -67,7 +67,7 @@ interface PointSystemDao {
      * @param pointSystem the point system to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(pointSystem: PointSystemEntity)
+    suspend fun upsert(pointSystem: PointSystem)
 
     /**
      * Insert or update point systems in the database. If a point system already exists, replace it.
@@ -75,7 +75,7 @@ interface PointSystemDao {
      * @param pointSystems the point systems to be inserted or updated.
      */
     @Upsert
-    suspend fun upsertAll(pointSystems: List<PointSystemEntity>)
+    suspend fun upsertAll(pointSystems: List<PointSystem>)
 
     /**
      * Delete a point system by id.

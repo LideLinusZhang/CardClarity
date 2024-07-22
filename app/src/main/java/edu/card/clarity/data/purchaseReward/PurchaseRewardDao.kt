@@ -15,7 +15,7 @@ interface PurchaseRewardDao {
      * @param purchaseReturn the purchase return to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(purchaseReturn: PurchaseRewardEntity)
+    suspend fun upsert(purchaseReturn: PurchaseReward)
 
     /**
      * Insert or update purchase returns in the database.
@@ -24,7 +24,7 @@ interface PurchaseRewardDao {
      * @param purchaseReturns the purchase returns to be inserted or updated.
      */
     @Upsert
-    suspend fun upsertAll(purchaseReturns: List<PurchaseRewardEntity>)
+    suspend fun upsertAll(purchaseReturns: List<PurchaseReward>)
 
     /**
      * Update the percentage of a purchase return.
