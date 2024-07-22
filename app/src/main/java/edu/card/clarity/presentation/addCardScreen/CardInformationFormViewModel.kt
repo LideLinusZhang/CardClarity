@@ -3,7 +3,6 @@ package edu.card.clarity.presentation.addCardScreen
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +11,6 @@ import edu.card.clarity.AndroidAlarmScheduler
 import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.alarmItem.toSchedulerAlarmItem
-import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
@@ -158,9 +156,6 @@ class CardInformationFormViewModel @Inject constructor(
                 alarmItemDao.insert(it)
                 scheduler.schedule(it.toSchedulerAlarmItem())
             }
-
-            Log.d("boot ish", "${alarmItemDao.getAllAlarms()}")
-            Log.d("boot ish", "${alarmItemDao.getAllAlarms().size}")
         }
 
 

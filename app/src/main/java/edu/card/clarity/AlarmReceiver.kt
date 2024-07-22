@@ -19,9 +19,6 @@ class AlarmReceiver : BroadcastReceiver() {
         context ?: return
         val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: return
 
-        // Log message for debugging
-        println("Alarm Triggered: $message")
-
         // Create notification channel if needed
         val channelId = "alarm_channel_id"
         val channelName = "Alarm Notifications"
