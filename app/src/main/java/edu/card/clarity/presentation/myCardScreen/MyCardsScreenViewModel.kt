@@ -6,6 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.AndroidAlarmScheduler
+import edu.card.clarity.data.alarmItem.AlarmItemDao
+import edu.card.clarity.data.alarmItem.toSchedulerAlarmItem
+import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
@@ -26,6 +30,9 @@ import javax.inject.Inject
 class MyCardsScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    private val creditCardDao: CreditCardDao,
+    private val alarmItemDao: AlarmItemDao,
+    private val scheduler: AndroidAlarmScheduler,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _savedFilter = savedStateHandle.getStateFlow(
@@ -83,6 +90,16 @@ class MyCardsScreenViewModel @Inject constructor(
 
     fun deleteCreditCard(id: UUID) {
         viewModelScope.launch {
+            // Fetch the alarm item associated with the credit card
+            val alarmItem = creditCardDao.getAlarmItemByCreditCardId(id)
+
+            // Cancel the alarm if it exists
+            alarmItem?.let {
+                scheduler.cancel(it.toSchedulerAlarmItem())
+                alarmItemDao.deleteById(it.id)
+            }
+
+            // Delete the credit card
             cashBackCreditCardRepository.deleteCreditCard(id)
             pointBackCreditCardRepository.deleteCreditCard(id)
         }
