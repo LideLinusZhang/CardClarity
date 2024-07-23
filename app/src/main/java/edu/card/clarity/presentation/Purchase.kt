@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.R
+import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.utils.Destinations
 
 @Composable
@@ -56,18 +57,7 @@ fun PurchaseScreen(navController: NavController) {
 
 @Composable
 fun CategoryGrid(navController: NavController) {
-    val categories = listOf(
-        "Pharmacy",
-        "Entertainment",
-        "Furniture",
-        "Gas",
-        "Hotel",
-        "Home Improvement",
-        "Groceries",
-        "Restaurants",
-        "Travel",
-        "Others"
-    )
+    val categories = PurchaseType.entries
 
     Column {
         for (i in categories.indices step 3) {
@@ -78,7 +68,7 @@ fun CategoryGrid(navController: NavController) {
                 for (j in i until i + 3) {
                     if (j < categories.size) {
                         CategoryCard(category = categories[j]) {
-                            navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${categories[j]}")
+                            navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${categories[j].name}")
                         }
                     } else {
                         Spacer(modifier = Modifier.size(100.dp))
@@ -90,7 +80,7 @@ fun CategoryGrid(navController: NavController) {
 }
 
 @Composable
-fun CategoryCard(category: String, onClick: () -> Unit) {
+fun CategoryCard(category: PurchaseType, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -106,29 +96,26 @@ fun CategoryCard(category: String, onClick: () -> Unit) {
                 .background(Color.LightGray)
         ) {
             val imageRes = when (category) {
-                "Pharmacy" -> R.drawable.pharmacy
-                "Entertainment" -> R.drawable.entertainment
-                "Furniture" -> R.drawable.furniture
-                "Gas" -> R.drawable.gas
-                "Hotel" -> R.drawable.hotel
-                "Home Improvement" -> R.drawable.home_improvement
-                "Groceries" -> R.drawable.groceries
-                "Restaurants" -> R.drawable.restaurants
-                "Travel" -> R.drawable.travel
-                "Others" -> R.drawable.others
-                else -> null
+                PurchaseType.Pharmacy -> R.drawable.pharmacy
+                PurchaseType.Entertainment -> R.drawable.entertainment
+                PurchaseType.Furniture -> R.drawable.furniture
+                PurchaseType.Gas -> R.drawable.gas
+                PurchaseType.Hotel -> R.drawable.hotel
+                PurchaseType.HomeImprovement -> R.drawable.home_improvement
+                PurchaseType.Groceries -> R.drawable.groceries
+                PurchaseType.Restaurants -> R.drawable.restaurants
+                PurchaseType.Travel -> R.drawable.travel
+                PurchaseType.Others -> R.drawable.others
             }
-            if (imageRes != null) {
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = category,
-                    modifier = Modifier.size(64.dp)
-                )
-            }
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = category.name,
+                modifier = Modifier.size(64.dp)
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = category,
+            text = category.name,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
             color = Color.Black,

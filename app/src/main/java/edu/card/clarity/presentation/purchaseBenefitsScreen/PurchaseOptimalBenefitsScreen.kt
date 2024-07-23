@@ -17,14 +17,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.card.clarity.enums.PurchaseType
 
 @Composable
 fun PurchaseOptimalBenefitsScreen(
     navController: NavController,
-    category: String,
+    category: PurchaseType,
     viewModel: PurchaseOptimalBenefitsScreenViewModel = hiltViewModel()
 ) {
     val creditCards by viewModel.creditCards.collectAsState()
+    val optimalCreditCard by viewModel.optimalCreditCard.collectAsState()
+    val optimalCardMessage by viewModel.optimalCardMessage.collectAsState()
 
     Column(
         modifier = Modifier
@@ -33,7 +36,28 @@ fun PurchaseOptimalBenefitsScreen(
             .padding(horizontal = 16.dp, vertical = 20.dp)
     ) {
         Text(
-            text = "Benefits for $category",
+            text = "Best Card for ${category.name}",
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
+        if (optimalCreditCard != null) {
+            OptimalCreditCardItem(optimalCreditCard!!, category)
+            Spacer(modifier = Modifier.height(16.dp))
+        } else {
+            Text(
+                text = optimalCardMessage ?: "",
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                color = Color.Red,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        }
+
+        Text(
+            text = "Other Available Benefits for ${category.name}",
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             color = Color.Black,
@@ -63,6 +87,40 @@ fun PurchaseOptimalBenefitsScreen(
 }
 
 @Composable
+fun OptimalCreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUiState, category: PurchaseType) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = card.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            card.rewards.forEach { reward ->
+                Text(
+                    text = "${reward.purchaseType} - ${reward.description}",
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+            }
+        }
+    }
+}
+
+@Composable
 fun CreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUiState) {
     Card(
         modifier = Modifier
@@ -85,7 +143,7 @@ fun CreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUi
             Spacer(modifier = Modifier.height(8.dp))
             card.rewards.forEach { reward ->
                 Text(
-                    text = "${reward.purchaseType} - ${reward.percentage}%",
+                    text = "${reward.purchaseType} - ${reward.description}",
                     fontSize = 16.sp,
                     color = Color.Black
                 )
@@ -99,5 +157,5 @@ fun CreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUi
 @Preview
 fun BenefitsScreenPreview() {
     val navController = rememberNavController()
-    PurchaseOptimalBenefitsScreen(navController, category = "Pharmacy")
+    PurchaseOptimalBenefitsScreen(navController, category = PurchaseType.Pharmacy)
 }

@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.MyReceiptsScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.homeScreen.HomeScreen
@@ -96,7 +97,8 @@ fun BottomNavGraph(navController: NavHostController) {
             route = "${Destinations.PURCHASE_OPTIMAL_BENEFITS}/{category}",
             arguments = listOf(navArgument("category") { type = NavType.StringType })
         ) { backStackEntry ->
-            val category = backStackEntry.arguments?.getString("category")!!
+            val categoryString = backStackEntry.arguments?.getString("category")!!
+            val category = PurchaseType.valueOf(categoryString)
             PurchaseOptimalBenefitsScreen(navController, category)
         }
     }
