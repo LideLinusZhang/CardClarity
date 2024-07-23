@@ -3,6 +3,8 @@ package edu.card.clarity.data
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import edu.card.clarity.data.alarmItem.AlarmItem
+import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardId
@@ -27,20 +29,22 @@ import edu.card.clarity.data.purchaseReward.PurchaseReward
         CreditCardIdPointSystemIdPair::class,
         Purchase::class,
         PlaceTypeToPurchaseTypeMapping::class,
-        PredefinedCreditCardId::class
+        PredefinedCreditCardId::class,
+        AlarmItem::class
     ],
     views = [
         UserAddedCreditCardInfo::class,
         PredefinedCreditCardInfo::class
     ],
-    version = 7,
+    version = 8,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
         AutoMigration(3, 4),
         AutoMigration(4, 5),
         AutoMigration(5, 6),
-        AutoMigration(6, 7)
+        AutoMigration(6, 7),
+        AutoMigration(7, 8)
     ],
     exportSchema = true
 )
@@ -49,6 +53,7 @@ abstract class Database : RoomDatabase() {
     abstract fun pointSystemAssociation(): PointBackCardPointSystemAssociationDao
 
     abstract fun creditCard(): CreditCardDao
+    abstract fun alarmItem(): AlarmItemDao
     abstract fun purchaseReward(): PurchaseRewardDao
 
     abstract fun purchase(): PurchaseDao

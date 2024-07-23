@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.card.clarity.data.Database
+import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
@@ -41,6 +42,10 @@ object DatabaseModule {
     @Provides
     fun provideCreditCardDao(database: Database): CreditCardDao =
         database.creditCard()
+
+    @Provides
+    fun provideAlarmItemDao(database: Database): AlarmItemDao =
+        database.alarmItem()
 
     @Provides
     fun providePointBackCardPointSystemAssociationDao(

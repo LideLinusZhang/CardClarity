@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.utils.displayString
@@ -33,6 +35,7 @@ import edu.card.clarity.ui.theme.CardClarityTypography
 @Composable
 fun AddBenefitScreen(
     creditCardName: String,
+    navController: NavHostController,
     viewModel: AddBenefitScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -127,7 +130,10 @@ fun AddBenefitScreen(
             }
 
             Button(
-                onClick = viewModel::addBenefit,
+                onClick = {
+                    viewModel.addBenefit()
+                    navController.navigateUp()
+                },
                 modifier = Modifier.padding(top = 16.dp),
                 enabled = uiState.isFactorValid
             ) {
@@ -140,5 +146,6 @@ fun AddBenefitScreen(
 @Composable
 @Preview
 fun AddBenefitScreenPreview() {
-    AddBenefitScreen("AMEX Cobalt Card")
+    val navController = rememberNavController()
+    AddBenefitScreen("AMEX Cobalt Card", navController)
 }
