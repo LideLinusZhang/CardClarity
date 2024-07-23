@@ -16,6 +16,7 @@ import edu.card.clarity.presentation.addBenefitScreen.AddBenefitScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
+import edu.card.clarity.presentation.recordReceiptScreen.RecordReceiptScreen
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.presentation.utils.Destinations
 
@@ -32,7 +33,8 @@ fun BottomNavGraph(navController: NavHostController) {
             AddCardScreen(navController)
         }
         composable(Destinations.MY_RECEIPTS) {
-            MyReceiptsScreen()
+//            MyReceiptsScreen()
+            RecordReceiptScreen()
         }
         composable(Destinations.PURCHASE) {
             PurchaseScreen()
