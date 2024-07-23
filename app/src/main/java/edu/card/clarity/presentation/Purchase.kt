@@ -4,12 +4,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,17 +42,17 @@ fun PurchaseScreen(navController: NavController) {
         Text(
             text = "Best Card for Every Purchase",
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            color = Color.Black
+            fontSize = 26.sp,
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "Categories:",
-            fontWeight = FontWeight.Normal,
-            fontSize = 18.sp,
-            color = Color.Black
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 20.sp,
+            color = Color.Gray
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -62,41 +68,44 @@ fun CategoryGrid(navController: NavController) {
         PurchaseType.HomeImprovement to "Home Improvement"
     )
 
-    Column {
-        for (i in categories.indices step 3) {
+    LazyColumn {
+        items(categories.chunked(2)) { rowItems ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                for (j in i until i + 3) {
-                    if (j < categories.size) {
-                        CategoryCard(category = categories[j], displayNames) {
-                            navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${categories[j].name}")
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.size(100.dp))
+                for (category in rowItems) {
+                    CategoryCard(category = category, displayNames) {
+                        navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${category.name}")
                     }
                 }
+                if (rowItems.size == 1) {
+                    Spacer(modifier = Modifier.size(150.dp))
+                }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
 @Composable
 fun CategoryCard(category: PurchaseType, displayNames: Map<PurchaseType, String>, onClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(4.dp)
+            .padding(8.dp)
+            .shadow(4.dp, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .size(150.dp)
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.LightGray)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             val imageRes = when (category) {
                 PurchaseType.Pharmacy -> R.drawable.pharmacy
@@ -110,21 +119,27 @@ fun CategoryCard(category: PurchaseType, displayNames: Map<PurchaseType, String>
                 PurchaseType.Travel -> R.drawable.travel
                 PurchaseType.Others -> R.drawable.others
             }
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = category.name,
-                modifier = Modifier.size(64.dp)
+            Surface(
+                modifier = Modifier.size(100.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+            ) {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = category.name,
+                    modifier = Modifier.padding(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = displayNames[category] ?: category.name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 4.dp)
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = displayNames[category] ?: category.name,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Normal,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 4.dp)
-        )
     }
 }
 
