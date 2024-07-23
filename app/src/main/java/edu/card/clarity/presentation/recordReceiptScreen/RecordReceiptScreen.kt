@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
@@ -37,6 +38,7 @@ fun RecordReceiptScreen(
     val uiState by viewModel.uiState.collectAsState()
     val allCards by viewModel.allCards.collectAsState()
     val context = LocalContext.current
+    val showCamera by viewModel.showCamera.collectAsState()
     val cameraError = uiState.cameraError
 
     if (cameraError != null) {
@@ -71,7 +73,7 @@ fun RecordReceiptScreen(
                 fontSize = 22.sp,
             )
 
-            if (uiState.showCamera) {
+            if (showCamera) {
                 CameraCapture(
                     onImageCaptured = viewModel::onImageCaptured,
                     onError = { exception: Throwable ->
@@ -79,16 +81,17 @@ fun RecordReceiptScreen(
                     }
                 )
             } else {
-                // Display receipt
-                uiState.photoPath?.let { path ->
-                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = "Captured Receipt",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                    )
+                Button(
+                    onClick = {
+                        if (cameraPermissionState.status.isGranted) {
+                            viewModel.resetCamera()
+                        } else {
+                            cameraPermissionState.launchPermissionRequest()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Scan your receipt")
                 }
 
                 Button(

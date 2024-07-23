@@ -32,6 +32,9 @@ class RecordReceiptViewModel @Inject constructor(
 
     val allCards: StateFlow<List<CreditCardInfo>> = _allCards
 
+    private val _showCamera = MutableStateFlow(false)
+    val showCamera: StateFlow<Boolean> = _showCamera.asStateFlow()
+
     fun onCameraError(error: String) {
         _uiState.value = _uiState.value.copy(cameraError = error)
     }
@@ -41,11 +44,16 @@ class RecordReceiptViewModel @Inject constructor(
     }
 
     fun onImageCaptured(imagePath: String) {
-        _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
+        _uiState.value = _uiState.value.copy(photoPath = imagePath)
+        _showCamera.value = false
     }
 
     fun openCamera() {
         _uiState.value = _uiState.value.copy(showCamera = true)
+    }
+
+    fun resetCamera() {
+        _showCamera.value = true
     }
 
     fun scanReceipt() {
