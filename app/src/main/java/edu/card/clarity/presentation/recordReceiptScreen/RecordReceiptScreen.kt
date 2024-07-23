@@ -74,7 +74,7 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                 Button(
                     onClick = {
                         if (cameraPermissionState.status.isGranted) {
-                            viewModel.resetCamera()
+                            viewModel.openCamera()
                         } else {
                             cameraPermissionState.launchPermissionRequest()
                         }

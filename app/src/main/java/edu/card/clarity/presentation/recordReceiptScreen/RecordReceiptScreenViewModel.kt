@@ -19,7 +19,7 @@ class RecordReceiptViewModel : ViewModel() {
         _showCamera.value = false
     }
 
-    fun resetCamera() {
+    fun openCamera() {
         _showCamera.value = true
     }
 
