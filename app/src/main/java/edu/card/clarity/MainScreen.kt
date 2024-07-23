@@ -44,7 +44,7 @@ fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         BottomNavBar.Home,
         BottomNavBar.AddCard,
-        BottomNavBar.MyBenefits,
+        BottomNavBar.MyReceipts,
         BottomNavBar.Purchase,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()

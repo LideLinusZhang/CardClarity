@@ -5,10 +5,12 @@ import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.displayStrings
+import edu.card.clarity.repositories.PointSystemRepository
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,7 @@ import javax.inject.Inject
 class CardInformationFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    private val pointSystemRepository: PointSystemRepository,
 ) : ViewModel() {
     val cardNetworkTypeStrings = CardNetworkType.displayStrings
     val rewardTypeOptionStrings = RewardType.displayStrings
@@ -91,6 +94,18 @@ class CardInformationFormViewModel @Inject constructor(
         }
     }
 
+    fun updatePointSystemName(name: String) {
+        _uiState.update {
+            it.copy(pointSystemName = name)
+        }
+    }
+
+    fun updatePointToCashConversionRate(rate: String) {
+        _uiState.update {
+            it.copy(pointToCashConversionRate = rate)
+        }
+    }
+
     fun addCreditCard() = viewModelScope.launch {
         val creditCardInfo = CreditCardInfo(
             name = uiState.value.cardName,
@@ -104,7 +119,12 @@ class CardInformationFormViewModel @Inject constructor(
         if (selectedRewardType == RewardType.CashBack) {
             cashBackCreditCardRepository.createCreditCard(creditCardInfo)
         } else {
-            pointBackCreditCardRepository.createCreditCard(creditCardInfo)
+            val pointSystem = PointSystem(
+                name = uiState.value.pointSystemName,
+                pointToCashConversionRate = uiState.value.pointToCashConversionRate.toFloat()
+            )
+            val pointSystemId = pointSystemRepository.addPointSystem(pointSystem)
+            pointBackCreditCardRepository.createCreditCard(creditCardInfo, pointSystemId)
         }
 
         _uiState.update {

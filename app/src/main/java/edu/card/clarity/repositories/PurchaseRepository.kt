@@ -1,7 +1,6 @@
 package edu.card.clarity.repositories
 
 import edu.card.clarity.data.purchase.PurchaseDao
-import edu.card.clarity.data.purchase.PurchaseEntity
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.repositories.utils.toDomainModel
@@ -22,12 +21,13 @@ class PurchaseRepository @Inject constructor(
     suspend fun addPurchase(purchase: Purchase): UUID {
         val id = withContext(dispatcher) { UUID.randomUUID() }
 
-        val entity = PurchaseEntity(
+        val entity = edu.card.clarity.data.purchase.Purchase(
             id,
             purchase.time,
             purchase.merchant,
             purchase.type,
             purchase.total,
+            purchase.rewardAmount,
             purchase.creditCardId
         )
 
@@ -91,12 +91,13 @@ class PurchaseRepository @Inject constructor(
         require(purchaseDataSource.exist(purchase.id))
 
         purchaseDataSource.upsert(
-            PurchaseEntity(
+            edu.card.clarity.data.purchase.Purchase(
                 purchase.id,
                 purchase.time,
                 purchase.merchant,
                 purchase.type,
                 purchase.total,
+                purchase.rewardAmount,
                 purchase.creditCardId
             )
         )

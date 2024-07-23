@@ -15,5 +15,5 @@ interface PlaceTypeToPurchaseTypeMappingDao {
     suspend fun getPurchaseTypeByPlaceType(placeType: String): PurchaseType?
 
     @Upsert
-    suspend fun upsert(mapping: PlaceTypeToPurchaseTypeMappingEntity)
+    suspend fun upsert(mapping: PlaceTypeToPurchaseTypeMapping)
 }

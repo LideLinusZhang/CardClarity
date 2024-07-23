@@ -35,5 +35,5 @@ interface PointBackCardPointSystemAssociationDao {
      * @association the pair to insert or update.
      */
     @Upsert
-    suspend fun upsert(pair: CreditCardIdPointSystemIdPairEntity)
+    suspend fun upsert(pair: CreditCardIdPointSystemIdPair)
 }

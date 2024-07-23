@@ -2,9 +2,9 @@ package edu.card.clarity.repositories
 
 import android.icu.util.Calendar
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.pointSystem.PointSystem as PointSystemInDB
 import edu.card.clarity.data.pointSystem.PointSystemWithCreditCardIds
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.enums.CardNetworkType
@@ -76,13 +76,13 @@ class PointSystemRepositoryTest {
     @Test
     fun getPointSystem() = testScope.runTest {
         val pointSystemId = UUID.randomUUID()
-        val pointSystemEntity = PointSystemEntity(
+        val pointSystem = PointSystemInDB(
             id = pointSystemId,
             name = "Test Point System",
             pointToCashConversionRate = 0.01f
         )
 
-        `when`(pointSystemDao.getById(pointSystemId)).thenReturn(pointSystemEntity)
+        `when`(pointSystemDao.getById(pointSystemId)).thenReturn(pointSystem)
 
         val result = pointSystemRepository.getPointSystem(pointSystemId)
 
@@ -94,19 +94,19 @@ class PointSystemRepositoryTest {
     @Test
     fun getAllPointSystems() = testScope.runTest {
         val pointSystemId1 = UUID.randomUUID()
-        val pointSystemEntity1 = PointSystemEntity(
+        val pointSystem1 = PointSystemInDB(
             id = pointSystemId1,
             name = "Test Point System 1",
             pointToCashConversionRate = 0.01f
         )
         val pointSystemId2 = UUID.randomUUID()
-        val pointSystemEntity2 = PointSystemEntity(
+        val pointSystem2 = PointSystemInDB(
             id = pointSystemId2,
             name = "Test Point System 2",
             pointToCashConversionRate = 0.01f
         )
 
-        `when`(pointSystemDao.getAll()).thenReturn(listOf(pointSystemEntity1, pointSystemEntity2))
+        `when`(pointSystemDao.getAll()).thenReturn(listOf(pointSystem1, pointSystem2))
 
         val result = pointSystemRepository.getAllPointSystems()
 
@@ -120,13 +120,13 @@ class PointSystemRepositoryTest {
     @Test
     fun getAllPointSystemsStream() = testScope.runTest {
         val pointSystemId1 = UUID.randomUUID()
-        val pointSystemEntity1 = PointSystemEntity(
+        val pointSystem1 = PointSystemInDB(
             id = pointSystemId1,
             name = "Test Point System 1",
             pointToCashConversionRate = 0.01f
         )
         val pointSystemId2 = UUID.randomUUID()
-        val pointSystemEntity2 = PointSystemEntity(
+        val pointSystem2 = PointSystemInDB(
             id = pointSystemId2,
             name = "Test Point System 2",
             pointToCashConversionRate = 0.01f
@@ -135,8 +135,8 @@ class PointSystemRepositoryTest {
         `when`(pointSystemDao.observeAll()).thenReturn(
             flowOf(
                 listOf(
-                    pointSystemEntity1,
-                    pointSystemEntity2
+                    pointSystem1,
+                    pointSystem2
                 )
             )
         )
@@ -153,7 +153,7 @@ class PointSystemRepositoryTest {
     fun getCreditCardsUsingPointSystem() = testScope.runTest {
         val pointSystemId = UUID.randomUUID()
         val creditCardId1 = UUID.randomUUID()
-        val creditCardInfoEntity1 = CreditCardInfoEntity(
+        val creditCardInfoEntity1 = CreditCardInfo(
             id = creditCardId1,
             name = "Test Card 1",
             rewardType = RewardType.PointBack,
@@ -163,7 +163,7 @@ class PointSystemRepositoryTest {
             isReminderEnabled = true
         )
         val creditCardId2 = UUID.randomUUID()
-        val creditCardInfoEntity2 = CreditCardInfoEntity(
+        val creditCardInfoEntity2 = CreditCardInfo(
             id = creditCardId2,
             name = "Test Card 2",
             rewardType = RewardType.PointBack,
@@ -172,13 +172,13 @@ class PointSystemRepositoryTest {
             paymentDueDate = Calendar.getInstance(),
             isReminderEnabled = true
         )
-        val pointSystemEntity = PointSystemEntity(
+        val pointSystem = PointSystemInDB(
             id = pointSystemId,
             name = "Test Point System",
             pointToCashConversionRate = 0.01f
         )
         val pointSystemWithCreditCardIds = PointSystemWithCreditCardIds(
-            pointSystem = pointSystemEntity,
+            pointSystem = pointSystem,
             creditCardIds = listOf(creditCardId1, creditCardId2)
         )
 
@@ -211,7 +211,7 @@ class PointSystemRepositoryTest {
         pointSystemRepository.updatePointSystem(pointSystem)
 
         verify(pointSystemDao, times(1)).upsert(
-            PointSystemEntity(
+            PointSystemInDB(
                 id = pointSystemId,
                 name = "Test Point System",
                 pointToCashConversionRate = 0.01f

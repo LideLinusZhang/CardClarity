@@ -2,7 +2,6 @@ package edu.card.clarity.repositories
 
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
@@ -26,7 +25,7 @@ class PointSystemRepository @Inject constructor(
             UUID.randomUUID()
         }
 
-        val entity = PointSystemEntity(
+        val entity = edu.card.clarity.data.pointSystem.PointSystem(
             id,
             pointSystem.name,
             pointSystem.pointToCashConversionRate
@@ -69,7 +68,7 @@ class PointSystemRepository @Inject constructor(
         require(pointSystemDataSource.exist(pointSystem.id))
 
         pointSystemDataSource.upsert(
-            PointSystemEntity(
+            edu.card.clarity.data.pointSystem.PointSystem(
                 pointSystem.id,
                 pointSystem.name,
                 pointSystem.pointToCashConversionRate
