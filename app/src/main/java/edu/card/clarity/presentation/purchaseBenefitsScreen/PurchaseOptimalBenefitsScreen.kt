@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +40,7 @@ fun PurchaseOptimalBenefitsScreen(
             text = "Best Card for ${category.name}",
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
@@ -60,7 +61,7 @@ fun PurchaseOptimalBenefitsScreen(
             text = "Other Available Benefits for ${category.name}",
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
@@ -91,13 +92,14 @@ fun OptimalCreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCar
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .shadow(8.dp, shape = MaterialTheme.shapes.medium),
         elevation = CardDefaults.elevatedCardElevation(4.dp),
         shape = MaterialTheme.shapes.medium
     ) {
         Column(
             modifier = Modifier
-                .background(Color.LightGray)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .padding(16.dp)
         ) {
             Text(
@@ -125,13 +127,14 @@ fun CreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUi
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .shadow(8.dp, shape = MaterialTheme.shapes.medium),
         elevation = CardDefaults.elevatedCardElevation(4.dp),
         shape = MaterialTheme.shapes.medium
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
         ) {
             Text(
