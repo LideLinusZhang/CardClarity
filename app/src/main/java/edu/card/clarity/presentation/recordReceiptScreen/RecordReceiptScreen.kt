@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -32,11 +34,10 @@ import java.util.*
 fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val showCamera by viewModel.showCamera.collectAsState()
-    val cameraError by viewModel.cameraError.collectAsState()
+    val cameraError = uiState.cameraError
 
     if (cameraError != null) {
-        ErrorDialog(error = cameraError!!, onDismiss = { viewModel.resetCameraError() })
+        ErrorDialog(error = cameraError, onDismiss = viewModel::resetCameraError)
     }
 
     val datePickerDialog = remember {
@@ -62,12 +63,13 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
         ) {
             Text(
                 text = "Record a Receipt",
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
 
-            if (showCamera) {
+            if (uiState.showCamera) {
                 CameraCapture(
                     onImageCaptured = viewModel::onImageCaptured,
                     onError = { exception ->
@@ -75,6 +77,17 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                     }
                 )
             } else {
+                // display receipt
+                uiState.photoPath?.let { path ->
+                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
+                    Image(
+                        bitmap = imageBitmap,
+                        contentDescription = "Captured Receipt",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                    )
+                }
 
                 Button(
                     onClick = {
@@ -89,18 +102,6 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                     Text("Scan your receipt")
                 }
 
-                // display receipt
-                uiState.photoPath?.let { path ->
-                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = "Captured Receipt",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(top = 16.dp)
-                    )
-                }
                 LazyColumn {
                     item {
                         Text("Detected information:")

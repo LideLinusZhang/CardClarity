@@ -11,27 +11,20 @@ class RecordReceiptViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(RecordReceiptUiState())
     val uiState: StateFlow<RecordReceiptUiState> = _uiState
 
-    private val _showCamera = MutableStateFlow(false)
-    val showCamera: StateFlow<Boolean> = _showCamera.asStateFlow()
-
-    private val _cameraError = MutableStateFlow<String?>(null)
-    val cameraError: StateFlow<String?> = _cameraError.asStateFlow()
-
     fun onCameraError(error: String) {
-        _cameraError.value = error
+        _uiState.value = _uiState.value.copy(cameraError = error)
     }
 
     fun resetCameraError() {
-        _cameraError.value = null
+        _uiState.value = _uiState.value.copy(cameraError = null)
     }
 
     fun onImageCaptured(imagePath: String) {
-        _uiState.value = _uiState.value.copy(photoPath = imagePath)
-        _showCamera.value = false
+        _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
     }
 
     fun openCamera() {
-        _showCamera.value = true
+        _uiState.value = _uiState.value.copy(showCamera = true)
     }
 
     fun scanReceipt() {
@@ -78,5 +71,7 @@ data class RecordReceiptUiState(
     val merchant: String = "",
     val selectedCard: String = "",
     val selectedPurchaseType: String = "",
-    val photoPath: String? = null
+    val photoPath: String? = null,
+    val showCamera: Boolean = false,
+    val cameraError: String? = null
 )
