@@ -23,9 +23,9 @@ import edu.card.clarity.presentation.upcomingPaymentsScreen.UpcomingPaymentsScre
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavBar.Home.route
+        startDestination = Destinations.HOME
     ) {
-        composable(BottomNavBar.Home.route) {
+        composable(Destinations.HOME) {
             HomeScreen(navController)
         }
         composable(Destinations.ADD_CARD) {
