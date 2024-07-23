@@ -1,15 +1,11 @@
 package edu.card.clarity.presentation.myReceiptsScreen
 
 import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.card.clarity.domain.creditCard.CreditCardInfo
-import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.PurchaseType
-import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayStrings
 import edu.card.clarity.repositories.PurchaseRepository
@@ -40,33 +36,18 @@ class MyReceiptsScreenViewModel @Inject constructor (
         private val dateFormatter = SimpleDateFormat.getDateInstance()
     }
 
-    private val allCardsOption = flow<List<CreditCardInfo>> {
+    private val allCardsOption = flow<List<ParcelableCreditCardInfo>> {
         emit(
-            listOf(
-                CreditCardInfo(
-                    null, "All", RewardType.CashBack,
-                    CardNetworkType.MasterCard,
-                    Calendar.getInstance(),
-                    Calendar.getInstance(), false
-                )
-            )
+            listOf(ParcelableCreditCardInfo(null, "All"))
         )
     }
 
-    /*// Temporary Data
+    /*// Temporary Test Data
     private val creditCards = listOf(
-        CreditCardInfo(
-            UUID.randomUUID(), "Visa Dividend", RewardType.CashBack,
-            CardNetworkType.MasterCard,
-            Calendar.getInstance(),
-            Calendar.getInstance(), false
-        ),
-        CreditCardInfo(
-            UUID.randomUUID(), "MasterCard", RewardType.CashBack,
-            CardNetworkType.MasterCard,
-            Calendar.getInstance(),
-            Calendar.getInstance(), false
-        )
+        ParcelableCreditCardInfo(
+            UUID.randomUUID(), "Visa Dividend",),
+        ParcelableCreditCardInfo(
+            UUID.randomUUID(), "MasterCard")
     )
     private val receipts: StateFlow<List<ReceiptsUiState>> = MutableStateFlow(
         listOf(
@@ -100,7 +81,7 @@ class MyReceiptsScreenViewModel @Inject constructor (
         )
     )
     val cards = combine(
-        allCardsOption, flow<List<CreditCardInfo>> { emit(creditCards) }
+        allCardsOption, flow<List<ParcelableCreditCardInfo>> { emit(creditCards) }
     ) { list1, list2 ->
         list1 + list2
     }.stateIn(
@@ -129,8 +110,16 @@ class MyReceiptsScreenViewModel @Inject constructor (
 
     val cards = combine(
         allCardsOption,
-        cashBackCreditCardRepository.getAllCreditCardInfoStream(),
-        pointBackCreditCardRepository.getAllCreditCardInfoStream()
+        cashBackCreditCardRepository.getAllCreditCardInfoStream().map { cashBackCreditCards ->
+            cashBackCreditCards.map {
+                ParcelableCreditCardInfo(it.id, it.name)
+            }
+        },
+        pointBackCreditCardRepository.getAllCreditCardInfoStream().map { pointBackCreditCards ->
+            pointBackCreditCards.map {
+                ParcelableCreditCardInfo(it.id, it.name)
+            }
+        }
     )
     { list1, list2 , list3->
         list1 + list2 + list3
@@ -143,8 +132,8 @@ class MyReceiptsScreenViewModel @Inject constructor (
     val purchaseTypeOptions = PurchaseType.displayStrings
 
     private val _selectedCardFilter =
-        MutableStateFlow(savedStateHandle.get<CreditCardInfo?>(KEY_SELECTED_CARD_FILTER))
-    val selectedCardFilter: StateFlow<CreditCardInfo?> = _selectedCardFilter
+        MutableStateFlow(savedStateHandle.get<ParcelableCreditCardInfo?>(KEY_SELECTED_CARD_FILTER))
+    val selectedCardFilter: StateFlow<ParcelableCreditCardInfo?> = _selectedCardFilter
 
     private val _selectedPurchaseTypeFilter =
         MutableStateFlow(savedStateHandle.get<String?>(KEY_SELECTED_PURCHASE_TYPE_FILTER))
@@ -173,7 +162,7 @@ class MyReceiptsScreenViewModel @Inject constructor (
         return card!!.name
     }
 
-    fun setCardFilter(card: CreditCardInfo) {
+    fun setCardFilter(card: ParcelableCreditCardInfo) {
         _selectedCardFilter.value = card
         savedStateHandle[KEY_SELECTED_CARD_FILTER] = card
     }
