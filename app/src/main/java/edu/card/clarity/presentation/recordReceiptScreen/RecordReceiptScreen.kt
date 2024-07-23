@@ -84,7 +84,7 @@ fun RecordReceiptScreen(
                 Button(
                     onClick = {
                         if (cameraPermissionState.status.isGranted) {
-                            viewModel.resetCamera()
+                            viewModel.openCamera()
                         } else {
                             cameraPermissionState.launchPermissionRequest()
                         }
