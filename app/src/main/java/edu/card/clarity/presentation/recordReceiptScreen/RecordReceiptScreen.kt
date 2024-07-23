@@ -53,7 +53,7 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(20.dp)
+                .padding(horizontal = 32.dp, vertical = 40.dp),
         ) {
             Text(
                 text = "Record a Receipt",
