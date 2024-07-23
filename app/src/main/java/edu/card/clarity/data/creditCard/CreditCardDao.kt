@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCard
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCard
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
@@ -179,4 +180,10 @@ interface CreditCardDao {
             "WHERE rewardType = :rewardType " +
             "AND id NOT IN (SELECT * FROM predefinedCreditCardId)")
     suspend fun deleteAllOf(rewardType: RewardType)
+
+    /**
+     * Get the associated AlarmItem of the credit card.
+     */
+    @Query("SELECT * FROM alarmItems WHERE creditCardId = :creditCardId")
+    suspend fun getAlarmItemByCreditCardId(creditCardId: UUID): AlarmItem?
 }
