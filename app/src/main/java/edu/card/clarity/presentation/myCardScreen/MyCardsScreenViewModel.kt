@@ -94,15 +94,16 @@ class MyCardsScreenViewModel @Inject constructor(
         private val dateFormatter = SimpleDateFormat.getDateInstance()
 
         private fun CreditCardInfo.toUiState() = CreditCardItemUiState(
+            id!!,
             name,
+            rewardType.ordinal,
             dateFormatter.format(paymentDueDate.timeInMillis),
             isReminderEnabled,
             when (cardNetworkType) {
                 CardNetworkType.Visa -> Color(0xFFB7FF9E)
                 CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
                 CardNetworkType.AMEX -> Color(0xFFAED8FF)
-            },
-            id!!,
+            }
         )
     }
 }

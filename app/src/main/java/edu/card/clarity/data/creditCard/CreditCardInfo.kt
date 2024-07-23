@@ -22,13 +22,13 @@ import java.util.UUID
     ]
 )
 @TypeConverters(CalendarConverter::class)
-data class CreditCardInfoEntity(
-    @PrimaryKey val id: UUID,
-    val name: String,
-    val rewardType: RewardType,
-    val cardNetworkType: CardNetworkType,
-    val statementDate: Calendar,
-    val paymentDueDate: Calendar,
+data class CreditCardInfo(
+    @PrimaryKey override val id: UUID,
+    override val name: String,
+    override val rewardType: RewardType,
+    override val cardNetworkType: CardNetworkType,
+    override val statementDate: Calendar,
+    override val paymentDueDate: Calendar,
     @ColumnInfo(defaultValue = "0")
-    val isReminderEnabled: Boolean,
-)
+    override val isReminderEnabled: Boolean,
+): ICreditCardInfo
