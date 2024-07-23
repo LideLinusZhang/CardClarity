@@ -1,10 +1,11 @@
 package edu.card.clarity.repositories.creditCard
 
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.repositories.utils.toDomainModel
@@ -13,18 +14,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.UUID
+import edu.card.clarity.data.creditCard.CreditCardInfo as CreditCardInfoInDB
 
 abstract class CreditCardRepositoryBase internal constructor(
     protected val creditCardDataSource: CreditCardDao,
     private val purchaseRewardDataSource: PurchaseRewardDao,
     protected val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun createCreditCard(info: CreditCardInfo): UUID {
+    protected open suspend fun createCreditCard(info: CreditCardInfo): UUID {
         val id = withContext(dispatcher) {
             UUID.randomUUID()
         }
 
-        val cardInfoEntity = CreditCardInfoEntity(
+        val cardInfoEntity = CreditCardInfoInDB(
             id,
             info.name,
             info.rewardType,
@@ -48,7 +50,7 @@ abstract class CreditCardRepositoryBase internal constructor(
         withContext(dispatcher) {
             for (purchaseType in purchaseTypes) {
                 purchaseRewardDataSource.upsert(
-                    PurchaseRewardEntity(
+                    PurchaseReward(
                         creditCardId = creditCardId,
                         purchaseType = purchaseType,
                         rewardType = rewardType,
@@ -90,6 +92,8 @@ abstract class CreditCardRepositoryBase internal constructor(
         return creditCardDataSource.getRewardTypeById(id)
     }
 
+    protected abstract suspend fun getAllCreditCards(): List<ICreditCard>
+
     protected suspend fun getAllCreditCardInfoOf(rewardType: RewardType): List<CreditCardInfo> {
         return withContext(dispatcher) {
             creditCardDataSource.getAllInfoOf(rewardType).toDomainModel()
@@ -110,6 +114,12 @@ abstract class CreditCardRepositoryBase internal constructor(
 
     protected suspend fun deleteAllCreditCardsOf(rewardType: RewardType) {
         creditCardDataSource.deleteAllOf(rewardType)
+    }
+
+    suspend fun findOptimalCreditCard(purchase: Purchase): ICreditCard? {
+        return getAllCreditCards().maxByOrNull {
+            it.getReturnAmountInCash(purchase)
+        }
     }
 
     protected companion object {

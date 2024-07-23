@@ -1,12 +1,13 @@
 package edu.card.clarity.data.purchase
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import edu.card.clarity.data.converters.DateConverter
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import java.util.Date
 import java.util.UUID
@@ -15,7 +16,7 @@ import java.util.UUID
     tableName = "purchase",
     foreignKeys = [
         ForeignKey(
-            entity = CreditCardInfoEntity::class,
+            entity = CreditCardInfo::class,
             parentColumns = ["id"],
             childColumns = ["creditCardId"]
         )
@@ -26,11 +27,13 @@ import java.util.UUID
     ]
 )
 @TypeConverters(DateConverter::class)
-data class PurchaseEntity(
+data class Purchase(
     @PrimaryKey val id: UUID,
     val time: Date,
     val merchant: String,
     val type: PurchaseType,
     val total: Float,
+    @ColumnInfo(defaultValue = "0")
+    val rewardAmount: Float,
     val creditCardId: UUID
 )

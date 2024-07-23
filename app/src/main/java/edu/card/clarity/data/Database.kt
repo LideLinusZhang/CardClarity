@@ -3,36 +3,48 @@ package edu.card.clarity.data
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import edu.card.clarity.data.alarmItem.AlarmItem
+import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.creditCard.CreditCardDao
-import edu.card.clarity.data.creditCard.CreditCardInfoEntity
-import edu.card.clarity.data.creditCard.PredefinedCreditCardIdEntity
-import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPairEntity
+import edu.card.clarity.data.creditCard.CreditCardInfo
+import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardId
+import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
+import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardInfo
+import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.pointSystem.PointSystemEntity
+import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
-import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingEntity
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMapping
 import edu.card.clarity.data.purchase.PurchaseDao
-import edu.card.clarity.data.purchase.PurchaseEntity
+import edu.card.clarity.data.purchase.Purchase
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardEntity
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 
 @Database(
     entities = [
-        PointSystemEntity::class,
-        CreditCardInfoEntity::class,
-        PurchaseRewardEntity::class,
-        CreditCardIdPointSystemIdPairEntity::class,
-        PurchaseEntity::class,
-        PlaceTypeToPurchaseTypeMappingEntity::class,
-        PredefinedCreditCardIdEntity::class
+        PointSystem::class,
+        CreditCardInfo::class,
+        PurchaseReward::class,
+        CreditCardIdPointSystemIdPair::class,
+        Purchase::class,
+        PlaceTypeToPurchaseTypeMapping::class,
+        PredefinedCreditCardId::class,
+        AlarmItem::class
     ],
-    version = 5,
+    views = [
+        UserAddedCreditCardInfo::class,
+        PredefinedCreditCardInfo::class
+    ],
+    version = 8,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
         AutoMigration(3, 4),
-        AutoMigration(4, 5)
+        AutoMigration(4, 5),
+        AutoMigration(5, 6),
+        AutoMigration(6, 7),
+        AutoMigration(7, 8)
     ],
     exportSchema = true
 )
@@ -41,6 +53,7 @@ abstract class Database : RoomDatabase() {
     abstract fun pointSystemAssociation(): PointBackCardPointSystemAssociationDao
 
     abstract fun creditCard(): CreditCardDao
+    abstract fun alarmItem(): AlarmItemDao
     abstract fun purchaseReward(): PurchaseRewardDao
 
     abstract fun purchase(): PurchaseDao

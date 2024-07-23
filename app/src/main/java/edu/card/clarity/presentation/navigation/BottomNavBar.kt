@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
+import edu.card.clarity.presentation.utils.Destinations
 
 sealed class BottomNavBar (
     val route: String,
@@ -13,22 +14,22 @@ sealed class BottomNavBar (
     val icon: ImageVector
 ) {
     data object Home: BottomNavBar(
-        route = "home",
+        route = Destinations.HOME,
         title = "Home",
         icon = Icons.Default.Home
     )
     data object AddCard: BottomNavBar(
-        route = "addCard",
+        route = Destinations.ADD_CARD,
         title = "Add Card",
         icon = Icons.Default.AddCircle
     )
-    data object MyBenefits: BottomNavBar(
-        route = "Benefits",
-        title = "Benefits",
+    data object MyReceipts: BottomNavBar(
+        route = Destinations.MY_RECEIPTS,
+        title = "Receipts",
         icon = Icons.Default.Star
     )
     data object Purchase: BottomNavBar(
-        route = "purchase",
+        route = Destinations.PURCHASE,
         title = "Purchase",
         icon = Icons.Default.Search
     )

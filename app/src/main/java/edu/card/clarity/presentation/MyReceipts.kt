@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun MyBenefitsScreen() {
+fun MyReceiptsScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -20,7 +20,7 @@ fun MyBenefitsScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "MY BENEFITS",
+            text = "MY RECEIPTS",
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
@@ -30,5 +30,5 @@ fun MyBenefitsScreen() {
 @Composable
 @Preview
 fun MyBenefitsScreenPreview() {
-    MyBenefitsScreen()
+    MyReceiptsScreen()
 }

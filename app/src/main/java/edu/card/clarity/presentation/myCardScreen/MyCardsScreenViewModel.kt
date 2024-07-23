@@ -6,6 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.notifications.AndroidAlarmScheduler
+import edu.card.clarity.data.alarmItem.AlarmItemDao
+import edu.card.clarity.data.converters.toSchedulerAlarmItem
+import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
@@ -26,6 +30,9 @@ import javax.inject.Inject
 class MyCardsScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    private val creditCardDao: CreditCardDao,
+    private val alarmItemDao: AlarmItemDao,
+    private val scheduler: AndroidAlarmScheduler,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _savedFilter = savedStateHandle.getStateFlow(
@@ -83,6 +90,13 @@ class MyCardsScreenViewModel @Inject constructor(
 
     fun deleteCreditCard(id: UUID) {
         viewModelScope.launch {
+            val alarmItem = creditCardDao.getAlarmItemByCreditCardId(id)
+
+            alarmItem?.let {
+                scheduler.cancel(it.toSchedulerAlarmItem())
+                alarmItemDao.deleteById(it.id)
+            }
+
             cashBackCreditCardRepository.deleteCreditCard(id)
             pointBackCreditCardRepository.deleteCreditCard(id)
         }
@@ -94,15 +108,16 @@ class MyCardsScreenViewModel @Inject constructor(
         private val dateFormatter = SimpleDateFormat.getDateInstance()
 
         private fun CreditCardInfo.toUiState() = CreditCardItemUiState(
+            id!!,
             name,
+            rewardType.ordinal,
             dateFormatter.format(paymentDueDate.timeInMillis),
             isReminderEnabled,
             when (cardNetworkType) {
                 CardNetworkType.Visa -> Color(0xFFB7FF9E)
                 CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
                 CardNetworkType.AMEX -> Color(0xFFAED8FF)
-            },
-            id!!,
+            }
         )
     }
 }
