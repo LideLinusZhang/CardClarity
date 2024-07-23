@@ -24,12 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
 import java.util.Calendar
 
 @Composable
 fun UseTemplateCardInformationForm(
+    navController: NavController,
     viewModel: TemplateSelectionFormViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -134,6 +136,7 @@ fun UseTemplateCardInformationForm(
             Button(
                 onClick = {
                     viewModel.createCreditCard()
+                    navController.navigate("myCards")
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,

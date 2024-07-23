@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
@@ -13,6 +14,7 @@ import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayString
+import edu.card.clarity.repositories.PointSystemRepository
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TemplateSelectionFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
-    private val pointBackCreditCardRepository: PointBackCreditCardRepository
+    private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    private val pointSystemRepository: PointSystemRepository,
 ) : ViewModel() {
     private val cashBackTemplates = cashBackCreditCardRepository
         .getAllPredefinedCreditCardsStream()
@@ -116,28 +119,49 @@ class TemplateSelectionFormViewModel @Inject constructor(
     }
 
     fun createCreditCard() {
-        val selectedCard = selectedTemplate
-        if (selectedCard is CashBackCreditCard) {
-            viewModelScope.launch {
-                val cardInfo = CreditCardInfo(
-                    name = _uiState.value.cardName,
-                    rewardType = RewardType.CashBack,
-                    cardNetworkType = selectedCard.info.cardNetworkType,
-                    statementDate = mostRecentStatementDate,
-                    paymentDueDate = mostRecentPaymentDueDate,
-                    isReminderEnabled = _uiState.value.isReminderEnabled
-                )
-                val newCardId = cashBackCreditCardRepository.createCreditCard(cardInfo)
-                selectedCard.purchaseRewards.forEach{ reward ->
-                    cashBackCreditCardRepository.addPurchaseReward(
-                        creditCardId = newCardId,
-                        purchaseTypes = listOf(reward.applicablePurchaseType),
-                        percentage = reward.rewardFactor
+        val selectedCard = selectedTemplate ?: return
+
+        viewModelScope.launch {
+            val cardInfo = CreditCardInfo(
+                name = _uiState.value.cardName,
+                rewardType = when (selectedCard) {
+                    is CashBackCreditCard -> RewardType.CashBack
+                    is PointBackCreditCard -> RewardType.PointBack
+                    else -> return@launch
+                },
+                cardNetworkType = selectedCard.info.cardNetworkType,
+                statementDate = mostRecentStatementDate,
+                paymentDueDate = mostRecentPaymentDueDate,
+                isReminderEnabled = _uiState.value.isReminderEnabled
+            )
+
+            when (selectedCard) {
+                is CashBackCreditCard -> {
+                    val newCardId = cashBackCreditCardRepository.createCreditCard(cardInfo)
+                    selectedCard.purchaseRewards.forEach { reward ->
+                        cashBackCreditCardRepository.addPurchaseReward(
+                            creditCardId = newCardId,
+                            purchaseTypes = listOf(reward.applicablePurchaseType),
+                            percentage = reward.rewardFactor
+                        )
+                    }
+                }
+                is PointBackCreditCard -> {
+                    val pointSystem = PointSystem(
+                        name = selectedCard.pointSystem.name,
+                        pointToCashConversionRate = selectedCard.pointSystem.pointToCashConversionRate
                     )
+                    val pointSystemId = pointSystemRepository.addPointSystem(pointSystem)
+                    val newCardId = pointBackCreditCardRepository.createCreditCard(cardInfo, pointSystemId)
+                    selectedCard.purchaseRewards.forEach { reward ->
+                        pointBackCreditCardRepository.addPurchaseReward(
+                            creditCardId = newCardId,
+                            purchaseTypes = listOf(reward.applicablePurchaseType),
+                            multiplier = reward.rewardFactor
+                        )
+                    }
                 }
             }
-        } else if (selectedCard is PointBackCreditCard) {
-
         }
     }
 }

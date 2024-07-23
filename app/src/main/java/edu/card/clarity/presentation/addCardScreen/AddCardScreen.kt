@@ -71,7 +71,7 @@ fun AddCardScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         when (selectedTab) {
-            AddCardTabOption.Template -> UseTemplateCardInformationForm()
+            AddCardTabOption.Template -> UseTemplateCardInformationForm(navController)
             AddCardTabOption.Customize -> AddCustomCardContent(navController)
         }
     }
