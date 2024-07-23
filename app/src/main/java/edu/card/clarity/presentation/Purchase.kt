@@ -58,6 +58,9 @@ fun PurchaseScreen(navController: NavController) {
 @Composable
 fun CategoryGrid(navController: NavController) {
     val categories = PurchaseType.entries
+    val displayNames = mapOf(
+        PurchaseType.HomeImprovement to "Home Improvement"
+    )
 
     Column {
         for (i in categories.indices step 3) {
@@ -67,7 +70,7 @@ fun CategoryGrid(navController: NavController) {
             ) {
                 for (j in i until i + 3) {
                     if (j < categories.size) {
-                        CategoryCard(category = categories[j]) {
+                        CategoryCard(category = categories[j], displayNames) {
                             navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${categories[j].name}")
                         }
                     } else {
@@ -80,7 +83,7 @@ fun CategoryGrid(navController: NavController) {
 }
 
 @Composable
-fun CategoryCard(category: PurchaseType, onClick: () -> Unit) {
+fun CategoryCard(category: PurchaseType, displayNames: Map<PurchaseType, String>, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -115,7 +118,7 @@ fun CategoryCard(category: PurchaseType, onClick: () -> Unit) {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = category.name,
+            text = displayNames[category] ?: category.name,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
             color = Color.Black,
