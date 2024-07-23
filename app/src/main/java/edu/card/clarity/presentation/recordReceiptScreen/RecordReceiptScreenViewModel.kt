@@ -14,6 +14,17 @@ class RecordReceiptViewModel : ViewModel() {
     private val _showCamera = MutableStateFlow(false)
     val showCamera: StateFlow<Boolean> = _showCamera.asStateFlow()
 
+    private val _cameraError = MutableStateFlow<String?>(null)
+    val cameraError: StateFlow<String?> = _cameraError.asStateFlow()
+
+    fun onCameraError(error: String) {
+        _cameraError.value = error
+    }
+
+    fun resetCameraError() {
+        _cameraError.value = null
+    }
+
     fun onImageCaptured(imagePath: String) {
         _uiState.value = _uiState.value.copy(photoPath = imagePath)
         _showCamera.value = false

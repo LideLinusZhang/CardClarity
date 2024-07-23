@@ -33,6 +33,11 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val showCamera by viewModel.showCamera.collectAsState()
+    val cameraError by viewModel.cameraError.collectAsState()
+
+    if (cameraError != null) {
+        ErrorDialog(error = cameraError!!, onDismiss = { viewModel.resetCameraError() })
+    }
 
     val datePickerDialog = remember {
         DatePickerDialog(
@@ -66,7 +71,7 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                 CameraCapture(
                     onImageCaptured = viewModel::onImageCaptured,
                     onError = { exception ->
-                        // Handle camera errors here, update state to show an error message if necessary
+                        viewModel.onCameraError("Failed to capture image: ${exception.message}")
                     }
                 )
             } else {
@@ -156,6 +161,20 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
             }
         }
     }
+}
+
+@Composable
+fun ErrorDialog(error: String, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = "Error") },
+        text = { Text(text = error) },
+        confirmButton = {
+            Button(onClick = { onDismiss() }) {
+                Text("OK")
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)
