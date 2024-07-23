@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BenefitsPageViewModel @Inject constructor(
+class PurchaseOptimalBenefitsScreenViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {

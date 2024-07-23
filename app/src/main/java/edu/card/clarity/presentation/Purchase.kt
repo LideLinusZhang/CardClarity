@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.R
+import edu.card.clarity.presentation.utils.Destinations
 
 @Composable
 fun PurchaseScreen(navController: NavController) {
@@ -77,7 +78,7 @@ fun CategoryGrid(navController: NavController) {
                 for (j in i until i + 3) {
                     if (j < categories.size) {
                         CategoryCard(category = categories[j]) {
-                            navController.navigate("benefits/${categories[j]}")
+                            navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${categories[j]}")
                         }
                     } else {
                         Spacer(modifier = Modifier.size(100.dp))

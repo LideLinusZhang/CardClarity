@@ -17,10 +17,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import edu.card.clarity.presentation.purchaseBenefitsScreen.BenefitsPageViewModel.CreditCardItemUiState
 
 @Composable
-fun BenefitsScreen(navController: NavController, category: String, viewModel: BenefitsPageViewModel = hiltViewModel()) {
+fun PurchaseOptimalBenefitsScreen(
+    navController: NavController,
+    category: String,
+    viewModel: PurchaseOptimalBenefitsScreenViewModel = hiltViewModel()
+) {
     val creditCards by viewModel.creditCards.collectAsState()
 
     Column(
@@ -60,7 +63,7 @@ fun BenefitsScreen(navController: NavController, category: String, viewModel: Be
 }
 
 @Composable
-fun CreditCardItem(card: CreditCardItemUiState) {
+fun CreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUiState) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,5 +99,5 @@ fun CreditCardItem(card: CreditCardItemUiState) {
 @Preview
 fun BenefitsScreenPreview() {
     val navController = rememberNavController()
-    BenefitsScreen(navController, category = "Pharmacy")
+    PurchaseOptimalBenefitsScreen(navController, category = "Pharmacy")
 }

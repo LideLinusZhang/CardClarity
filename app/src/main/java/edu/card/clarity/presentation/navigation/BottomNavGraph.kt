@@ -16,6 +16,7 @@ import edu.card.clarity.presentation.addBenefitScreen.AddBenefitScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
+import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseOptimalBenefitsScreen
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.presentation.utils.Destinations
 
@@ -35,7 +36,7 @@ fun BottomNavGraph(navController: NavHostController) {
             MyReceiptsScreen()
         }
         composable(Destinations.PURCHASE) {
-            PurchaseScreen()
+            PurchaseScreen(navController)
         }
         composable(Destinations.MY_CARDS) {
             MyCardsScreen(navController)
@@ -90,6 +91,13 @@ fun BottomNavGraph(navController: NavHostController) {
             )
 
             AddBenefitScreen(cardName)
+        }
+        composable(
+            route = "${Destinations.PURCHASE_OPTIMAL_BENEFITS}/{category}",
+            arguments = listOf(navArgument("category") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val category = backStackEntry.arguments?.getString("category")!!
+            PurchaseOptimalBenefitsScreen(navController, category)
         }
     }
 }
