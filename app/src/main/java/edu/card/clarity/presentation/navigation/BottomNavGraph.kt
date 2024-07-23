@@ -89,7 +89,7 @@ fun BottomNavGraph(navController: NavHostController) {
                 cardRewardTypeOrdinal
             )
 
-            AddBenefitScreen(cardName)
+            AddBenefitScreen(cardName, navController)
         }
     }
 }
