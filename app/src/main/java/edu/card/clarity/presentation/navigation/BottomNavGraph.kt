@@ -91,7 +91,7 @@ fun BottomNavGraph(navController: NavHostController) {
                 cardRewardTypeOrdinal
             )
 
-            AddBenefitScreen(cardName)
+            AddBenefitScreen(cardName, navController)
         }
         composable(
             route = "${Destinations.PURCHASE_OPTIMAL_BENEFITS}/{category}",
