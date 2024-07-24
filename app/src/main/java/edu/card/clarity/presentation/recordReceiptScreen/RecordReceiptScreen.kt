@@ -30,8 +30,10 @@ import java.util.*
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RecordReceiptScreen(navController: NavController,
-                        viewModel: RecordReceiptViewModel = hiltViewModel()) {
+fun RecordReceiptScreen(
+    navController: NavController,
+    viewModel: RecordReceiptViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
     val allCards by viewModel.allCards.collectAsState()
     val context = LocalContext.current
@@ -69,16 +71,15 @@ fun RecordReceiptScreen(navController: NavController,
                 fontSize = 22.sp,
             )
 
-
             if (uiState.showCamera) {
                 CameraCapture(
                     onImageCaptured = viewModel::onImageCaptured,
-                    onError = { exception ->
+                    onError = { exception: Throwable ->
                         viewModel.onCameraError("Failed to capture image: ${exception.message}")
                     }
                 )
             } else {
-                // display receipt
+                // Display receipt
                 uiState.photoPath?.let { path ->
                     val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
                     Image(
@@ -161,6 +162,7 @@ fun RecordReceiptScreen(navController: NavController,
                         ) {
                             Text("Add Receipt")
                         }
+                        Spacer(modifier = Modifier.height(42.dp))
                     }
                 }
             }
