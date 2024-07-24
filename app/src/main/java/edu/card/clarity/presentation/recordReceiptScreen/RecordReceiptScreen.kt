@@ -33,6 +33,7 @@ import java.util.*
 @Composable
 fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
+    val allCards by viewModel.allCards.collectAsState()
     val context = LocalContext.current
     val cameraError = uiState.cameraError
 
@@ -134,16 +135,16 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                     }
                     item {
                         DropdownMenu(
-                            label = "Card Type",
-                            options = CardNetworkType.entries.map { it.name },
+                            label = "Select Card Used",
+                            options = allCards.map { it.name },
                             selectedOption = uiState.selectedCard,
-                            onOptionSelected = { viewModel.onCardSelected(CardNetworkType.entries[it].name) }
+                            onOptionSelected = { viewModel.onCardSelected(allCards[it].name) }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                     item {
                         DropdownMenu(
-                            label = "Purchase Type",
+                            label = "Select Card Purchase Type",
                             options = PurchaseType.entries.map { it.name },
                             selectedOption = uiState.selectedPurchaseType,
                             onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
@@ -178,17 +179,17 @@ fun ErrorDialog(error: String, onDismiss: () -> Unit) {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RecordReceiptScreenPreview() {
-    // mock data for preview
-    val mockViewModel = RecordReceiptViewModel().apply {
-        onDateChange("2024-07-20")
-        onTotalAmountChange("45.99")
-        onMerchantChange("Walmart")
-        onCardSelected("Visa")
-        onPurchaseTypeSelected("Groceries")
-    }
-
-    RecordReceiptScreen(viewModel = mockViewModel)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun RecordReceiptScreenPreview() {
+//    // mock data for preview
+//    val mockViewModel = RecordReceiptViewModel().apply {
+//        onDateChange("2024-07-20")
+//        onTotalAmountChange("45.99")
+//        onMerchantChange("Walmart")
+//        onCardSelected("Visa")
+//        onPurchaseTypeSelected("Groceries")
+//    }
+//
+//    RecordReceiptScreen(viewModel = mockViewModel)
+//}
