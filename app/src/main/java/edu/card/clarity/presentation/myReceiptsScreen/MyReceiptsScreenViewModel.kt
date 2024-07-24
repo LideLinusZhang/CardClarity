@@ -30,7 +30,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class MyReceiptsScreenViewModel @Inject constructor (
+class MyReceiptsScreenViewModel @Inject constructor(
     private val receiptRepository: ReceiptRepository,
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
@@ -100,23 +100,47 @@ class MyReceiptsScreenViewModel @Inject constructor (
         listOf(ReceiptFilterUiState.ALL_OPTION) + PurchaseType.displayStrings
 
     fun setCreditCardFilter(optionIndex: Int) {
-        savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
-            .value
-            .copy(filteredCreditCardId = if (optionIndex == 0) null else creditCards.value[optionIndex - 1].id)
+        if (optionIndex in creditCardFilterOptionStrings.value.indices) {
+            if (optionIndex == 0) {
+                savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
+                    .value
+                    .copy(filteredCreditCardId = null)
 
-        _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
-            selectedCreditCardFilterOption = creditCards.value[optionIndex - 1].name
-        )
+                _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
+                    selectedCreditCardFilterOption = ReceiptFilterUiState.ALL_OPTION
+                )
+            } else {
+                savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
+                    .value
+                    .copy(filteredCreditCardId = creditCards.value[optionIndex - 1].id)
+
+                _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
+                    selectedCreditCardFilterOption = creditCards.value[optionIndex - 1].name
+                )
+            }
+        }
     }
 
     fun setPurchaseTypeFilter(optionIndex: Int) {
-        savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
-            .value
-            .copy(filteredPurchaseType = if (optionIndex == 0) null else PurchaseType.entries[optionIndex - 1])
+        if (optionIndex in purchaseTypeFilterOptionStrings.indices) {
+            if (optionIndex == 0) {
+                savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
+                    .value
+                    .copy(filteredPurchaseType = null)
 
-        _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
-            selectedPurchaseTypeFilterOption = purchaseTypeFilterOptionStrings[optionIndex]
-        )
+                _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
+                    selectedPurchaseTypeFilterOption = ReceiptFilterUiState.ALL_OPTION
+                )
+            } else {
+                savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
+                    .value
+                    .copy(filteredPurchaseType = PurchaseType.entries[optionIndex - 1])
+
+                _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
+                    selectedPurchaseTypeFilterOption = purchaseTypeFilterOptionStrings[optionIndex]
+                )
+            }
+        }
     }
 
     fun deleteReceipt(id: UUID) = viewModelScope.launch {
@@ -137,7 +161,7 @@ class MyReceiptsScreenViewModel @Inject constructor (
         val creditCardInfo = cashBackCreditCardRepository.getCreditCardInfo(id)
             ?: pointBackCreditCardRepository.getCreditCardInfo(id)
 
-        return creditCardInfo?.name!!
+        return creditCardInfo?.name ?: "Unknown"
     }
 
     companion object {
