@@ -16,6 +16,7 @@ import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
 import edu.card.clarity.presentation.myReceiptsScreen.MyReceiptsScreen
 import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseOptimalBenefitsScreen
 import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseScreen
+import edu.card.clarity.presentation.recordReceiptScreen.RecordReceiptScreen
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.presentation.utils.Destinations
 
@@ -32,7 +33,7 @@ fun BottomNavGraph(navController: NavHostController) {
             AddCardScreen(navController)
         }
         composable(Destinations.MY_RECEIPTS) {
-            MyReceiptsScreen()
+            MyReceiptsScreen(navController)
         }
         composable(Destinations.PURCHASE) {
             PurchaseScreen(navController)
@@ -42,6 +43,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(Destinations.UPCOMING_PAYMENTS) {
             UpcomingPaymentsScreen()
+        }
+        composable(Destinations.RECORD_RECEIPT) {
+            RecordReceiptScreen(navController)
         }
         composable(
             route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",

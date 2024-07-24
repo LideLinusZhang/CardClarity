@@ -1,6 +1,8 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
 agp = "8.5.1"
+cameraLifecycle = "1.3.4"
+cameraView = "1.3.4"
 coreTesting = "2.2.0"
 kotlin = "2.0.0"
 kotlin-coroutines = "1.8.1"
@@ -29,6 +31,9 @@ secrets = "2.0.1"
 
 [libraries]
 # Android
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraLifecycle" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraLifecycle" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraView" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

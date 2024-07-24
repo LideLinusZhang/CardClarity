@@ -24,12 +24,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.presentation.common.DropdownMenu
+import edu.card.clarity.presentation.utils.Destinations
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 
 @Composable
-fun MyReceiptsScreen(viewModel: MyReceiptsScreenViewModel = hiltViewModel()) {
+fun MyReceiptsScreen(navController: NavController,
+                     viewModel: MyReceiptsScreenViewModel = hiltViewModel()) {
     val receipts by viewModel.receipts.collectAsState()
     val receiptFilterUiState by viewModel.receiptFilterUiState.collectAsState()
     val creditCardFilterOptions by viewModel.creditCardFilterOptionStrings.collectAsState()
@@ -75,7 +79,7 @@ fun MyReceiptsScreen(viewModel: MyReceiptsScreenViewModel = hiltViewModel()) {
             }
 
             Button(
-                onClick = { /* TODO: Handle record receipt action */ },
+                onClick = {navController.navigate(Destinations.RECORD_RECEIPT)},
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White,
                     contentColor = Color.Black),
                 border = BorderStroke(2.dp, Color.Black),
@@ -93,5 +97,6 @@ fun MyReceiptsScreen(viewModel: MyReceiptsScreenViewModel = hiltViewModel()) {
 @Composable
 @Preview
 fun MyReceiptsScreenPreview() {
-    MyReceiptsScreen()
+    val navController = rememberNavController()
+    MyReceiptsScreen(navController)
 }
