@@ -18,6 +18,7 @@ import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseOptimalBenefitsScreen
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.presentation.utils.Destinations
+import edu.card.clarity.presentation.upcomingPaymentsScreen.UpcomingPaymentsScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
