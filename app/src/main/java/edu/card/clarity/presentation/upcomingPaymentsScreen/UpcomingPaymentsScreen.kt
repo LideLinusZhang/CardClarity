@@ -18,9 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.Gold
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -55,9 +57,10 @@ fun Header() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Icon(Icons.Filled.DateRange, contentDescription = "Date Range Icon", tint = Color(0xFF6200EE))
+        Icon(Icons.Filled.DateRange, contentDescription = "Date Range Icon", tint = Gold)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
+            fontSize = 18.sp,
             text = "Upcoming Credit Card Payments",
             style = CardClarityTypography.titleLarge,
             color = Color.Black
@@ -212,6 +215,7 @@ fun UpcomingPayment(cards: List<PaymentDueDateUiState>, viewModel: PaymentDueDat
         Text(
             text = "Next Payment",
             style = CardClarityTypography.titleLarge,
+            fontSize = 18.sp,
             modifier = Modifier.padding(vertical = 8.dp)
         )
 

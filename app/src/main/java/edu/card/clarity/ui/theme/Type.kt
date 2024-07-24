@@ -19,6 +19,12 @@ val customFontFamily = FontFamily(
     Font(googleFont = GoogleFont("Patrick Hand"), fontProvider = provider)
 )
 
+
+val robotoFontFamily = FontFamily(
+    Font(googleFont = GoogleFont("Roboto"), fontProvider = provider, weight = FontWeight.Normal),
+    Font(googleFont = GoogleFont("Roboto"), fontProvider = provider, weight = FontWeight.Bold)
+)
+
 val CardClarityTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = customFontFamily,
@@ -28,7 +34,7 @@ val CardClarityTypography = Typography(
         letterSpacing = 0.5.sp
     ),
     titleLarge = TextStyle(
-        fontFamily = customFontFamily,
+        fontFamily = robotoFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
