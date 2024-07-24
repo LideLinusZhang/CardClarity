@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.presentation.common.CustomButton
 import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.utils.displayString
 import edu.card.clarity.ui.theme.CardClarityTheme
@@ -66,24 +66,24 @@ fun AddBenefitScreen(
                 ) {
                     Text(
                         text = "Add New Benefit For:",
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = CardClarityTypography.bodyLarge.fontFamily,
+                        style = CardClarityTypography.titleLarge,
+                        fontSize = 20.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
                         text = creditCardName,
-                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = CardClarityTypography.bodyLarge.fontFamily,
+                        style = CardClarityTypography.titleLarge,
+                        fontSize = 18.sp,
                         color = Color(0xFF1A73E8),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
                         text = creditCardRewardType.displayString,
-                        fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
-                        fontFamily = CardClarityTypography.bodyLarge.fontFamily,
+                        style = CardClarityTypography.titleLarge,
+                        fontSize = 18.sp,
                         color = Color(0xFF34A853),
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
@@ -128,17 +128,13 @@ fun AddBenefitScreen(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-
-            Button(
+            CustomButton(
+                text = "Add Benefit",
                 onClick = {
                     viewModel.addBenefit()
                     navController.navigateUp()
-                },
-                modifier = Modifier.padding(top = 16.dp),
-                enabled = uiState.isFactorValid
-            ) {
-                Text(text = "Add Benefit")
-            }
+                }
+            )
         }
     }
 }
