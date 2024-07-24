@@ -10,17 +10,18 @@ import okhttp3.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okio.IOException
 import java.io.File
 import org.json.JSONObject
-import java.io.FileOutputStream
-
+import java.io.FileNotFoundException
 
 fun Context.imageToBase64(fileName: String): String {
-    val bytes = assets.open(fileName).readBytes()
+    val file = File(fileName)
+    if (!file.exists()) {
+        throw FileNotFoundException("File not found: $fileName")
+    }
+    val bytes = file.readBytes()
     val base = Base64.encodeToString(bytes, Base64.NO_WRAP)
-    val base64 = String.format("data:image/jpeg;base64,$base")
-    return base64
+    return String.format("data:image/jpeg;base64,%s", base)
 }
 
 suspend fun scanReceipt(context: Context, path: String) {
