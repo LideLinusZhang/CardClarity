@@ -6,13 +6,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import edu.card.clarity.presentation.MyReceiptsScreen
 import edu.card.clarity.presentation.PurchaseScreen
 import edu.card.clarity.presentation.addBenefitScreen.AddBenefitScreen
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.homeScreen.HomeScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
+import edu.card.clarity.presentation.myReceiptsScreen.MyReceiptsScreen
 import edu.card.clarity.presentation.upcomingPaymentsScreen.UpcomingPaymentsScreen
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.presentation.utils.Destinations
