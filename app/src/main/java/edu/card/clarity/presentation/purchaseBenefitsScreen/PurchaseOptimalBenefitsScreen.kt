@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +21,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.PurchaseType
+import edu.card.clarity.presentation.common.CustomButton
+import edu.card.clarity.presentation.common.InfoBoxItem
 import edu.card.clarity.presentation.utils.Destinations
+import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.DarkAccentBlue
 
 @Composable
 fun PurchaseOptimalBenefitsScreen(
@@ -37,16 +43,12 @@ fun PurchaseOptimalBenefitsScreen(
             .background(Color.White)
             .padding(horizontal = 16.dp, vertical = 20.dp)
     ) {
-        Text(
-            text = "Best Card for ${category.name}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-
+        Spacer(modifier = Modifier.height(16.dp))
+        OptimalBenefitTitle(category.toString())
+        Spacer(modifier = Modifier.height(16.dp))
         if (optimalCreditCard != null) {
-            OptimalCreditCardItem(optimalCreditCard!!, category)
+            val rewardsDescription = optimalCreditCard!!.rewards.joinToString(separator = "\n") { "${it.purchaseType} - ${it.description}" }
+            InfoBoxItem(mainTitle = optimalCreditCard!!.name, subtitle = rewardsDescription)
             Spacer(modifier = Modifier.height(16.dp))
         } else {
             Text(
@@ -61,7 +63,7 @@ fun PurchaseOptimalBenefitsScreen(
         Text(
             text = "Other Available Benefits for ${category.name}",
             fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
+            style = CardClarityTypography.titleLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(vertical = 16.dp)
         )
@@ -71,17 +73,13 @@ fun PurchaseOptimalBenefitsScreen(
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(creditCards) { card ->
-                CreditCardItem(card)
+                val rewardsDescription = card.rewards.joinToString(separator = "\n") { "${it.purchaseType} - ${it.description}" }
+                InfoBoxItem(mainTitle = card.name, subtitle = rewardsDescription)
             }
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {navController.navigate(Destinations.RECORD_RECEIPT)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                ) {
-                    Text(text = "Record a Receipt")
+                CustomButton("Record a Receipt") {
+                    navController.navigate(Destinations.RECORD_RECEIPT)
                 }
             }
         }
@@ -89,71 +87,38 @@ fun PurchaseOptimalBenefitsScreen(
 }
 
 @Composable
-fun OptimalCreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUiState, category: PurchaseType) {
-    Card(
+fun OptimalBenefitTitle(purchaseTypeString: String) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .shadow(8.dp, shape = MaterialTheme.shapes.medium),
-        elevation = CardDefaults.elevatedCardElevation(4.dp),
-        shape = MaterialTheme.shapes.medium
+            .padding(vertical = 16.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(16.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
+            Icon(Icons.Filled.Search, contentDescription = "Search Icon", tint = DarkAccentBlue)
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = card.name,
+                text = "Your Optimal Card Suggestion for",
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.primary
+                style = CardClarityTypography.titleLarge,
+                color = Color.Black
             )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            card.rewards.forEach { reward ->
-                Text(
-                    text = "${reward.purchaseType} - ${reward.description}",
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-            }
         }
-    }
-}
-
-@Composable
-fun CreditCardItem(card: PurchaseOptimalBenefitsScreenViewModel.CreditCardItemUiState) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .shadow(8.dp, shape = MaterialTheme.shapes.medium),
-        elevation = CardDefaults.elevatedCardElevation(4.dp),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = card.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            card.rewards.forEach { reward ->
-                Text(
-                    text = "${reward.purchaseType} - ${reward.description}",
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-            }
-        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = purchaseTypeString,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            style = CardClarityTypography.titleLarge,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
     }
 }
 
