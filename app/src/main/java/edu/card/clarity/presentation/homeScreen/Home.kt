@@ -55,7 +55,7 @@ fun HomeScreen(navController: NavController,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-
+        Spacer(modifier = Modifier.height(16.dp))
         RewardsSummary(months = uiState.selectedMonths, userName = "Sophie Chan", rewardsSummary = uiState.rewardsSummary)
 
         LabelSelectorBar(

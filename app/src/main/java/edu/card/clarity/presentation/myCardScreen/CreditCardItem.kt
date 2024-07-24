@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.LightGray
 import java.util.UUID
 
 @Composable
@@ -47,7 +48,7 @@ fun CreditCardItem(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(60.dp)
-                    .background(Color.LightGray)
+                    .background(LightGray)
             )
 
             Column(
