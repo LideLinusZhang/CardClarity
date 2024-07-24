@@ -2,12 +2,12 @@ package edu.card.clarity.presentation.myReceiptsScreen
 
 import java.util.UUID
 
-data class ReceiptsUiState (
+data class ReceiptUiState(
     val id: UUID,
-    val time: String,
+    val purchaseTime: String,
     val merchant: String,
-    val type: String,
+    val purchaseType: String,
     val total: String,
     val creditCardId: UUID,
-    val creditCard: String
+    val creditCardName: String
 )

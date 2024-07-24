@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -16,34 +15,17 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import java.util.UUID
 
 @Composable
-fun Receipts(
-    navController: NavController,
-    viewModel: MyReceiptsScreenViewModel = hiltViewModel()
+fun ReceiptsItem(
+    receipt: ReceiptUiState,
+    onRemoveReceipt: (receiptId: UUID) -> Unit
 ) {
-    val receipts by viewModel.filteredReceipts.collectAsStateWithLifecycle()
-
-    LazyColumn {
-        items(receipts.size) { index ->
-            ReceiptsItem(receipts[index])
-        }
-    }
-}
-
-
-
-@Composable
-fun ReceiptsItem(receipt: ReceiptsUiState,
-                 viewModel: MyReceiptsScreenViewModel = hiltViewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -62,15 +44,15 @@ fun ReceiptsItem(receipt: ReceiptsUiState,
                 fontSize = 16.sp
             )
             Text(
-                text = "Card Used: ${receipt.creditCard}",
+                text = "Card Used: ${receipt.creditCardName}",
                 fontSize = 16.sp
             )
             Text(
-                text = "Purchase Type: ${receipt.type}",
+                text = "Purchase Type: ${receipt.purchaseType}",
                 fontSize = 16.sp
             )
             Text(
-                text = "Date: ${receipt.time}",
+                text = "Date: ${receipt.purchaseTime}",
                 fontSize = 16.sp
             )
             Text(
@@ -86,9 +68,11 @@ fun ReceiptsItem(receipt: ReceiptsUiState,
             ) {
                 Spacer(modifier = Modifier.weight(2f))
                 Button(
-                    onClick = {  /*TODO: Handle view click*/  },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White,
-                        contentColor = Color.Black),
+                    onClick = {  /*TODO: Handle view click*/ },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    ),
                     modifier = Modifier.weight(3f),
                     border = BorderStroke(2.dp, Color.Black),
                     shape = RoundedCornerShape(25)
@@ -97,9 +81,11 @@ fun ReceiptsItem(receipt: ReceiptsUiState,
                 }
                 Spacer(modifier = Modifier.weight(0.2f))
                 Button(
-                    onClick = { viewModel.deleteReceipt(receipt.id) },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White,
-                        contentColor = Color.Black),
+                    onClick = { onRemoveReceipt(receipt.id) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    ),
                     modifier = Modifier.weight(3f),
                     border = BorderStroke(2.dp, Color.Black),
                     shape = RoundedCornerShape(25)

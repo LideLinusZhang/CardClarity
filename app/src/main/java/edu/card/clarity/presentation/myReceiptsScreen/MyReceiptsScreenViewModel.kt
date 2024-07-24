@@ -5,18 +5,22 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.domain.Purchase
+import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayStrings
 import edu.card.clarity.repositories.PurchaseRepository
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -29,150 +33,112 @@ class MyReceiptsScreenViewModel @Inject constructor (
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val dateFormatter = SimpleDateFormat.getDateInstance()
 
-    companion object {
-        private const val KEY_SELECTED_CARD_FILTER = "selected_card_filter"
-        private const val KEY_SELECTED_PURCHASE_TYPE_FILTER = "selected_purchase_type_filter"
-        private val dateFormatter = SimpleDateFormat.getDateInstance()
+    private val savedCreditCardFilter: StateFlow<ReceiptFilter> = savedStateHandle
+        .getStateFlow(
+            key = MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY,
+            initialValue = ReceiptFilter()
+        )
+
+    val receipts: StateFlow<List<ReceiptUiState>> = combine(
+        receiptRepository.getAllPurchasesStream(),
+        savedCreditCardFilter
+    ) { receipts, filter ->
+        receipts
+            .filter {
+                if (filter.filteredPurchaseType != null)
+                    it.type == filter.filteredPurchaseType
+                else true
+            }
+            .filter {
+                if (filter.filteredCreditCardId != null)
+                    it.creditCardId == filter.filteredCreditCardId
+                else true
+            }
     }
+        .map { it.map { receipt -> receipt.toUiState() } }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileUiSubscribed,
+            initialValue = emptyList()
+        )
 
-    private val allCardsOption = flow<List<ParcelableCreditCardInfo>> {
-        emit(
-            listOf(ParcelableCreditCardInfo(null, "All"))
+    private val _receiptFilterUiState = MutableStateFlow(
+        ReceiptFilterUiState()
+    )
+
+    val receiptFilterUiState = _receiptFilterUiState.asStateFlow()
+
+    private val creditCards: StateFlow<List<CreditCardInfo>> = combine(
+        cashBackCreditCardRepository.getAllCreditCardInfoStream(),
+        pointBackCreditCardRepository.getAllCreditCardInfoStream()
+    ) { cashBack, pointBack ->
+        cashBack + pointBack
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileUiSubscribed,
+            initialValue = emptyList()
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val creditCardFilterOptionStrings: StateFlow<List<String>> = creditCards
+        .mapLatest {
+            listOf(ReceiptFilterUiState.ALL_OPTION) + it.map { creditCard -> creditCard.name }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList()
+        )
+
+    val purchaseTypeFilterOptionStrings =
+        listOf(ReceiptFilterUiState.ALL_OPTION) + PurchaseType.displayStrings
+
+    fun setCreditCardFilter(optionIndex: Int) {
+        savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
+            .value
+            .copy(filteredCreditCardId = if (optionIndex == 0) null else creditCards.value[optionIndex - 1].id)
+
+        _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
+            selectedCreditCardFilterOption = creditCards.value[optionIndex - 1].name
         )
     }
 
-    /*// Temporary Test Data
-    private val creditCards = listOf(
-        ParcelableCreditCardInfo(
-            UUID.randomUUID(), "Visa Dividend",),
-        ParcelableCreditCardInfo(
-            UUID.randomUUID(), "MasterCard")
-    )
-    private val receipts: StateFlow<List<ReceiptsUiState>> = MutableStateFlow(
-        listOf(
-            ReceiptsUiState(
-                UUID.randomUUID(),
-                "2024-05-19",
-                "Shell",
-                "Gas",
-                "30.22",
-                creditCards[0].id!!,
-                creditCards[0].name
-            ),
-            ReceiptsUiState(
-                UUID.randomUUID(),
-                "2024-06-06",
-                "Air Canada",
-                "Travel",
-                "520.87",
-                creditCards[1].id!!,
-                creditCards[1].name
-            ),
-            ReceiptsUiState(
-                UUID.randomUUID(),
-                "2024-07-21",
-                "Hilton",
-                "Hotel",
-                "837.25",
-                creditCards[1].id!!,
-                creditCards[1].name
-            )
+    fun setPurchaseTypeFilter(optionIndex: Int) {
+        savedStateHandle[MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY] = savedCreditCardFilter
+            .value
+            .copy(filteredPurchaseType = if (optionIndex == 0) null else PurchaseType.entries[optionIndex - 1])
+
+        _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
+            selectedPurchaseTypeFilterOption = purchaseTypeFilterOptionStrings[optionIndex]
         )
-    )
-    val cards = combine(
-        allCardsOption, flow<List<ParcelableCreditCardInfo>> { emit(creditCards) }
-    ) { list1, list2 ->
-        list1 + list2
-    }.stateIn(
-        scope = viewModelScope,
-        started = WhileUiSubscribed,
-        initialValue = listOf()
-    )*/
-
-    private val receipts = receiptRepository.getAllPurchasesStream().map { receipts ->
-        receipts.map {
-            ReceiptsUiState(
-                it.id!!,
-                dateFormatter.format(it.time),
-                it.merchant,
-                it.total.toString(),
-                it.type.toString(),
-                it.creditCardId,
-                getCardName(it.creditCardId)
-            )
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = WhileUiSubscribed,
-        initialValue = listOf()
-    )
-
-    val cards = combine(
-        allCardsOption,
-        cashBackCreditCardRepository.getAllCreditCardInfoStream().map { cashBackCreditCards ->
-            cashBackCreditCards.map {
-                ParcelableCreditCardInfo(it.id, it.name)
-            }
-        },
-        pointBackCreditCardRepository.getAllCreditCardInfoStream().map { pointBackCreditCards ->
-            pointBackCreditCards.map {
-                ParcelableCreditCardInfo(it.id, it.name)
-            }
-        }
-    )
-    { list1, list2 , list3->
-        list1 + list2 + list3
-    }.stateIn(
-        scope = viewModelScope,
-        started = WhileUiSubscribed,
-        initialValue = listOf()
-    )
-
-    val purchaseTypeOptions = PurchaseType.displayStrings
-
-    private val _selectedCardFilter =
-        MutableStateFlow(savedStateHandle.get<ParcelableCreditCardInfo?>(KEY_SELECTED_CARD_FILTER))
-    val selectedCardFilter: StateFlow<ParcelableCreditCardInfo?> = _selectedCardFilter
-
-    private val _selectedPurchaseTypeFilter =
-        MutableStateFlow(savedStateHandle.get<String?>(KEY_SELECTED_PURCHASE_TYPE_FILTER))
-    val selectedPurchaseTypeFilter: StateFlow<String?> = _selectedPurchaseTypeFilter
-
-    val filteredReceipts: StateFlow<List<ReceiptsUiState>> = combine(
-        receipts, selectedCardFilter, selectedPurchaseTypeFilter
-    ) { receipts, cardFilter, purchaseTypeFilter ->
-        var filtered = receipts
-        if (cardFilter?.id != null) {
-            cardFilter.let {
-                filtered = filtered.filter { it.creditCardId == cardFilter.id }
-            }
-        }
-        if (purchaseTypeFilter != "All") {
-            purchaseTypeFilter?.let {
-                filtered = filtered.filter { it.type == purchaseTypeFilter }
-            }
-        }
-        filtered
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-    private suspend fun getCardName(id: UUID): String {
-        val card = cashBackCreditCardRepository.getCreditCardInfo(id)
-            ?: pointBackCreditCardRepository.getCreditCardInfo(id)
-        return card!!.name
-    }
-
-    fun setCardFilter(card: ParcelableCreditCardInfo) {
-        _selectedCardFilter.value = card
-        savedStateHandle[KEY_SELECTED_CARD_FILTER] = card
-    }
-
-    fun setPurchaseTypeFilter(purchaseType: String) {
-        _selectedPurchaseTypeFilter.value = purchaseType
-        savedStateHandle[KEY_SELECTED_PURCHASE_TYPE_FILTER] = purchaseType
     }
 
     fun deleteReceipt(id: UUID) = viewModelScope.launch {
         receiptRepository.removePurchase(id)
+    }
+
+    private suspend fun Purchase.toUiState() = ReceiptUiState(
+        id = this.id!!,
+        purchaseTime = dateFormatter.format(this.time),
+        merchant = this.merchant,
+        total = this.total.toString(),
+        purchaseType = this.type.name,
+        creditCardId = this.creditCardId,
+        creditCardName = getCreditCardName(this.creditCardId)
+    )
+
+    private suspend fun getCreditCardName(id: UUID): String {
+        val creditCardInfo = cashBackCreditCardRepository.getCreditCardInfo(id)
+            ?: pointBackCreditCardRepository.getCreditCardInfo(id)
+
+        return creditCardInfo?.name!!
+    }
+
+    companion object {
+        private const val MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY: String =
+            "MY_RECEIPTS_SCREEN_SAVED_FILTER"
     }
 }
