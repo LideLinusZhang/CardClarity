@@ -5,12 +5,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.data.receipt.ReceiptDao
 import edu.card.clarity.domain.Purchase
+import edu.card.clarity.domain.Receipt
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayStrings
 import edu.card.clarity.repositories.PurchaseRepository
+import edu.card.clarity.repositories.ReceiptRepository
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyReceiptsScreenViewModel @Inject constructor (
-    private val receiptRepository: PurchaseRepository,
+    private val receiptRepository: ReceiptRepository,
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val savedStateHandle: SavedStateHandle
@@ -42,18 +45,18 @@ class MyReceiptsScreenViewModel @Inject constructor (
         )
 
     val receipts: StateFlow<List<ReceiptUiState>> = combine(
-        receiptRepository.getAllPurchasesStream(),
+        receiptRepository.getAllReceiptsStream(),
         savedCreditCardFilter
     ) { receipts, filter ->
         receipts
             .filter {
                 if (filter.filteredPurchaseType != null)
-                    it.type == filter.filteredPurchaseType
+                    it.selectedPurchaseType == filter.filteredPurchaseType.toString()
                 else true
             }
             .filter {
                 if (filter.filteredCreditCardId != null)
-                    it.creditCardId == filter.filteredCreditCardId
+                    it.selectedCardId == filter.filteredCreditCardId
                 else true
             }
     }
@@ -117,17 +120,17 @@ class MyReceiptsScreenViewModel @Inject constructor (
     }
 
     fun deleteReceipt(id: UUID) = viewModelScope.launch {
-        receiptRepository.removePurchase(id)
+        receiptRepository.removeReceipt(id)
     }
 
-    private suspend fun Purchase.toUiState() = ReceiptUiState(
+    private suspend fun Receipt.toUiState() = ReceiptUiState(
         id = this.id!!,
-        purchaseTime = dateFormatter.format(this.time),
+        purchaseTime = this.date,
         merchant = this.merchant,
-        total = this.total.toString(),
-        purchaseType = this.type.name,
-        creditCardId = this.creditCardId,
-        creditCardName = getCreditCardName(this.creditCardId)
+        total = this.totalAmount,
+        purchaseType = this.selectedPurchaseType,
+        creditCardId = this.selectedCardId,
+        creditCardName = getCreditCardName(this.selectedCardId)
     )
 
     private suspend fun getCreditCardName(id: UUID): String {
