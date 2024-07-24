@@ -1,9 +1,5 @@
 package edu.card.clarity.presentation.purchaseBenefitsScreen
 
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,66 +15,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.R
 import edu.card.clarity.enums.PurchaseType
-import edu.card.clarity.location.GeolocationInference
 import edu.card.clarity.presentation.utils.Destinations
 
 @Composable
-fun PurchaseScreen(navController: NavController) {
-    val geolocationViewModel: GeolocationViewModel = hiltViewModel()
+fun PurchaseScreen(navController: NavController, geolocationViewModel: GeolocationViewModel = hiltViewModel()) {
+    var showDialog by remember { mutableStateOf(true) }
     val geolocationInference by geolocationViewModel.geolocationInference.collectAsState()
-    val context = LocalContext.current
-
-    var permissionsGranted by remember { mutableStateOf(false) }
-    var permissionDenied by remember { mutableStateOf(false) }
-
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        permissionsGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-        permissionDenied = !permissionsGranted
-    }
 
     LaunchedEffect(Unit) {
-        when {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                permissionsGranted = true
-            }
-            else -> {
-                requestPermissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
-            }
-        }
+        geolocationViewModel.fetchGeolocationInference()
     }
 
-    if (permissionsGranted) {
-        LaunchedEffect(Unit) {
-            geolocationViewModel.fetchGeolocationInference()
-        }
+    if (showDialog) {
+        GeolocationPopup(
+            geolocationInference = geolocationInference?.firstOrNull(),
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                showDialog = false
+                geolocationInference?.firstOrNull()?.purchaseType?.let { purchaseType ->
+                    navController.navigate("${Destinations.PURCHASE_OPTIMAL_BENEFITS}/${purchaseType.name}")
+                }
+            }
+        )
     }
 
     Column(
@@ -108,70 +77,6 @@ fun PurchaseScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(24.dp))
 
         CategoryGrid(navController)
-
-        if (permissionsGranted && geolocationInference != null) {
-            val inference = geolocationInference?.firstOrNull()
-            if (inference != null) {
-                GeolocationPopup(inference)
-            }
-        }
-
-        if (permissionDenied) {
-            Text(
-                text = "Location permissions are required to use this feature.",
-                color = Color.Red,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun GeolocationPopup(inference: GeolocationInference) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.6f))
-            .clickable { },
-        color = Color.Transparent
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                color = Color.White,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "You are near ${inference.merchantName}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Button(onClick = { /* TO DO: Handle Yes action */ }) {
-                            Text("Yes")
-                        }
-                        Button(onClick = { /* TO DO: Handle No action */ }) {
-                            Text("No")
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
