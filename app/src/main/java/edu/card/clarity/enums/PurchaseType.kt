@@ -12,5 +12,6 @@ enum class PurchaseType {
     Groceries,
     Restaurants,
     Travel,
-    Others
+    Others;
+    companion object
 }

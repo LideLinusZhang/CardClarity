@@ -1,6 +1,7 @@
 package edu.card.clarity.presentation.utils
 
 import edu.card.clarity.enums.CardNetworkType
+import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 
 internal val RewardType.displayString: String
@@ -20,3 +21,6 @@ internal val CardNetworkType.Companion.displayStrings: List<String>
 
 internal val CardNetworkType.Companion.ordinals: List<Int>
     get() = CardNetworkType.entries.map { it.ordinal }
+
+internal val PurchaseType.Companion.displayStrings: List<String>
+    get() = PurchaseType.entries.map { it.name }
