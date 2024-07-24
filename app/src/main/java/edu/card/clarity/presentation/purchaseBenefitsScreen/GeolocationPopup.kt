@@ -51,7 +51,7 @@ fun GeolocationPopup(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Would you like to shop in this purchase type?",
+                        text = "Would you explore benefits in ${geolocationInference.purchaseType}?",
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
