@@ -1,5 +1,6 @@
 package edu.card.clarity.presentation.purchaseBenefitsScreen
 
+import android.Manifest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,20 +25,38 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import edu.card.clarity.R
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.utils.Destinations
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PurchaseScreen(navController: NavController, geolocationViewModel: GeolocationViewModel = hiltViewModel()) {
-    var showDialog by remember { mutableStateOf(true) }
-    val geolocationInference by geolocationViewModel.geolocationInference.collectAsState()
+    val locationPermissionsState = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
 
     LaunchedEffect(Unit) {
-        geolocationViewModel.fetchGeolocationInference()
+        locationPermissionsState.launchMultiplePermissionRequest()
     }
 
-    if (showDialog) {
+    var showDialog by remember { mutableStateOf(false) }
+    val geolocationInference by geolocationViewModel.geolocationInference.collectAsState()
+
+    // Wait for permissions to be granted before fetching inferences
+    LaunchedEffect(locationPermissionsState.allPermissionsGranted) {
+        if (locationPermissionsState.allPermissionsGranted) {
+            geolocationViewModel.fetchGeolocationInference()
+            showDialog = true
+        }
+    }
+
+    if (showDialog && locationPermissionsState.allPermissionsGranted) {
         GeolocationPopup(
             geolocationInference = geolocationInference?.firstOrNull(),
             onDismiss = { showDialog = false },
