@@ -77,7 +77,7 @@ fun CreditCardItem(
                             onBenefitButtonClick(cardId, cardName, creditCardRewardTypeOrdinal)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
+                            containerColor = Color.Transparent,
                             contentColor = Color.Black
                         ),
                         border = BorderStroke(1.5.dp, Color.Black),
@@ -123,6 +123,7 @@ fun CreditCardItem(
                                     .size(16.dp)
                                     .padding(end = 1.dp)
                                     .offset(y = 3.dp),
+                                tint = Color(0xFF4CAF50)
                             )
                         } else {
                             Icon(
@@ -132,6 +133,7 @@ fun CreditCardItem(
                                     .size(16.dp)
                                     .padding(end = 1.dp)
                                     .offset(y = 3.dp),
+                                tint = Color.Red
                             )
                         }
                         Text(

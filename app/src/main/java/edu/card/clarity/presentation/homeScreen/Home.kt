@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -94,7 +93,7 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
         Text(
             modifier = Modifier
                 .padding(bottom = 12.dp),
-            text = "Hi $userName,",
+            text = "Hi $userName 👋,",
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             color = Color.Black
@@ -292,25 +291,38 @@ fun CardBox(label: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.LightGray)
+            .padding(8.dp)
+            .background(
+                color = Color(0xFFE3F2FD),
+                shape = RoundedCornerShape(16.dp)
+            )
             .clickable(onClick = onClick)
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .padding(12.dp)
-                .heightIn(min = 100.dp, max = 100.dp)
+                .fillMaxWidth()
+                .padding(all = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Text(
-                text = label,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black,
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(56.dp)
+                    .background(color = Color(0xFF42A5F5))
             )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = label,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black,
+                )
+            }
         }
     }
 }
-
 
 @Composable
 @Preview
