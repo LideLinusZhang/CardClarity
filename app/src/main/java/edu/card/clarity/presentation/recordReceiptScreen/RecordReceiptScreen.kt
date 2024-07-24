@@ -3,6 +3,7 @@ package edu.card.clarity.presentation.recordReceiptScreen
 import android.Manifest
 import android.app.DatePickerDialog
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -79,7 +80,6 @@ fun RecordReceiptScreen(
                     }
                 )
             } else {
-                // Display receipt
                 uiState.photoPath?.let { path ->
                     val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
                     Image(
@@ -90,7 +90,6 @@ fun RecordReceiptScreen(
                             .height(200.dp)
                     )
                 }
-
                 Button(
                     onClick = {
                         if (cameraPermissionState.status.isGranted) {
@@ -103,7 +102,6 @@ fun RecordReceiptScreen(
                 ) {
                     Text("Scan your receipt")
                 }
-
                 LazyColumn {
                     item {
                         Text("Detected information:")
@@ -138,9 +136,8 @@ fun RecordReceiptScreen(
                         DropdownMenu(
                             label = "Select Card Used",
                             options = allCards.map { it.name },
-                            selectedOption = uiState.selectedCard,
-                            onOptionSelected = { viewModel.onCardSelected(allCards[it].name) }
-                        )
+                            selectedOption = uiState.selectedCard?.name ?: "Select a card",
+                            onOptionSelected = { viewModel.onCardSelected(allCards[it]) }                        )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                     item {
@@ -155,9 +152,14 @@ fun RecordReceiptScreen(
                     item {
                         Button(
                             onClick = {
-                                viewModel.addReceipt()
-                                navController.popBackStack()
+                                if (uiState.selectedCard != null) {
+                                    Log.d("receipt", uiState.selectedCard!!.name)
+                                    viewModel.addReceipt()
+                                    navController.popBackStack()
+
+                                }
                             },
+                            enabled = uiState.selectedCard != null,
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Add Receipt")
@@ -184,17 +186,3 @@ fun ErrorDialog(error: String, onDismiss: () -> Unit) {
     )
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun RecordReceiptScreenPreview() {
-//    // mock data for preview
-//    val mockViewModel = RecordReceiptViewModel().apply {
-//        onDateChange("2024-07-20")
-//        onTotalAmountChange("45.99")
-//        onMerchantChange("Walmart")
-//        onCardSelected("Visa")
-//        onPurchaseTypeSelected("Groceries")
-//    }
-//
-//    RecordReceiptScreen(viewModel = mockViewModel)
-//}

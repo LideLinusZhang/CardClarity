@@ -1,13 +1,16 @@
 package edu.card.clarity.repositories.utils
 
 import edu.card.clarity.data.creditCard.ICreditCardInfo
+import edu.card.clarity.data.receipt.Receipt as ReceiptInDB
 import edu.card.clarity.data.pointSystem.PointSystem as PointSystemInDB
 import edu.card.clarity.data.purchase.Purchase as PurchaseInDB
 import edu.card.clarity.data.purchaseReward.PurchaseReward as PurchaseRewardInDB
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.PurchaseReward
+import edu.card.clarity.domain.Receipt
 import edu.card.clarity.domain.creditCard.CreditCardInfo
+import java.util.UUID
 
 @JvmName("creditCardInfoEntityToDomainModel")
 internal fun List<ICreditCardInfo>.toDomainModel() = map(
@@ -54,4 +57,18 @@ internal fun PurchaseInDB.toDomainModel() = Purchase(
     total = total,
     rewardAmount = rewardAmount,
     creditCardId = creditCardId
+)
+
+@JvmName("receiptEntityToDomainModel")
+internal fun List<ReceiptInDB>.toDomainModel() =
+    map(ReceiptInDB::toDomainModel)
+
+internal fun ReceiptInDB.toDomainModel() = Receipt(
+    id = id,
+    date = date,
+    totalAmount = totalAmount,
+    merchant = merchant,
+    selectedCardId = selectedCardId,
+    selectedPurchaseType = selectedPurchaseType,
+    photoPath = photoPath
 )
