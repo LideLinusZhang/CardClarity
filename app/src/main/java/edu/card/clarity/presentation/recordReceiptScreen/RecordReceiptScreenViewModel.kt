@@ -110,7 +110,9 @@ class RecordReceiptViewModel @Inject constructor(
 
             // Wrap scanReceipt in a coroutine
             withContext(Dispatchers.IO) {
-                scanReceipt(context, "receipt_1.jpg")
+                _uiState.value.photoPath?.let { path ->
+                    scanReceipt(context, path)
+                }
             }
         }
     }

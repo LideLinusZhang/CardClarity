@@ -59,6 +59,7 @@ fun RecordReceiptScreen(
     }
 
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
+    val storagePermissionState = rememberPermissionState(permission = Manifest.permission.READ_EXTERNAL_STORAGE)
 
     CardClarityTheme {
         Column(
@@ -101,6 +102,10 @@ fun RecordReceiptScreen(
                             viewModel.openCamera()
                         } else {
                             cameraPermissionState.launchPermissionRequest()
+                        }
+                        if (!storagePermissionState.status.isGranted) {
+                            Log.d("receipt", "in permission getting")
+                            storagePermissionState.launchPermissionRequest()
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
