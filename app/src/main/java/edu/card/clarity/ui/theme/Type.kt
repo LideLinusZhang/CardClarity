@@ -40,6 +40,13 @@ val CardClarityTypography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
+    bodySmall = TextStyle(
+        fontFamily = robotoFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
 //    labelSmall = TextStyle(
 //        fontFamily = customFontFamily,
 //        fontWeight = FontWeight.Medium,
