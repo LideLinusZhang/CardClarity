@@ -15,6 +15,7 @@ import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
+import edu.card.clarity.data.receipt.ReceiptDao
 import javax.inject.Singleton
 
 @Module
@@ -54,6 +55,9 @@ object DatabaseModule {
 
     @Provides
     fun providePurchaseDao(database: Database): PurchaseDao = database.purchase()
+
+    @Provides
+    fun provideReceiptDao(database: Database): ReceiptDao = database.receipt()
 
     @Provides
     fun providePlaceTypeToPurchaseTypeDao(database: Database): PlaceTypeToPurchaseTypeMappingDao =

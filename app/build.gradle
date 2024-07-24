@@ -93,6 +93,7 @@ dependencies {
     implementation libs.android.libraries.places.places
     implementation libs.maps.android.places.places.ktx
     implementation libs.accompanist.permissions
+    implementation libs.okhttp
 
     // Kotlin Dependencies
     implementation platform(libs.jetbrains.kotlin.bom)
