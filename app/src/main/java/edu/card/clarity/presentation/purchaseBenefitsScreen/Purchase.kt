@@ -90,7 +90,7 @@ fun PurchaseScreen(navController: NavController, geolocationViewModel: Geolocati
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(Icons.Filled.LocationOn, contentDescription = "Star Icon", tint = DarkAccentBlue)
+            Icon(Icons.Filled.LocationOn, contentDescription = "Location Icon", tint = DarkAccentBlue)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Best Card for Every Purchase",

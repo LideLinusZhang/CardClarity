@@ -68,9 +68,12 @@ fun MyBenefitsScreen(
             item {
                 Spacer(modifier = Modifier.height(32.dp))
                 Box(modifier = Modifier.padding(bottom = 52.dp)) {
-                    CustomButton("Discovered a new benefit for this card? Add it here!") {
-                        navController.navigate("${Destinations.ADD_BENEFIT}/${viewModel.cardIdString}/$creditCardName/${viewModel.cardRewardTypeOrdinal}")
-                    }
+                    CustomButton(
+                        text = "Discovered a new benefit for this card? Add it here!",
+                        onClick = {
+                            navController.navigate("${Destinations.ADD_BENEFIT}/${viewModel.cardIdString}/$creditCardName/${viewModel.cardRewardTypeOrdinal}")
+                        }
+                    )
                 }
             }
         }

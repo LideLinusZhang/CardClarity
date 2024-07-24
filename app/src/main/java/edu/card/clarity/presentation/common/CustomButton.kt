@@ -18,7 +18,7 @@ import edu.card.clarity.ui.theme.DarkAccentBlue
 import edu.card.clarity.ui.theme.LightBlue
 
 @Composable
-fun CustomButton(text: String, onClick: () -> Unit) {
+fun CustomButton(text: String, onClick: () -> Unit, enabled: Boolean = true) {
     OutlinedButton(
         onClick = onClick,
         modifier = Modifier
@@ -26,7 +26,8 @@ fun CustomButton(text: String, onClick: () -> Unit) {
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(2.dp, DarkAccentBlue),
-        colors = ButtonDefaults.buttonColors(containerColor = LightBlue)
+        colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
+        enabled = enabled
     ) {
         Box(modifier = Modifier.padding(16.dp)) {
             Text(

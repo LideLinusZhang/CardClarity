@@ -78,9 +78,12 @@ fun PurchaseOptimalBenefitsScreen(
             }
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                CustomButton("Record a Receipt") {
-                    navController.navigate(Destinations.RECORD_RECEIPT)
-                }
+                CustomButton(
+                    text = "Record a Receipt",
+                    onClick = {
+                        navController.navigate(Destinations.RECORD_RECEIPT)
+                    }
+                )
             }
         }
     }
