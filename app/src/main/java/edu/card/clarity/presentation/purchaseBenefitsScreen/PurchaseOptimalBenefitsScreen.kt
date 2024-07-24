@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.enums.PurchaseType
+import edu.card.clarity.presentation.utils.Destinations
 
 @Composable
 fun PurchaseOptimalBenefitsScreen(
@@ -75,7 +76,7 @@ fun PurchaseOptimalBenefitsScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Navigate to record receipt screen */ },
+                    onClick = {navController.navigate(Destinations.RECORD_RECEIPT)},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)

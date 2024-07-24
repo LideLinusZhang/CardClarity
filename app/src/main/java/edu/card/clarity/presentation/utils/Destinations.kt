@@ -10,4 +10,5 @@ internal object Destinations {
     const val MY_BENEFITS = "myBenefits"
     const val ADD_BENEFIT = "addBenefit"
     const val PURCHASE_OPTIMAL_BENEFITS = "purchaseOptimalBenefits"
+    const val RECORD_RECEIPT = "recordReceipt"
 }

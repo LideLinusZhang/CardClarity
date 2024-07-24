@@ -33,7 +33,7 @@ fun BottomNavGraph(navController: NavHostController) {
             AddCardScreen(navController)
         }
         composable(Destinations.MY_RECEIPTS) {
-            MyReceiptsScreen()
+            MyReceiptsScreen(navController)
         }
         composable(Destinations.PURCHASE) {
             PurchaseScreen(navController)
@@ -43,6 +43,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(Destinations.UPCOMING_PAYMENTS) {
             UpcomingPaymentsScreen()
+        }
+        composable(Destinations.RECORD_RECEIPT) {
+            RecordReceiptScreen()
         }
         composable(
             route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
