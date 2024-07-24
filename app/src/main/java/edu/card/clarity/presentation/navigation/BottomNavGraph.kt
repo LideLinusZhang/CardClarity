@@ -12,7 +12,6 @@ import edu.card.clarity.presentation.addCardScreen.AddCardScreen
 import edu.card.clarity.presentation.homeScreen.HomeScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
 import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseScreen
-import edu.card.clarity.presentation.UpcomingPaymentsScreen
 import edu.card.clarity.presentation.addBenefitScreen.AddBenefitScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseOptimalBenefitsScreen
