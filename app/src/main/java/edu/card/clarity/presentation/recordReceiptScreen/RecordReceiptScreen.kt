@@ -22,7 +22,6 @@ import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
@@ -119,36 +118,16 @@ fun RecordReceiptScreen(
                     Text("Scan your receipt")
                 }
 
-                // display receipt
-//                uiState.photoPath?.let { path ->
-//                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
-//                    Image(
-//                        bitmap = imageBitmap,
-//                        contentDescription = "Captured Receipt",
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(200.dp)
-//                            .padding(top = 16.dp)
-//                    )
-//                }
-
-                // Check if photo path is valid and display receipt
                 uiState.photoPath?.let { path ->
-                    val file = File(path)
-                    if (file.exists()) {
-                        Log.e("receipt", "File exist1: $path")
-                        val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
-                        Image(
-                            bitmap = imageBitmap,
-                            contentDescription = "Captured Receipt",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .padding(top = 16.dp)
-                        )
-                    } else {
-                        Log.e("receipt", "File does not exist: $path")
-                    }
+                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
+                    Image(
+                        bitmap = imageBitmap,
+                        contentDescription = "Captured Receipt",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(top = 16.dp)
+                    )
                 }
                 LazyColumn {
                     item {
@@ -233,3 +212,4 @@ fun ErrorDialog(error: String, onDismiss: () -> Unit) {
         }
     )
 }
+

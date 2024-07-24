@@ -21,6 +21,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 @HiltViewModel
 class RecordReceiptViewModel @Inject constructor(
@@ -55,6 +56,34 @@ class RecordReceiptViewModel @Inject constructor(
     fun onImageCaptured(imagePath: String) {
         _uiState.value = _uiState.value.copy(photoPath = imagePath)
         _showCamera.value = false
+
+        viewModelScope.launch {
+            try {
+                val response = scanReceipt(context, imagePath)
+                if (response.isSuccessful) {
+                    response.body?.string()?.let { responseBody ->
+                        val jsonObject = JSONObject(responseBody)
+                        processReceiptData(jsonObject)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun processReceiptData(jsonObject: JSONObject) {
+        val createdDate = jsonObject.optString("created_date")
+        val totalAmount = jsonObject.optString("total")
+        val merchant = jsonObject.optJSONObject("vendor")?.optString("name")
+        val purchaseType = jsonObject.optString("category")
+
+        _uiState.value = _uiState.value.copy(
+            date = createdDate,
+            totalAmount = totalAmount,
+            merchant = merchant ?: "",
+            selectedPurchaseType = purchaseType
+        )
     }
 
     fun openCamera() {
@@ -64,17 +93,6 @@ class RecordReceiptViewModel @Inject constructor(
     fun resetCamera() {
         _showCamera.value = true
     }
-
-//    fun scanReceipt() {
-//        // TOOD: Implement receipt scanning logic
-//        viewModelScope.launch {
-//            _uiState.value = _uiState.value.copy(
-//                date = "2024-07-20",
-//                totalAmount = "45.99",
-//                merchant = "Local Store"
-//            )
-//        }
-//    }
 
     fun onDateChange(newDate: String) {
         _uiState.value = _uiState.value.copy(date = newDate)
@@ -108,7 +126,6 @@ class RecordReceiptViewModel @Inject constructor(
             )
             receiptDao.insertReceipt(receipt)
 
-            // Wrap scanReceipt in a coroutine
             withContext(Dispatchers.IO) {
                 _uiState.value.photoPath?.let { path ->
                     scanReceipt(context, path)
