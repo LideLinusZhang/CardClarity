@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.hilt.navigation.compose.hiltViewModel
+import edu.card.clarity.presentation.common.CardBox
 import edu.card.clarity.ui.theme.CardClarityTypography
 import edu.card.clarity.ui.theme.DarkAccentBlue
 import edu.card.clarity.ui.theme.LightBlue
@@ -286,45 +287,6 @@ fun LabelSelectorBar(
             Spacer(modifier = Modifier.width(distanceBetweenItems))
         }
         item { Spacer(modifier = Modifier.width(horizontalPadding)) }
-    }
-}
-
-@Composable
-fun CardBox(label: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .background(
-                color = LightBlue,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .clickable(onClick = onClick)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(4.dp)
-                    .height(56.dp)
-                    .background(DarkAccentBlue)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = label,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Normal,
-                    style = CardClarityTypography.titleLarge,
-                    color = Color.Black,
-                )
-            }
-        }
     }
 }
 

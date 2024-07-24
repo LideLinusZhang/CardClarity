@@ -61,7 +61,7 @@ fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenView
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Icon(Icons.Filled.Star, contentDescription = "Credit Card Icon", tint = DarkAccentBlue)
+                Icon(Icons.Filled.Star, contentDescription = "Star Icon", tint = DarkAccentBlue)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "My Wallet",
