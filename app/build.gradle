@@ -131,6 +131,9 @@ dependencies {
     implementation libs.androidx.camera.view
 
     implementation libs.accompanist.permissions
+    implementation libs.bcpkix.jdk15on
+    implementation libs.conscrypt.android
+    implementation libs.openjsse
 
 
 }
