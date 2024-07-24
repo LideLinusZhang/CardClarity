@@ -144,7 +144,7 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                     }
                     item {
                         DropdownMenu(
-                            label = "Select Card Purchase Type",
+                            label = "Select Purchase Type",
                             options = PurchaseType.entries.map { it.name },
                             selectedOption = uiState.selectedPurchaseType,
                             onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
