@@ -45,7 +45,7 @@ fun BottomNavGraph(navController: NavHostController) {
             UpcomingPaymentsScreen()
         }
         composable(Destinations.RECORD_RECEIPT) {
-            RecordReceiptScreen()
+            RecordReceiptScreen(navController)
         }
         composable(
             route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",

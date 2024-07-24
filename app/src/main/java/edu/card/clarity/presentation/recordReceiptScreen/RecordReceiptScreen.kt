@@ -14,14 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
@@ -31,7 +30,8 @@ import java.util.*
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
+fun RecordReceiptScreen(navController: NavController,
+                        viewModel: RecordReceiptViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val allCards by viewModel.allCards.collectAsState()
     val context = LocalContext.current
@@ -153,7 +153,10 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
                     }
                     item {
                         Button(
-                            onClick = viewModel::addReceipt,
+                            onClick = {
+                                viewModel.addReceipt()
+                                navController.popBackStack()
+                            },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Add Receipt")
