@@ -26,7 +26,7 @@ import org.json.JSONObject
 @HiltViewModel
 class RecordReceiptViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
-    private val pointBackCreditCardRepository: PointBackCreditCardRepository
+    private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val receiptDao: ReceiptDao,
     @ApplicationContext private val context: Context,
     ) : ViewModel() {
@@ -54,8 +54,7 @@ class RecordReceiptViewModel @Inject constructor(
     }
 
     fun onImageCaptured(imagePath: String) {
-        _uiState.value = _uiState.value.copy(photoPath = imagePath)
-        _showCamera.value = false
+        _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
 
         viewModelScope.launch {
             try {

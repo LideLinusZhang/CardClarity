@@ -6,11 +6,11 @@ import android.util.Log
 import edu.card.clarity.enums.PurchaseType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import java.io.File
 import org.json.JSONObject
@@ -45,7 +45,7 @@ suspend fun scanReceipt(context: Context, path: String): Response {
 
         Log.d("json", jsonBody.substring(0, 1000))
 
-        val body = RequestBody.create(mediaTypeJson, jsonBody)
+        val body = jsonBody.toRequestBody(mediaTypeJson)
 
         val request = Request.Builder()
             .url("https://api.veryfi.com/api/v8/partner/documents")

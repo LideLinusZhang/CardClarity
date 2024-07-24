@@ -27,7 +27,6 @@ import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.common.TextField
 import edu.card.clarity.ui.theme.CardClarityTheme
-import java.io.File
 import java.util.*
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -39,7 +38,6 @@ fun RecordReceiptScreen(
     val uiState by viewModel.uiState.collectAsState()
     val allCards by viewModel.allCards.collectAsState()
     val context = LocalContext.current
-    val showCamera by viewModel.showCamera.collectAsState()
     val cameraError = uiState.cameraError
 
     if (cameraError != null) {
@@ -59,8 +57,6 @@ fun RecordReceiptScreen(
     }
 
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-    val storagePermissionState = rememberPermissionState(permission = Manifest.permission.READ_EXTERNAL_STORAGE)
-    val managePermissionState = rememberPermissionState(permission = Manifest.permission.MANAGE_EXTERNAL_STORAGE)
 
     CardClarityTheme {
         Column(
@@ -76,7 +72,7 @@ fun RecordReceiptScreen(
                 fontSize = 22.sp,
             )
 
-            if (showCamera) {
+            if (uiState.showCamera) {
                 CameraCapture(
                     onImageCaptured = viewModel::onImageCaptured,
                     onError = { exception: Throwable ->
@@ -84,40 +80,6 @@ fun RecordReceiptScreen(
                     }
                 )
             } else {
-                Button(
-                    onClick = {
-                        if (cameraPermissionState.status.isGranted) {
-                            viewModel.openCamera()
-                        } else {
-                            cameraPermissionState.launchPermissionRequest()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Scan your receipt")
-                }
-
-                Button(
-                    onClick = {
-                        if (cameraPermissionState.status.isGranted) {
-                            viewModel.openCamera()
-                        } else {
-                            cameraPermissionState.launchPermissionRequest()
-                        }
-                        if (!storagePermissionState.status.isGranted) {
-                            Log.d("receipt", "in storage permission getting")
-                            storagePermissionState.launchPermissionRequest()
-                        }
-                        if (!managePermissionState.status.isGranted) {
-                            Log.d("receipt", "in manage permission getting")
-                            managePermissionState.launchPermissionRequest()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Scan your receipt")
-                }
-
                 uiState.photoPath?.let { path ->
                     val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
                     Image(
@@ -126,8 +88,19 @@ fun RecordReceiptScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
-                            .padding(top = 16.dp)
                     )
+                }
+                Button(
+                    onClick = {
+                        if (cameraPermissionState.status.isGranted) {
+                            viewModel.openCamera()
+                        } else {
+                            cameraPermissionState.launchPermissionRequest()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Scan your receipt")
                 }
                 LazyColumn {
                     item {
