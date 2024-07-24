@@ -35,6 +35,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.hilt.navigation.compose.hiltViewModel
+import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.DarkAccentBlue
+import edu.card.clarity.ui.theme.LightBlue
 import java.util.Locale
 
 
@@ -95,7 +98,7 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
                 .padding(bottom = 12.dp),
             text = "Hi $userName 👋,",
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
+            style = CardClarityTypography.titleLarge,
             color = Color.Black
         )
         Text(
@@ -293,7 +296,7 @@ fun CardBox(label: String, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(8.dp)
             .background(
-                color = Color(0xFFE3F2FD),
+                color = LightBlue,
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable(onClick = onClick)
@@ -309,7 +312,7 @@ fun CardBox(label: String, onClick: () -> Unit) {
                 modifier = Modifier
                     .width(4.dp)
                     .height(56.dp)
-                    .background(color = Color(0xFF42A5F5))
+                    .background(DarkAccentBlue)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -317,6 +320,7 @@ fun CardBox(label: String, onClick: () -> Unit) {
                     text = label,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
+                    style = CardClarityTypography.titleLarge,
                     color = Color.Black,
                 )
             }

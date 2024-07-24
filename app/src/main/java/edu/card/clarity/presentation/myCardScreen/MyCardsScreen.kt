@@ -34,7 +34,7 @@ import edu.card.clarity.presentation.common.ChipFilter
 import edu.card.clarity.presentation.utils.Destinations
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
-import edu.card.clarity.ui.theme.Gold
+import edu.card.clarity.ui.theme.DarkAccentBlue
 
 data class CardInfo(
     val cardName: String,
@@ -61,7 +61,7 @@ fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenView
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Icon(Icons.Filled.Star, contentDescription = "Credit Card Icon", tint = Gold)
+                Icon(Icons.Filled.Star, contentDescription = "Credit Card Icon", tint = DarkAccentBlue)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "My Wallet",
