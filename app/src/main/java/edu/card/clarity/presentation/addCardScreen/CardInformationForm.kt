@@ -3,7 +3,6 @@ package edu.card.clarity.presentation.addCardScreen
 import android.app.DatePickerDialog
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import edu.card.clarity.presentation.common.CustomButton
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.common.TextField
@@ -69,113 +69,86 @@ fun CardInformationForm(
         )
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            TextField(
-                label = "Card Name",
-                placeholderText = "Enter Card Name",
-                text = uiState.cardName,
-                onTextChange = viewModel::updateCardName
+        TextField(
+            label = "Card Name",
+            placeholderText = "Enter Card Name",
+            text = uiState.cardName,
+            onTextChange = viewModel::updateCardName
+        )
+
+        DropdownMenu(
+            label = "Card Network",
+            options = viewModel.cardNetworkTypeStrings,
+            selectedOption = uiState.selectedCardNetworkType,
+            onOptionSelected = viewModel::updateSelectedCardNetworkType
+        )
+
+        DropdownMenu(
+            label = "Reward Type",
+            options = viewModel.rewardTypeOptionStrings,
+            selectedOption = uiState.selectedRewardType,
+            onOptionSelected = viewModel::updateSelectedRewardType
+        )
+
+        DatePickerField(
+            date = uiState.mostRecentStatementDate,
+            label = "Most Recent Statement Date",
+            onClick = statementDatePickerDialog::show
+        )
+
+        DatePickerField(
+            date = uiState.mostRecentPaymentDueDate,
+            label = "Most Recent Payment Due Date",
+            onClick = paymentDatePickerDialog::show
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Payment Reminder:",
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                color = Color.Black
             )
-        }
-        item {
-            DropdownMenu(
-                label = "Card Network",
-                options = viewModel.cardNetworkTypeStrings,
-                selectedOption = uiState.selectedCardNetworkType,
-                onOptionSelected = viewModel::updateSelectedCardNetworkType
+            Switch(
+                checked = uiState.isReminderEnabled,
+                onCheckedChange = viewModel::updateReminderEnabled
             )
-        }
-        item {
-            DropdownMenu(
-                label = "Reward Type",
-                options = viewModel.rewardTypeOptionStrings,
-                selectedOption = uiState.selectedRewardType,
-                onOptionSelected = viewModel::updateSelectedRewardType
-            )
-        }
-        item {
-            DatePickerField(
-                date = uiState.mostRecentStatementDate,
-                label = "Most Recent Statement Date",
-                onClick = statementDatePickerDialog::show
-            )
-        }
-        item {
-            DatePickerField(
-                date = uiState.mostRecentPaymentDueDate,
-                label = "Most Recent Payment Due Date",
-                onClick = paymentDatePickerDialog::show
-            )
-        }
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Payment Reminder:",
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
-                Switch(
-                    checked = uiState.isReminderEnabled,
-                    onCheckedChange = viewModel::updateReminderEnabled
-                )
-            }
         }
 
         if (uiState.selectedRewardType == "Point Back") {
-            item {
-                TextField(
-                    label = "Point System Name",
-                    placeholderText = "Enter Point System Name",
-                    text = uiState.pointSystemName,
-                    onTextChange = viewModel::updatePointSystemName
-                )
-            }
-            item {
-                TextField(
-                    label = "Point to Cash Conversion Rate",
-                    placeholderText = "Enter Conversion Rate (e.g., 0.01)",
-                    text = uiState.pointToCashConversionRate,
-                    onTextChange = viewModel::updatePointToCashConversionRate,
-                )
-            }
+            TextField(
+                label = "Point System Name",
+                placeholderText = "Enter Point System Name",
+                text = uiState.pointSystemName,
+                onTextChange = viewModel::updatePointSystemName
+            )
+
+            TextField(
+                label = "Point to Cash Conversion Rate",
+                placeholderText = "Enter Conversion Rate (e.g., 0.01)",
+                text = uiState.pointToCashConversionRate,
+                onTextChange = viewModel::updatePointToCashConversionRate,
+            )
         }
 
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        item {
-            Button(
-                onClick = {
-                    viewModel.addCreditCard()
-                    navController.navigate("myCards")
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-            ) {
-                Text(text = "Add Card to My Cards")
+        CustomButton(
+            text = "Add Card to My Cards",
+            onClick = {
+                viewModel.addCreditCard()
+                navController.navigate("myCards")
             }
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-        }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
