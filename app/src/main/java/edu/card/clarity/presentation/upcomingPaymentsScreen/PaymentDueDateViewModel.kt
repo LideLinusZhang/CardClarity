@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +22,14 @@ class PaymentDueDateViewModel @Inject constructor(
     private val pointBackCreditCardRepository: PointBackCreditCardRepository
 ) : ViewModel() {
 
-    private val _filteredCreditCards = combine(
+    private val _creditCards = combine(
         cashBackCreditCardRepository.getAllCreditCardInfoStream(),
         pointBackCreditCardRepository.getAllCreditCardInfoStream()
     ) { cashBack, pointBack ->
         cashBack + pointBack
     }
 
-    val uiState: StateFlow<List<PaymentDueDateUiState>> = _filteredCreditCards
+    val uiState: StateFlow<List<PaymentDueDateUiState>> = _creditCards
         .map { cardList -> cardList.map { it.toUiState() } }
         .stateIn(
             scope = viewModelScope,
@@ -38,27 +37,60 @@ class PaymentDueDateViewModel @Inject constructor(
             initialValue = listOf()
         )
 
-    fun getNextPayment(): PaymentDueDateUiState? {
-        val sortedPayments = uiState.value.sortedBy { parseDate(it.dueDate) }
-        return sortedPayments.firstOrNull { parseDate(it.dueDate).isAfter(LocalDate.now()) }
+    fun getNextPayment(cards: List<PaymentDueDateUiState>): Pair<String, LocalDate>? {
+        if (cards.isEmpty()) {
+            return null
+        }
+
+        val today = LocalDate.now()
+        val todayDayOfMonth = today.dayOfMonth
+        val todayMonth = today.monthValue
+
+        // sort payments by due date
+        val sortedPayments = cards.sortedBy { it.dueDate.toLocalDate() }
+
+        // find the first payment that is due later this month
+        val nextPaymentThisMonth = sortedPayments.firstOrNull {
+            it.dueDate.get(Calendar.DAY_OF_MONTH) > todayDayOfMonth &&
+                    it.dueDate.get(Calendar.MONTH) + 1 == todayMonth
+        }
+
+        // if no payment is due later this month, take the earliest due date next month
+        val nextPayment = nextPaymentThisMonth ?: sortedPayments.firstOrNull()
+
+        return nextPayment?.let {
+            // adjust for indexing
+            val dueMonth = it.dueDate.get(Calendar.MONTH) + 1
+            // wrap around to next year
+            val dueYear = if (dueMonth < todayMonth) {
+                it.dueDate.get(Calendar.YEAR) + 1
+            } else {
+                it.dueDate.get(Calendar.YEAR)
+            }
+
+            // add one month if we are wrapping to the earliest due date next month
+            val adjustedMonth = if (nextPaymentThisMonth == null) dueMonth + 1 else dueMonth
+
+            val dueDate = LocalDate.of(dueYear, adjustedMonth, it.dueDate.get(Calendar.DAY_OF_MONTH))
+            Pair(it.cardName, dueDate)
+        }
     }
 
-    private fun parseDate(calendar: Calendar): LocalDate {
-        val instant = calendar.toInstant()
+
+    private fun Calendar.toLocalDate(): LocalDate {
+        val instant = this.toInstant()
         val zoneId = ZoneId.systemDefault()
         return instant.atZone(zoneId).toLocalDate()
     }
 
     companion object {
-        private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
         private fun CreditCardInfo.toUiState() = PaymentDueDateUiState(
             cardName = name,
             dueDate = paymentDueDate,
             backgroundColor = when (cardNetworkType) {
-                CardNetworkType.Visa -> Color.Green
-                CardNetworkType.MasterCard -> Color.Red
-                CardNetworkType.AMEX -> Color.Blue
+                CardNetworkType.Visa -> Color(0xFFC8E6C9)  // light green
+                CardNetworkType.MasterCard -> Color(0xFFFFCDD2)  // light red
+                CardNetworkType.AMEX -> Color(0xFFBBDEFB)  // light blue
             }
         )
 
