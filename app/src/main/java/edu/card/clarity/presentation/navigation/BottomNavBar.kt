@@ -5,7 +5,6 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import edu.card.clarity.presentation.utils.Destinations
 
@@ -27,7 +26,7 @@ sealed class BottomNavBar (
     data object MyReceipts: BottomNavBar(
         route = Destinations.MY_RECEIPTS,
         title = "Receipts",
-        icon = Icons.Default.Star
+        icon = Icons.Default.ShoppingCart
     )
     data object Purchase: BottomNavBar(
         route = Destinations.PURCHASE,
