@@ -112,7 +112,11 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
             Text(
-                text = String.format(Locale.CANADA, "+$%.2f", rewardsSummary[0].amount),
+                text = if (rewardsSummary.isNotEmpty()) {
+                    String.format(Locale.CANADA, "+$%.2f", rewardsSummary[0].amount)
+                } else {
+                    "+$0.00"
+                },
                 fontWeight = FontWeight.Normal,
                 fontSize = 80.sp,
                 color = Color.Black

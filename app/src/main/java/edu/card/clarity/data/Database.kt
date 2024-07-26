@@ -18,8 +18,10 @@ import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMapping
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchase.Purchase
+import edu.card.clarity.data.receipt.Receipt
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseReward
+import edu.card.clarity.data.receipt.ReceiptDao
 
 @Database(
     entities = [
@@ -28,6 +30,7 @@ import edu.card.clarity.data.purchaseReward.PurchaseReward
         PurchaseReward::class,
         CreditCardIdPointSystemIdPair::class,
         Purchase::class,
+        Receipt::class,
         PlaceTypeToPurchaseTypeMapping::class,
         PredefinedCreditCardId::class,
         AlarmItem::class
@@ -36,7 +39,7 @@ import edu.card.clarity.data.purchaseReward.PurchaseReward
         UserAddedCreditCardInfo::class,
         PredefinedCreditCardInfo::class
     ],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
@@ -44,7 +47,8 @@ import edu.card.clarity.data.purchaseReward.PurchaseReward
         AutoMigration(4, 5),
         AutoMigration(5, 6),
         AutoMigration(6, 7),
-        AutoMigration(7, 8)
+        AutoMigration(7, 8),
+        AutoMigration(8, 9)
     ],
     exportSchema = true
 )
@@ -57,5 +61,6 @@ abstract class Database : RoomDatabase() {
     abstract fun purchaseReward(): PurchaseRewardDao
 
     abstract fun purchase(): PurchaseDao
+    abstract fun receipt(): ReceiptDao
     abstract fun placeTypeToPurchaseTypeMapping(): PlaceTypeToPurchaseTypeMappingDao
 }

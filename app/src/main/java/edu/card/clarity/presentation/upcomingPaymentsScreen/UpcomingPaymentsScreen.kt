@@ -1,5 +1,6 @@
-package edu.card.clarity.presentation
+package edu.card.clarity.presentation.upcomingPaymentsScreen
 
+import android.icu.util.Calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -9,33 +10,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
-import edu.card.clarity.presentation.myCardScreen.CardInfo
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
 import java.time.LocalDate
 import java.time.YearMonth
-
-
-val cards = listOf(
-    CardInfo(cardName = "TD Aeroplan Visa Infinite Card", dueDate = "2024-06-29", backgroundColor = Color(0xFFAED8FF)),
-    CardInfo(cardName = "American Express Platinum Card", dueDate = "2024-06-13", backgroundColor = Color(0xFFB7FF9E)),
-    CardInfo(cardName = "CIBC Dividend", dueDate = "2024-06-03", backgroundColor = Color(0xFFFF9EB8)),
-)
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun UpcomingPaymentsScreen() {
+fun UpcomingPaymentsScreen(viewModel: PaymentDueDateViewModel = hiltViewModel()) {
+    val cards by viewModel.uiState.collectAsState()
+
     CardClarityTheme {
         Column(
             modifier = Modifier
@@ -47,7 +39,8 @@ fun UpcomingPaymentsScreen() {
         ) {
             Header()
             CalendarPager(cards)
-            UpcomingPayment(cards)
+            PaymentLegend(cards)
+            UpcomingPayment(cards, viewModel)
         }
     }
 }
@@ -65,7 +58,7 @@ fun Header() {
 }
 
 @Composable
-fun CalendarPager(cards: List<CardInfo>) {
+fun CalendarPager(cards: List<PaymentDueDateUiState>) {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
 
     Column {
@@ -80,7 +73,7 @@ fun CalendarPager(cards: List<CardInfo>) {
 @Composable
 fun MonthView(
     month: YearMonth,
-    cards: List<CardInfo>,
+    cards: List<PaymentDueDateUiState>,
     onMonthChange: (YearMonth) -> Unit
 ) {
     val daysInMonth: Int = month.lengthOfMonth()
@@ -128,25 +121,27 @@ fun MonthView(
                 )
             }
 
+            // day cells with payment coloring
             items(daysInMonth + dayOfWeekOffset) { index: Int ->
                 if (index >= dayOfWeekOffset) {
                     val day: Int = index - dayOfWeekOffset + 1
-                    DayCell(day = day, month = month, cards = cards)
+                    DayCell(day = day, cards = cards)
                 } else {
                     Box(Modifier.size(40.dp))
                 }
             }
         }
     }
-    PaymentLegend(cards = cards)
 }
 
 @Composable
-fun DayCell(day: Int, month: YearMonth, cards: List<CardInfo>) {
-    val date: LocalDate = month.atDay(day)
-    // check if any card has a due date with the same day of the month as 'day'
+fun DayCell(day: Int, cards: List<PaymentDueDateUiState>) {
     val paymentColor = cards.find { card ->
-        val cardDueDate = LocalDate.parse(card.dueDate)
+        val cardDueDate = LocalDate.of(
+            card.dueDate.get(Calendar.YEAR),
+            card.dueDate.get(Calendar.MONTH) + 1,  // Calendar.MONTH is zero-based in java.util.Calendar
+            card.dueDate.get(Calendar.DAY_OF_MONTH)
+        )
         cardDueDate.dayOfMonth == day
     }?.backgroundColor ?: Color.LightGray
 
@@ -164,12 +159,13 @@ fun DayCell(day: Int, month: YearMonth, cards: List<CardInfo>) {
     }
 }
 
+
 @Composable
-fun PaymentLegend(cards: List<CardInfo>) {
+fun PaymentLegend(cards: List<PaymentDueDateUiState>) {
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp)
-            .background(color = Color.LightGray, shape = RoundedCornerShape(4))
+            .background(color = Color.LightGray, shape = RoundedCornerShape(8))
     ) {
         cards.forEach { card ->
             Row(
@@ -193,14 +189,12 @@ fun PaymentLegend(cards: List<CardInfo>) {
     }
 }
 
-
-
 @Composable
-fun UpcomingPayment(cards: List<CardInfo>) {
-    val sortedPayments = cards.sortedBy { LocalDate.parse(it.dueDate) }
-    val nextPayment = sortedPayments.firstOrNull { LocalDate.parse(it.dueDate).isAfter(LocalDate.now()) }
+fun UpcomingPayment(cards: List<PaymentDueDateUiState>, viewModel: PaymentDueDateViewModel) {
+    val nextPaymentInfo = viewModel.getNextPayment(cards)
+    val dateFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
 
-    Column (
+    Column(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
@@ -209,13 +203,16 @@ fun UpcomingPayment(cards: List<CardInfo>) {
         Text(
             text = "Next payment",
             style = CardClarityTypography.titleLarge,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = 8.dp)
         )
-        if (nextPayment != null) {
+
+        if (cards.isEmpty()) {
+            Text("No upcoming payments", style = CardClarityTypography.bodyLarge, modifier = Modifier.padding(start = 16.dp))
+        } else if (nextPaymentInfo != null) {
+            val formattedDueDate = nextPaymentInfo.second.format(dateFormatter)
             Box(
                 modifier = Modifier
-                    .background(color = nextPayment.backgroundColor, shape = RoundedCornerShape(4))
+                    .background(color = Color.LightGray, shape = RoundedCornerShape(8))
                     .fillMaxWidth()
             ) {
                 Row(
@@ -225,20 +222,17 @@ fun UpcomingPayment(cards: List<CardInfo>) {
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
-                        text = "${nextPayment.cardName}\nDue Date: ${nextPayment.dueDate}",
+                        text = "${nextPaymentInfo.first}\nDue Date: $formattedDueDate",
                         style = CardClarityTypography.bodyLarge
                     )
                 }
             }
         } else {
-            Text(
-                text = "No upcoming payments",
-                style = CardClarityTypography.bodyLarge,
-                modifier = Modifier.padding(start = 16.dp)
-            )
+            Text("No upcoming payments", style = CardClarityTypography.bodyLarge, modifier = Modifier.padding(start = 16.dp))
         }
     }
 }
+
 
 
 @Preview(showBackground = true)

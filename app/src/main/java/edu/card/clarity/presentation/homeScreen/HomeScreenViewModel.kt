@@ -76,26 +76,14 @@ class HomeScreenViewModel @Inject constructor(
             now.set(Calendar.DAY_OF_MONTH, 1)
             val startTime = now.time
 
-            // generate dummy data
-            // TODO: remove function and connect to backend once purchase is implemented
-            val dummyPurchases = generateDummyPurchasesFlow(startTime, endTime)
-            dummyPurchases.map { purchases: List<Purchase> ->
+            purchaseRepository.getAllPurchasesStreamBetween(startTime, endTime)
+                .map { purchases: List<Purchase> ->
                     val rewardsSummary = calculateRewardsSummary(purchases)
                     HomeScreenUiState(rewardsSummary = rewardsSummary, selectedMonths = months)
                 }
                 .collect {
                     _uiState.value = it
                 }
-
-            // fetch data from repository
-//            purchaseRepository.getAllPurchasesStreamBetween(startTime, endTime)
-//                .map { purchases: List<Purchase> ->
-//                    val rewardsSummary = calculateRewardsSummary(purchases)
-//                    HomeScreenUiState(rewardsSummary = rewardsSummary, selectedMonths = months)
-//                }
-//                .collect {
-//                    _uiState.value = it
-//                }
         }
     }
 

@@ -6,16 +6,17 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import edu.card.clarity.presentation.MyReceiptsScreen
+import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.addCardScreen.AddCardScreen
-import edu.card.clarity.presentation.homeScreen.HomeScreen
-import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
-import edu.card.clarity.presentation.PurchaseScreen
-import edu.card.clarity.presentation.UpcomingPaymentsScreen
 import edu.card.clarity.presentation.addBenefitScreen.AddBenefitScreen
-import edu.card.clarity.presentation.addCardScreen.AddCardScreen
+import edu.card.clarity.presentation.upcomingPaymentsScreen.UpcomingPaymentsScreen
+import edu.card.clarity.presentation.homeScreen.HomeScreen
 import edu.card.clarity.presentation.myBenefitsScreen.MyBenefitsScreen
 import edu.card.clarity.presentation.myCardScreen.MyCardsScreen
+import edu.card.clarity.presentation.myReceiptsScreen.MyReceiptsScreen
+import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseOptimalBenefitsScreen
+import edu.card.clarity.presentation.purchaseBenefitsScreen.PurchaseScreen
+import edu.card.clarity.presentation.recordReceiptScreen.RecordReceiptScreen
 import edu.card.clarity.presentation.utils.ArgumentNames
 import edu.card.clarity.presentation.utils.Destinations
 
@@ -32,16 +33,19 @@ fun BottomNavGraph(navController: NavHostController) {
             AddCardScreen(navController)
         }
         composable(Destinations.MY_RECEIPTS) {
-            MyReceiptsScreen()
+            MyReceiptsScreen(navController)
         }
         composable(Destinations.PURCHASE) {
-            PurchaseScreen()
+            PurchaseScreen(navController)
         }
         composable(Destinations.MY_CARDS) {
             MyCardsScreen(navController)
         }
         composable(Destinations.UPCOMING_PAYMENTS) {
             UpcomingPaymentsScreen()
+        }
+        composable(Destinations.RECORD_RECEIPT) {
+            RecordReceiptScreen(navController)
         }
         composable(
             route = "${Destinations.MY_BENEFITS}/{${ArgumentNames.CREDIT_CARD_ID}}/{${ArgumentNames.CREDIT_CARD_NAME}}/{${ArgumentNames.CREDIT_CARD_REWARD_TYPE}}",
@@ -90,6 +94,14 @@ fun BottomNavGraph(navController: NavHostController) {
             )
 
             AddBenefitScreen(cardName, navController)
+        }
+        composable(
+            route = "${Destinations.PURCHASE_OPTIMAL_BENEFITS}/{category}",
+            arguments = listOf(navArgument("category") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val categoryString = backStackEntry.arguments?.getString("category")!!
+            val category = PurchaseType.valueOf(categoryString)
+            PurchaseOptimalBenefitsScreen(navController, category)
         }
     }
 }
