@@ -1,54 +1,65 @@
-| Date (DD/MM/YYYY)              | Task                                                       | Linus | Sophie | Jeannie | Nandini | Rachelle | Samuel |
-|--------------------------------|------------------------------------------------------------|-------|--------|---------|---------|----------|--------|
-| 15/05/2024                     | Project Setup on Github                                    |       |        |         |         |          |        |
-| 22/05/2024                     | Project Proposal Brainstorming - Meeting                   | 2hr   | 2hr    | 2hr     | 2hr     | 2hr      | 2hr    |
-| 27/05/2024                     | Project Idea and Deliverable 1 - Meeting                   | 2hr   | 2hr    | 2hr     | 2hr     | 2hr      | 2hr    |
-| 13/06/2024                     | Deliverable 2 - Meeting                                    | 2hr   | 2hr    | 2hr     | 2hr     | 2hr      | 2hr    |
-| 22/06/2024                     | Prototype Discussion - Meeting                             | 1.5hr | 1.5hr  | 1.5hr   | 1.5hr   | 1.5hr    | 1.5hr  |
-| 25/06/2024                     | Figma Designs Discussion - Meeting                         | 1.5hr | 1.5hr  | 1.5hr   | 1.5hr   | 1.5hr    | 1.5hr  |
-| 26/06/2024                     | Deliverable 3 (Presentation) - Meeting                     | 2hr   | 2hr    | 2hr     | 2hr     | 2hr      | 2hr    |
-| 30/06/2024                     | Issues Discussion + Kanban Board Creation - Meeting        | 2.5hr | 2.5hr  | 2.5hr   | 2.5hr   | 2.5hr    | 2.5hr  |
-| 09/07/2024                     | Deliverable 4 and General Discussion - Meeting             | 2hr   | 2hr    | 2hr     | 2hr     | 2hr      | 2hr    |
-| 17/07/2024                     | D5 and Status Update - Meeting                             | 2.5hr | 2.5hr  | 2.5hr   | 2.5hr   | 2.5hr    | 2.5hr  |
-| 20/07/2024                     | Status Update and Group Coding - Meeting                   | 2hr   | 2hr    | 2hr     | 2hr     | 2hr      | 2hr    |
-|                                | Creating Figma Designs and Logo                            |       |        |         | 3hr     |          |        |
-|                                | Creating Prototype on Figma                                |       |        |         | 2hr     |          |        |
-|                                | Home Screen UI                                             |       |        |         |         |          |        |
-|                                | Add a Card Screen UI                                       |       |        |         | 3hr     |          |        |
-|                                | Record a Receipt Screen UI                                 |       |        |         |         |          |        |
-|                                | My Benefits Page UI                                        |       |        |         | 3hr     |          |        |
-|                                | Payment Dates Page UI                                      |       |        |         |         |          |        |
-|                                | My Cards Page UI                                           |       |        |         |         |          |        |
-|                                | My Receipts Page UI                                        |       |        |         |         |          |        |
-|                                | Rewards Summary + Toggle 1/3/6 months                      |       |        |         |         |          |        |
-|                                | Filtering My Cards Screen                                  |       |        |         |         |          |        |
-|                                | Add a Card - Custom Create Card                            |       |        |         | 2hr     |          |        |
-|                                | Add a Card - Use template                                  |       |        |         | 4hr     |          |        |
-|                                | Testing                                                    |       |        |         |         |          |        |
-|                                | My Benefits View Model + Add Benefit                       |       |        |         | 6hr     |          |        |
-|                                | Purchase Page UI                                           |       |        |         | 2hr     |          |        |
-|                                | Purchase Page View Model (Display Optimal Card + Benefits) |       |        |         | 4hr     |          |        |
-|                                | Researching Geolocation Inference                          |       |        |         | 2hr     |          |        |
-|                                | Research on Credit Card Types + Structure                  |       |        |         | 2hr     |          |        |
-| Throughout The Term (12 weeks) | PR Reviews + Testing Features + Approval                   |       |        |         | 12hr    |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
-|                                |                                                            |       |        |         |         |          |        |
+| Date (DD/MM/YYYY) | Task                                                                                            | Linus | Sophie | Jeannie | Nandini       | Rachelle | Samuel |
+|-------------------|-------------------------------------------------------------------------------------------------|-------|--------|---------|---------------|----------|--------|
+| 15/05/2024        | Project Setup on Github                                                                         |       |        |         |               |          |        |
+| 17/06/2024        | Initialize Project                                                                              |       |        |         |               |          |        |
+| 22/05/2024        | Project Proposal Brainstorming - Meeting                                                        | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 27/05/2024        | Project Idea and Deliverable 1 - Meeting                                                        | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 29/05/2024        | Learning Kotlin, Android Studio, Room and Hilt                                                  |       |        |         | 3hr           |          |        |
+| 31/05/2024        | Initial UI Design for Home Screen                                                               |       |        |         | 1hr           |          |        |
+| 05/06/2024        | UI Design for My Cards Screen                                                                   |       |        |         | 0.5hr         |          |        |
+| 07/06/2024        | UI Design for Add a Card                                                                        |       |        |         | 0.5hr         |          |        |
+| 10/06/2024        | UI Design for Payments Calendar Screen                                                          |       |        |         | 0.5hr         |          |        |
+| 12/06/2024        | UI Design for My Benefits                                                                       |       |        |         | 0.5hr         |          |        |
+| 13/06/2024        | Deliverable 2 - Meeting                                                                         | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 15/06/2024        | UI Design for Add a Benefit                                                                     |       |        |         | 0.25hr        |          |        |
+| 18/06/2024        | UI Design for Receipts Page                                                                     |       |        |         | 0.25hr        |          |        |
+| 20/06/2024        | UI Design for Record a Receipt Page                                                             |       |        |         | 0.5hr         |          |        |
+| 21/06/2024        | Implement Navbar                                                                                |       |        |         |               |          |        |
+| 22/06/2024        | Prototype Discussion - Meeting                                                                  | 1.5hr | 1.5hr  | 1.5hr   | 1.5hr         | 1.5hr    | 1.5hr  |
+| 23/06/2024        | UI Design for Purchase Page + Ideating on Geolocation Inference                                 |       |        |         | 1hr           |          |        |
+| 24/06/2024        | Implement domain models, DAOs, and repositories for credit cards and point systems              |       |        |         |               |          |        |
+| 24/06/2024        | My Cards Screen Implementation Setup                                                            |       |        |         |               |          |        |
+| 24/06/2024        | Home Screen Implementation Setup                                                                |       |        |         |               |          |        |
+| 25/06/2024        | Figma Designs Discussion - Meeting                                                              | 1.5hr | 1.5hr  | 1.5hr   | 1.5hr         | 1.5hr    | 1.5hr  |
+| 26/06/2024        | Deliverable 3 (Presentation) - Meeting                                                          | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 26/06/2024        | Add Card Screen Setup                                                                           |       |        |         | 1hr           |          |        |
+| 28/06/2024        | UI Design for Optimal Purchase Recommendation Page                                              |       |        |         | 0.5hr         |          |        |
+| 30/06/2024        | Issues Discussion + Kanban Board Creation - Meeting                                             | 2.5hr | 2.5hr  | 2.5hr   | 2.5hr         | 2.5hr    | 2.5hr  |
+| 02/07/2024        | Implemented Database, DAO and Repository for Purchases                                          |       |        |         |               |          |        |
+| 02/07/2024        | View Model for Home Screen                                                                      |       |        |         |               |          |        |
+| 04/07/2024        | View Model for Add Card Screen                                                                  |       |        |         |               |          |        |
+| 05/07/2024        | Migrate navbar to use M3                                                                        |       |        |         |               |          |        |
+| 06/07/2024        | View Model for Add a Card                                                                       |       |        |         |               |          |        |
+| 08/07/2024        | View Model for Payments Calendar Screen                                                         |       |        |         |               |          |        |
+| 09/07/2024        | Deliverable 4 and General Discussion - Meeting                                                  | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 11/07/2024        | View Model for My Benefits                                                                      |       |        |         |               |          |        |
+| 13/07/2024        | View Model for Add a Benefit                                                                    |       |        |         |               |          |        |
+| 15/07/2024        | View Model for My Cards Screen                                                                  |       |        |         |               |          |        |
+| 15/07/2024        | Implement View Model for My Cards Screen                                                        |       |        |         |               |          |        |
+| 17/07/2024        | D5 and Status Update - Meeting (+ discussed idea of adding template cards)                      | 2.5hr | 2.5hr  | 2.5hr   | 2.5hr         | 2.5hr    | 2.5hr  |
+| 17/07/2024        | Modify DB, DAO, and Repositories for predefined credit cards                                    |       |        |         |               |          |        |
+| 18/07/2024        | Add Card Screen - UI changes to allow for using template predefined cards                       |       |        |         | 2hr           |          |        |
+| 18/07/2024        | View Model for Record a Receipt Page                                                            |       |        |         |               |          |        |
+| 18/07/2024        | Add predefined credit cards to the database                                                     |       |        |         |               |          |        |
+| 18/07/2024        | Implement geolocation-based purchase type inference                                             |       |        |         |               |          |        |
+| 20/07/2024        | Status Update and Group Coding - Meeting                                                        | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 20/07/2024        | Benefits Page UI & View Model + Add a Card Page (Defining a Point System for a Point back Card) |       |        |         | 4hr           |          |        |
+| 21/07/2024        | View Model for Purchase Page                                                                    |       |        |         |               |          |        |
+| 21/07/2024        | Rewards summary toggle                                                                          |       |        |         |               |          |        |
+| 22/07/2024        | Add the logic to handle "Others" purchase type                                                  |       |        |         |               |          |        |
+| 22/07/2024        | Add Card - Using Template (View Model)                                                          |       |        |         | 3hr           |          |        |
+| 22/07/2024        | Alarm manager notifications                                                                     |       |        |         |               |          |        |
+| 22/07/2024        | Record a Receipt UI                                                                             |       |        |         |               |          |        |
+| 22/07/2024        | Implement optimal card finding                                                                  |       |        |         |               |          |        |
+| 23/07/2024        | View Model for Optimal Purchase Recommendation Page + Purchase Page                             |       |        |         | 4hr           |          |        |
+| 23/07/2024        | Commit updates and fixes                                                                        |       |        |         |               |          |        |
+| 26/07/2024        | Implementing Geolocation Inference in UI                                                        |       |        |         | 6hr           |          |        |
+| 27/07/2024        | Implementing Receipt Scanning                                                                   |       |        |         |               |          |        |
+| 28/07/2024        | UI Improvements - Ideating UI Improvements on Figma                                             | 2hr   | 2hr    | 2hr     | 2hr           | 2hr      | 2hr    |
+| 28/07/2024        | UI Improvements and Bug Fixes                                                                   |       |        |         | 6hr (5 + 1hr) |          |        |
+| 29/07/2024        | Branding and Logo Creation                                                                      |       |        |         | 3hr           |          |        |
+| 30/07/2024        | Final Testing                                                                                   |       |        |         |               |          |        |
+| Various Dates     | Research on geolocation-based inference using Google API (total)                                |       |        |         | 5hr           |          |        |
+| Various Dates     | Research on Ktor                                                                                |       |        |         |               |          |        |
+| Various Dates     | Research on notification systems                                                                |       |        |         |               |          |        |
+| Various Dates     | Research on import/export of data                                                               |       |        |         | 3hr           |          |        |
