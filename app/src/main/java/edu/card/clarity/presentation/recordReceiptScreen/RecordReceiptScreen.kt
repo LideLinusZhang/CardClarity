@@ -1,6 +1,10 @@
 package edu.card.clarity.presentation.recordReceiptScreen
 
+import android.Manifest
 import android.app.DatePickerDialog
+import android.graphics.BitmapFactory
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,25 +12,37 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
-import edu.card.clarity.ui.theme.CardClarityTheme
+import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import edu.card.clarity.enums.PurchaseType
-import edu.card.clarity.enums.CardNetworkType
-import edu.card.clarity.presentation.common.TextField
-import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.common.DatePickerField
-import java.util.Calendar
+import edu.card.clarity.presentation.common.DropdownMenu
+import edu.card.clarity.presentation.common.TextField
+import edu.card.clarity.ui.theme.CardClarityTheme
+import java.util.*
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+fun RecordReceiptScreen(
+    navController: NavController,
+    viewModel: RecordReceiptViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val allCards by viewModel.allCards.collectAsState()
     val context = LocalContext.current
-    val calendar = Calendar.getInstance()
+    val cameraError = uiState.cameraError
+
+    if (cameraError != null) {
+        ErrorDialog(error = cameraError, onDismiss = viewModel::resetCameraError)
+    }
 
     val datePickerDialog = remember {
         DatePickerDialog(
@@ -34,86 +50,121 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
             { _, year, month, dayOfMonth ->
                 viewModel.onDateChange("$year-${month + 1}-$dayOfMonth")
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            Calendar.getInstance().get(Calendar.YEAR),
+            Calendar.getInstance().get(Calendar.MONTH),
+            Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         )
     }
+
+    val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
 
     CardClarityTheme {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(20.dp)
+                .padding(horizontal = 32.dp, vertical = 40.dp),
         ) {
             Text(
                 text = "Record a Receipt",
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
             )
-            LazyColumn {
-                item {
-                    Button(
-                        onClick = viewModel::scanReceipt,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Scan your receipt")
+
+            if (uiState.showCamera) {
+                CameraCapture(
+                    onImageCaptured = viewModel::onImageCaptured,
+                    onError = { exception: Throwable ->
+                        viewModel.onCameraError("Failed to capture image: ${exception.message}")
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-                item {
-                    Text("Detected information:")
-                }
-                item {
-                    DatePickerField(
-                        date = uiState.date,
-                        label = "Date",
-                        onClick = { datePickerDialog.show() }
+                )
+            } else {
+                uiState.photoPath?.let { path ->
+                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
+                    Image(
+                        bitmap = imageBitmap,
+                        contentDescription = "Captured Receipt",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
-                item {
-                    TextField(
-                        label = "Total Amount",
-                        text = uiState.totalAmount,
-                        placeholderText = "Enter total amount",
-                        onTextChange = viewModel::onTotalAmountChange
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        if (cameraPermissionState.status.isGranted) {
+                            viewModel.openCamera()
+                        } else {
+                            cameraPermissionState.launchPermissionRequest()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Scan your receipt")
                 }
-                item {
-                    TextField(
-                        label = "Merchant",
-                        text = uiState.merchant,
-                        placeholderText = "Enter merchant",
-                        onTextChange = viewModel::onMerchantChange
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                item {
-                    DropdownMenu(
-                        label = "Card Type",
-                        options = CardNetworkType.entries.map { it.name },
-                        selectedOption = uiState.selectedCard,
-                        onOptionSelected = { viewModel.onCardSelected(CardNetworkType.entries[it].name) }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                item {
-                    DropdownMenu(
-                        label = "Purchase Type",
-                        options = PurchaseType.entries.map { it.name },
-                        selectedOption = uiState.selectedPurchaseType,
-                        onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-                item {
-                    Button(
-                        onClick = viewModel::addReceipt,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Add Receipt")
+                LazyColumn {
+                    item {
+                        Text("Detected information:")
+                    }
+                    item {
+                        DatePickerField(
+                            date = uiState.date,
+                            label = "Date",
+                            onClick = { datePickerDialog.show() }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        TextField(
+                            label = "Total Amount",
+                            text = uiState.totalAmount,
+                            placeholderText = "Enter total amount",
+                            onTextChange = viewModel::onTotalAmountChange
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        TextField(
+                            label = "Merchant",
+                            text = uiState.merchant,
+                            placeholderText = "Enter merchant",
+                            onTextChange = viewModel::onMerchantChange
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        DropdownMenu(
+                            label = "Select Card Used",
+                            options = allCards.map { it.name },
+                            selectedOption = uiState.selectedCard?.name ?: "Select a card",
+                            onOptionSelected = { viewModel.onCardSelected(allCards[it]) }                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        DropdownMenu(
+                            label = "Select Purchase Type",
+                            options = PurchaseType.entries.map { it.name },
+                            selectedOption = uiState.selectedPurchaseType,
+                            onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    item {
+                        Button(
+                            onClick = {
+                                if (uiState.selectedCard != null) {
+                                    Log.d("receipt", uiState.selectedCard!!.name)
+                                    viewModel.addReceipt()
+                                    navController.popBackStack()
+
+                                }
+                            },
+                            enabled = uiState.selectedCard != null,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Add Receipt")
+                        }
+                        Spacer(modifier = Modifier.height(42.dp))
                     }
                 }
             }
@@ -121,17 +172,17 @@ fun RecordReceiptScreen(viewModel: RecordReceiptViewModel = hiltViewModel()) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun RecordReceiptScreenPreview() {
-    // mock data for preview
-    val mockViewModel = RecordReceiptViewModel().apply {
-        onDateChange("2024-07-20")
-        onTotalAmountChange("45.99")
-        onMerchantChange("Walmart")
-        onCardSelected("Visa")
-        onPurchaseTypeSelected("Groceries")
-    }
-
-    RecordReceiptScreen(viewModel = mockViewModel)
+fun ErrorDialog(error: String, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = "Error") },
+        text = { Text(text = error) },
+        confirmButton = {
+            Button(onClick = { onDismiss() }) {
+                Text("OK")
+            }
+        }
+    )
 }
+

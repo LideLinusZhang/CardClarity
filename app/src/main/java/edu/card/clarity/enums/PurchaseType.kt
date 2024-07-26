@@ -12,5 +12,11 @@ enum class PurchaseType {
     Groceries,
     Restaurants,
     Travel,
-    Others
+    Others;
+
+    companion object {
+        fun toList(): List<String> {
+            return entries.map { it.name }
+        }
+    }
 }

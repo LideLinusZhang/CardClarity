@@ -1,4 +1,4 @@
-package edu.card.clarity
+package edu.card.clarity.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.RowScope
