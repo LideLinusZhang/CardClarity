@@ -4,58 +4,58 @@ import android.content.Context
 import android.util.Base64
 import android.util.Log
 import edu.card.clarity.enums.PurchaseType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import io.ktor.client.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
-import java.io.File
 import org.json.JSONObject
+import java.io.File
 import java.io.FileNotFoundException
+import javax.inject.Inject
 
-fun Context.imageToBase64(fileName: String): String {
-    val file = File(fileName)
-    if (!file.exists()) {
-        throw FileNotFoundException("File not found: $fileName")
+class ReceiptScanner @Inject constructor(
+    private val client: HttpClient
+) {
+
+    private fun imageToBase64(context: Context, fileName: String): String {
+        val file = File(fileName)
+        if (!file.exists()) {
+            throw FileNotFoundException("File not found: $fileName")
+        }
+        val bytes = file.readBytes()
+
+        // for emulator testing purposes, this calls the scanner with a receipt image
+        // val bytes = assets.open("receipt_1.jpg").readBytes()
+        val base = Base64.encodeToString(bytes, Base64.NO_WRAP)
+        return String.format("data:image/jpeg;base64,%s", base)
     }
-    val bytes = file.readBytes()
 
-    // for emulator testing purposes, this calls the scanner with a receipt image
-//    val bytes = assets.open("receipt_1.jpg").readBytes()
-    val base = Base64.encodeToString(bytes, Base64.NO_WRAP)
-    return String.format("data:image/jpeg;base64,%s", base)
-}
+    suspend fun scanReceipt(context: Context, path: String): HttpResponse {
+        return withContext(Dispatchers.IO) {
+            val clientId = "vrfVPmJinsUPSkByAN3i0fYRlLHDinZwr7LFvlR"
+            val apiKey = "elxctrowave:bf1f8c156cbbd85ce46386853dedead5"
+            val base64Image = imageToBase64(context, path)
 
-suspend fun scanReceipt(context: Context, path: String): Response {
-    return withContext(Dispatchers.IO) {
-        val clientId = "vrfVPmJinsUPSkByAN3i0fYRlLHDinZwr7LFvlR"
-        val apiKey = "elxctrowave:bf1f8c156cbbd85ce46386853dedead5"
-        val client = OkHttpClient()
-        val base64Image = context.imageToBase64(path)
+            val categories = JSONArray(PurchaseType.toList())
+            val jsonBody = JSONObject()
+                .put("file_data", base64Image)
+                .put("categories", categories)
+                .toString()
 
-        val mediaTypeJson = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val categories = JSONArray(PurchaseType.toList())
-        val jsonBody = JSONObject()
-            .put("file_data", base64Image)
-            .put("categories", categories)
-            .toString()
+            Log.d("json", jsonBody.substring(0, 1000))
 
-        Log.d("json", jsonBody.substring(0, 1000))
-
-        val body = jsonBody.toRequestBody(mediaTypeJson)
-
-        val request = Request.Builder()
-            .url("https://api.veryfi.com/api/v8/partner/documents")
-            .post(body)
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Accept", "application/json")
-            .addHeader("CLIENT-ID", clientId)
-            .addHeader("AUTHORIZATION", "apikey $apiKey")
-            .build()
-
-        client.newCall(request).execute()
+            client.post("https://api.veryfi.com/api/v8/partner/documents") {
+                headers {
+                    append(HttpHeaders.ContentType, ContentType.Application.Json)
+                    append(HttpHeaders.Accept, ContentType.Application.Json)
+                    append("CLIENT-ID", clientId)
+                    append("AUTHORIZATION", "apikey $apiKey")
+                }
+                setBody(jsonBody)
+            }
+        }
     }
 }

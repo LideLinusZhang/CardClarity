@@ -13,6 +13,10 @@ coreKtx = "1.13.1"
 junit = "5.10.2"
 junitTestingExt = "1.2.1"
 espressoCore = "3.6.1"
+ktorClientCio = "2.0.0"
+ktorClientCore = "2.0.0"
+ktorClientJson = "2.0.0"
+ktorClientSerialization = "2.0.0"
 lifecycleRuntimeKtx = "2.8.3"
 androidxLifecycle = "2.8.3"
 annotation = "1.8.0"
@@ -61,6 +65,10 @@ android-libraries-places-places = { group = "com.google.android.libraries.places
 bcpkix-jdk15on = { module = "org.bouncycastle:bcpkix-jdk15on", version.ref = "bcpkixJdk15on" }
 com-sun-jndi-ldap = { module = "com.sun.jndi:com.sun.jndi.ldap", version.ref = "comSunJndiLdap" }
 conscrypt-android = { module = "org.conscrypt:conscrypt-android", version.ref = "conscryptAndroid" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktorClientJson" }
+ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientSerialization" }
 maps-android-places-places-ktx = { group = "com.google.maps.android", name = "places-ktx", version.ref = "gms-places-ktx" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 openjsse = { module = "org.openjsse:openjsse", version.ref = "openjsse" }
