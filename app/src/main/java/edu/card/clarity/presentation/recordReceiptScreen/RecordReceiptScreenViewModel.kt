@@ -128,12 +128,6 @@ class RecordReceiptViewModel @Inject constructor(
                 photoPath = _uiState.value.photoPath
             )
             receiptDao.insertReceipt(receipt)
-
-//            withContext(Dispatchers.IO) {
-//                _uiState.value.photoPath?.let { path ->
-//                    scanReceipt(context, path)
-//                }
-//            }
         }
     }
 }
