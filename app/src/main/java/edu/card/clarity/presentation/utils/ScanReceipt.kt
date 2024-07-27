@@ -28,15 +28,15 @@ class ReceiptScanner @Inject constructor(
         val bytes = file.readBytes()
 
         // for emulator testing purposes, this calls the scanner with a receipt image
-        // val bytes = assets.open("receipt_1.jpg").readBytes()
+//        val bytes = context.assets.open("receipt_1.jpg").readBytes()
         val base = Base64.encodeToString(bytes, Base64.NO_WRAP)
         return String.format("data:image/jpeg;base64,%s", base)
     }
 
     suspend fun scanReceipt(context: Context, path: String): HttpResponse {
         return withContext(Dispatchers.IO) {
-            val clientId = "vrfVPmJinsUPSkByAN3i0fYRlLHDinZwr7LFvlR"
-            val apiKey = "elxctrowave:bf1f8c156cbbd85ce46386853dedead5"
+            val clientId = "VERYFI_CLIENT_ID"
+            val apiKey = "VERYFI_API_KEY"
             val base64Image = imageToBase64(context, path)
 
             val categories = JSONArray(PurchaseType.toList())

@@ -76,13 +76,13 @@ class RecordReceiptViewModel @Inject constructor(
 
 
     private fun processReceiptData(jsonObject: JSONObject) {
-        val createdDate = jsonObject.optString("created_date")
+        val receiptDate = jsonObject.optString("date")
         val totalAmount = jsonObject.optString("total")
         val merchant = jsonObject.optJSONObject("vendor")?.optString("name")
         val purchaseType = jsonObject.optString("category")
 
         _uiState.value = _uiState.value.copy(
-            date = createdDate,
+            date = receiptDate ?: "",
             totalAmount = totalAmount,
             merchant = merchant ?: "",
             selectedPurchaseType = purchaseType
