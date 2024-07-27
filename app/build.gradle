@@ -135,5 +135,11 @@ dependencies {
     implementation 'org.openjsse:openjsse:1.1.6'
     implementation libs.openjsse
 
+    // HTTP requests
+    implementation libs.ktor.client.core
+    implementation libs.ktor.client.cio
+    implementation libs.ktor.client.json
+    implementation libs.ktor.client.serialization
+
 
 }

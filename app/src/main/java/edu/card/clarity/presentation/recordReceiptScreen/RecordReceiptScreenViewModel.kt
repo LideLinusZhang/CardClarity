@@ -1,6 +1,7 @@
 package edu.card.clarity.presentation.recordReceiptScreen
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,8 +12,9 @@ import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.data.receipt.ReceiptDao
-import edu.card.clarity.presentation.utils.scanReceipt
-import kotlinx.coroutines.Dispatchers
+import edu.card.clarity.presentation.utils.ReceiptScanner
+import io.ktor.client.call.body
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +22,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 @HiltViewModel
@@ -28,6 +29,7 @@ class RecordReceiptViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val receiptDao: ReceiptDao,
+    private val receiptScanner: ReceiptScanner,
     @ApplicationContext private val context: Context,
     ) : ViewModel() {
     private val _uiState = MutableStateFlow(RecordReceiptUiState())
@@ -58,18 +60,20 @@ class RecordReceiptViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val response = scanReceipt(context, imagePath)
-                if (response.isSuccessful) {
-                    response.body?.string()?.let { responseBody ->
-                        val jsonObject = JSONObject(responseBody)
-                        processReceiptData(jsonObject)
-                    }
+                val response = receiptScanner.scanReceipt(context, imagePath)
+                if (response.status.isSuccess()) {
+                    val responseBody: String = response.body()
+                    val jsonObject = JSONObject(responseBody)
+                    processReceiptData(jsonObject)
+                } else {
+                    Log.e("onImageCaptured", "Error: ${response.status}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
 
     private fun processReceiptData(jsonObject: JSONObject) {
         val createdDate = jsonObject.optString("created_date")
@@ -125,11 +129,11 @@ class RecordReceiptViewModel @Inject constructor(
             )
             receiptDao.insertReceipt(receipt)
 
-            withContext(Dispatchers.IO) {
-                _uiState.value.photoPath?.let { path ->
-                    scanReceipt(context, path)
-                }
-            }
+//            withContext(Dispatchers.IO) {
+//                _uiState.value.photoPath?.let { path ->
+//                    scanReceipt(context, path)
+//                }
+//            }
         }
     }
 }
