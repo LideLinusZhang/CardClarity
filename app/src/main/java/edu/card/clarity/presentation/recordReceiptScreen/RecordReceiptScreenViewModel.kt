@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 import org.json.JSONObject
 
 @HiltViewModel
-class RecordReceiptViewModel @Inject constructor(
+class RecordReceiptScreenViewModel @Inject constructor(
     cashBackCreditCardRepository: CashBackCreditCardRepository,
     pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val purchaseRepository: PurchaseRepository,

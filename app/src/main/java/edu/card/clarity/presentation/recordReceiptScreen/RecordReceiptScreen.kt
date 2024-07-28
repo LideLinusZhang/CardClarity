@@ -53,7 +53,7 @@ import java.util.Calendar
 @Composable
 fun RecordReceiptScreen(
     navController: NavController,
-    viewModel: RecordReceiptViewModel = hiltViewModel()
+    viewModel: RecordReceiptScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val allCardNames by viewModel.allCardNames.collectAsState()
