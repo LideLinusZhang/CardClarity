@@ -12,16 +12,17 @@ import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardInfo
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
+import edu.card.clarity.data.migration.DeleteUnnecessaryTableAutoMigrationSpec
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMapping
 import edu.card.clarity.data.purchase.PurchaseDao
 import edu.card.clarity.data.purchase.Purchase
-import edu.card.clarity.data.receipt.Receipt
+import edu.card.clarity.data.purchase.receipt.Receipt
+import edu.card.clarity.data.purchase.receipt.ReceiptDao
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchaseReward.PurchaseReward
-import edu.card.clarity.data.receipt.ReceiptDao
 
 @Database(
     entities = [
@@ -39,7 +40,7 @@ import edu.card.clarity.data.receipt.ReceiptDao
         UserAddedCreditCardInfo::class,
         PredefinedCreditCardInfo::class
     ],
-    version = 9,
+    version = 10,
     autoMigrations = [
         AutoMigration(1, 2),
         AutoMigration(2, 3),
@@ -48,7 +49,8 @@ import edu.card.clarity.data.receipt.ReceiptDao
         AutoMigration(5, 6),
         AutoMigration(6, 7),
         AutoMigration(7, 8),
-        AutoMigration(8, 9)
+        AutoMigration(8, 9),
+        AutoMigration(9, 10, DeleteUnnecessaryTableAutoMigrationSpec::class)
     ],
     exportSchema = true
 )
