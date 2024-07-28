@@ -130,7 +130,8 @@ class MyReceiptsScreenViewModel @Inject constructor(
         total = this.totalAmount,
         purchaseType = this.selectedPurchaseType,
         creditCardId = this.selectedCardId,
-        creditCardName = getCreditCardName(this.selectedCardId)
+        creditCardName = getCreditCardName(this.selectedCardId),
+        photoPath = this.photoPath
     )
 
     private suspend fun getCreditCardName(id: UUID): String {

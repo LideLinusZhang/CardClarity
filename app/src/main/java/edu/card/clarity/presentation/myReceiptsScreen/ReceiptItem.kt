@@ -12,6 +12,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import edu.card.clarity.ui.theme.CardClarityTypography
 import edu.card.clarity.ui.theme.LightPurple
 import edu.card.clarity.ui.theme.Purple40
+import edu.card.clarity.presentation.common.ImageDialog
 import java.util.UUID
 
 @Composable
@@ -30,10 +35,19 @@ fun ReceiptsItem(
     receipt: ReceiptUiState,
     onRemoveReceipt: (receiptId: UUID) -> Unit
 ) {
+    var showImage by remember { mutableStateOf(false) }
+
+    if (showImage && receipt.photoPath != null) {
+        ImageDialog(
+            photoPath = receipt.photoPath,
+            onClose = { showImage = false }
+        )
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+//            .padding(8.dp)
             .border(BorderStroke(2.dp, Purple40), shape = RoundedCornerShape(16.dp)),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF6F6F6)),
         shape = RoundedCornerShape(16.dp)
@@ -104,7 +118,7 @@ fun ReceiptsItem(
                     .padding(vertical = 8.dp)
             ) {
                 Button(
-                    onClick = { /*TODO: Handle view click*/ },
+                    onClick = { showImage = !showImage },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = LightPurple,
                         contentColor = Color.Black
@@ -138,6 +152,8 @@ fun ReceiptsItem(
     }
 }
 
+
+
 @Composable
 @Preview
 fun ReceiptsItemPreview() {
@@ -148,7 +164,8 @@ fun ReceiptsItemPreview() {
         creditCardId = UUID.randomUUID(),
         purchaseType = "Groceries",
         purchaseTime = "2024-07-24 21:07:08",
-        total = "200"
+        total = "200",
+        photoPath = null
     )
     ReceiptsItem(receipt, onRemoveReceipt = {})
 }
