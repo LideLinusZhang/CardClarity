@@ -30,7 +30,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class MyReceiptsScreenViewModel @Inject constructor (
+class MyReceiptsScreenViewModel @Inject constructor(
     private val receiptRepository: ReceiptRepository,
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
@@ -104,9 +104,9 @@ class MyReceiptsScreenViewModel @Inject constructor (
             .value
             .copy(filteredCreditCardId = if (optionIndex == 0) null else creditCards.value[optionIndex - 1].id)
 
-        _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
-            selectedCreditCardFilterOption = creditCards.value[optionIndex - 1].name
-        )
+        _receiptFilterUiState.value = _receiptFilterUiState
+            .value
+            .copy(selectedCreditCardFilterOption = creditCards.value[optionIndex - 1].name)
     }
 
     fun setPurchaseTypeFilter(optionIndex: Int) {
@@ -114,9 +114,9 @@ class MyReceiptsScreenViewModel @Inject constructor (
             .value
             .copy(filteredPurchaseType = if (optionIndex == 0) null else PurchaseType.entries[optionIndex - 1])
 
-        _receiptFilterUiState.value = _receiptFilterUiState.value.copy(
-            selectedPurchaseTypeFilterOption = purchaseTypeFilterOptionStrings[optionIndex]
-        )
+        _receiptFilterUiState.value = _receiptFilterUiState
+            .value
+            .copy(selectedPurchaseTypeFilterOption = purchaseTypeFilterOptionStrings[optionIndex])
     }
 
     fun deleteReceipt(id: UUID) = viewModelScope.launch {
@@ -137,6 +137,8 @@ class MyReceiptsScreenViewModel @Inject constructor (
         val creditCardInfo = cashBackCreditCardRepository.getCreditCardInfo(id)
             ?: pointBackCreditCardRepository.getCreditCardInfo(id)
 
+        // Credit Card UUIDs here are directly fetched from DB, where foreign key
+        // constraints make sure these UUIDs are present in the DB.
         return creditCardInfo?.name!!
     }
 

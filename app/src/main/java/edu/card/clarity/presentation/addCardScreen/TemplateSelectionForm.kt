@@ -1,15 +1,9 @@
 package edu.card.clarity.presentation.addCardScreen
 
 import android.app.DatePickerDialog
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,8 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import edu.card.clarity.presentation.common.CustomButton
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
+import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.LightPurple
+import edu.card.clarity.ui.theme.Purple40
 import java.util.Calendar
 
 @Composable
@@ -78,33 +76,18 @@ fun UseTemplateCardInformationForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DropdownMenu(
-            label = "Credit Card",
+            label = "Select Credit Card Template",
             options = templateOptions,
             selectedOption = uiState.selectedTemplateName,
             onOptionSelected = viewModel::updateTemplateSelection
         )
 
         if (uiState.showCardInfo) {
-            // Non-Editable Card information based on the template chosen
-            Text(
-                text = "Card Name: ${uiState.cardName}",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
+            TemplateCardInfoBox(
+                cardName = uiState.cardName,
+                cardNetwork = uiState.cardNetworkType,
+                rewardType = uiState.rewardType
             )
-            Text(
-                text = "Card Network: ${uiState.cardNetworkType}",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-            Text(
-                text = "Reward Type: ${uiState.rewardType}",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
             DatePickerField(
                 date = uiState.mostRecentStatementDate,
                 label = "Most Recent Statement Date",
@@ -132,21 +115,66 @@ fun UseTemplateCardInformationForm(
                     onCheckedChange = viewModel::updateReminderEnabled
                 )
             }
-
-            Button(
+            CustomButton(
+                text = "Add Card to My Cards",
                 onClick = {
                     viewModel.createCreditCard()
                     navController.navigate("myCards")
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
-                ),
+                }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+// Non-Editable Card information based on the template chosen
+@Composable
+fun TemplateCardInfoBox(
+    cardName: String,
+    cardNetwork: String,
+    rewardType: String
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .background(
+                color = LightPurple,
+                shape = RoundedCornerShape(16.dp)
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-            ) {
-                Text(text = "Add Card to My Cards")
+                    .width(4.dp)
+                    .height(80.dp)
+                    .background(color = Purple40)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = "Card Name: $cardName",
+                    style = CardClarityTypography.titleMedium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Card Network: $cardNetwork",
+                    style = CardClarityTypography.titleMedium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Reward Type: $rewardType",
+                    style = CardClarityTypography.titleMedium,
+                    color = Color.Black
+                )
             }
         }
     }
