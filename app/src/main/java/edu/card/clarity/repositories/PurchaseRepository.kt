@@ -1,6 +1,8 @@
 package edu.card.clarity.repositories
 
 import edu.card.clarity.data.purchase.PurchaseDao
+import edu.card.clarity.data.purchase.receipt.Receipt
+import edu.card.clarity.data.purchase.receipt.ReceiptDao
 import edu.card.clarity.dependencyInjection.annotations.DefaultDispatcher
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.repositories.utils.toDomainModel
@@ -16,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class PurchaseRepository @Inject constructor(
     private val purchaseDataSource: PurchaseDao,
+    private val receiptDataSource: ReceiptDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun addPurchase(purchase: Purchase): UUID {
@@ -34,6 +37,15 @@ class PurchaseRepository @Inject constructor(
         purchaseDataSource.upsert(entity)
 
         return id
+    }
+
+    suspend fun addReceiptImagePath(imagePath: String, purchaseId: UUID) {
+        val receipt = Receipt(
+            purchaseId = purchaseId,
+            receiptImagePath = imagePath
+        )
+
+        receiptDataSource.upsert(receipt)
     }
 
     suspend fun getPurchase(id: UUID): Purchase? {
@@ -86,6 +98,14 @@ class PurchaseRepository @Inject constructor(
         }
     }
 
+    suspend fun getReceiptImagePathById(purchaseId: UUID): String? {
+        return receiptDataSource.getByPurchaseId(purchaseId)?.receiptImagePath
+    }
+
+    fun getReceiptImagePathStreamById(purchaseId: UUID): Flow<String> {
+        return receiptDataSource.observeByPurchaseId(purchaseId).map { it.receiptImagePath }
+    }
+
     suspend fun updatePurchase(purchase: Purchase) {
         require(purchase.id != null)
         require(purchaseDataSource.exist(purchase.id))
@@ -103,7 +123,17 @@ class PurchaseRepository @Inject constructor(
         )
     }
 
+    suspend fun updateReceiptImagePath(imagePath: String, purchaseId: UUID) {
+        require(receiptDataSource.exist(purchaseId))
+
+        addReceiptImagePath(imagePath, purchaseId)
+    }
+
     suspend fun removePurchase(id: UUID) {
         purchaseDataSource.deleteById(id)
+    }
+
+    suspend fun removeReceiptImagePath(purchaseId: UUID) {
+        receiptDataSource.deleteByPurchaseId(purchaseId)
     }
 }

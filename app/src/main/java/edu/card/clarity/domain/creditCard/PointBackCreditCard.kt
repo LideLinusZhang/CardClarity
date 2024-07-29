@@ -1,7 +1,6 @@
 package edu.card.clarity.domain.creditCard
 
 import edu.card.clarity.domain.PointSystem
-import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.PurchaseReward
 import edu.card.clarity.enums.PurchaseType
 
@@ -10,19 +9,19 @@ data class PointBackCreditCard(
     override val purchaseRewards: List<PurchaseReward>,
     val pointSystem: PointSystem
 ) : ICreditCard {
-    override fun getReturnAmountInCash(purchase: Purchase): Float {
-        return getReturnAmountInPoint(purchase) * pointSystem.pointToCashConversionRate
+    override fun getReturnAmountInCash(purchaseTotal: Float, purchaseType: PurchaseType): Float {
+        return getReturnAmountInPoint(purchaseTotal, purchaseType) * pointSystem.pointToCashConversionRate
     }
 
-    fun getReturnAmountInPoint(purchase: Purchase): Int {
+    fun getReturnAmountInPoint(purchaseTotal: Float, purchaseType: PurchaseType): Int {
         val purchaseReturn = purchaseRewards.let {
             it.firstOrNull { reward ->
-                reward.applicablePurchaseType == purchase.type
+                reward.applicablePurchaseType == purchaseType
             } ?: it.firstOrNull { reward ->
                 reward.applicablePurchaseType == PurchaseType.Others
             }
         } ?: return 0
 
-        return purchaseReturn.getReturnAmount(purchase.total).toInt()
+        return purchaseReturn.getReturnAmount(purchaseTotal).toInt()
     }
 }

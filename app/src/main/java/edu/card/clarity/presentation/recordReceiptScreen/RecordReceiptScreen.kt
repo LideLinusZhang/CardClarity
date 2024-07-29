@@ -53,10 +53,10 @@ import java.util.Calendar
 @Composable
 fun RecordReceiptScreen(
     navController: NavController,
-    viewModel: RecordReceiptViewModel = hiltViewModel()
+    viewModel: RecordReceiptScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val allCards by viewModel.allCards.collectAsState()
+    val allCardNames by viewModel.allCardNames.collectAsState()
     val context = LocalContext.current
     val cameraError = uiState.cameraError
 
@@ -68,7 +68,7 @@ fun RecordReceiptScreen(
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                viewModel.onDateChange("$year-${month + 1}-$dayOfMonth")
+                viewModel.updateDate("$year-${month + 1}-$dayOfMonth")
             },
             Calendar.getInstance().get(Calendar.YEAR),
             Calendar.getInstance().get(Calendar.MONTH),
@@ -146,40 +146,38 @@ fun RecordReceiptScreen(
                     label = "Total Amount",
                     text = uiState.totalAmount,
                     placeholderText = "Enter total amount",
-                    onTextChange = viewModel::onTotalAmountChange
+                    onTextChange = viewModel::updateTotalAmount
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     label = "Merchant",
                     text = uiState.merchant,
                     placeholderText = "Enter merchant",
-                    onTextChange = viewModel::onMerchantChange
+                    onTextChange = viewModel::updateMerchant
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DropdownMenu(
                     label = "Select Card Used",
-                    options = allCards.map { it.name },
-                    selectedOption = uiState.selectedCard?.name ?: "Select a card",
-                    onOptionSelected = { viewModel.onCardSelected(allCards[it]) }
+                    options = allCardNames,
+                    selectedOption = uiState.selectedCreditCardName ?: "Select a credit card",
+                    onOptionSelected = viewModel::updateSelectedCreditCard
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DropdownMenu(
                     label = "Select Purchase Type",
                     options = PurchaseType.entries.map { it.name },
-                    selectedOption = uiState.selectedPurchaseType,
-                    onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
+                    selectedOption = uiState.selectedPurchaseType ?: "Select a purchase type",
+                    onOptionSelected = viewModel::updateSelectedPurchaseType
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 CustomButton(
                     text = "Add Receipt",
                     onClick = {
-                        if (uiState.selectedCard != null) {
-                            Log.d("receipt", uiState.selectedCard!!.name)
-                            viewModel.addReceipt()
-                            navController.popBackStack()
-                        }
+                        Log.d("receipt", uiState.selectedCreditCardName!!)
+                        viewModel.addReceipt()
+                        navController.popBackStack()
                     },
-                    enabled = uiState.selectedCard != null
+                    enabled = uiState.selectedCreditCardName != null && uiState.selectedPurchaseType != null
                 )
                 Spacer(modifier = Modifier.height(42.dp))
             }

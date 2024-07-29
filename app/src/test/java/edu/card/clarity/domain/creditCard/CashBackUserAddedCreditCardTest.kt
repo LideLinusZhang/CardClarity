@@ -1,7 +1,6 @@
 package edu.card.clarity.domain.creditCard
 
 import android.icu.util.Calendar
-import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.PurchaseReward
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.PurchaseType
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.MockedStatic
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.mockStatic
-import java.util.Date
 import java.util.UUID
 
 class CashBackUserAddedCreditCardTest {
@@ -59,17 +57,7 @@ class CashBackUserAddedCreditCardTest {
             purchaseRewards = purchaseRewards
         )
 
-        val purchase = Purchase(
-            id = UUID.randomUUID(),
-            time = Date(),
-            merchant = "T&T",
-            type = PurchaseType.Groceries,
-            total = 100.0f,
-            rewardAmount = 100.0f,
-            creditCardId = creditCardInfo.id!!
-        )
-
-        val returnAmount = cashBackCreditCard.getReturnAmountInCash(purchase)
+        val returnAmount = cashBackCreditCard.getReturnAmountInCash(100.0f, PurchaseType.Groceries)
 
         assertEquals(2.0f, returnAmount)
     }
