@@ -1,37 +1,34 @@
 package edu.card.clarity.presentation.recordReceiptScreen
 
-import android.content.Context
 import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import edu.card.clarity.presentation.utils.WhileUiSubscribed
-import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
-import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.enums.PurchaseType
-import edu.card.clarity.presentation.utils.scanReceipt
+import edu.card.clarity.presentation.utils.WhileUiSubscribed
+import edu.card.clarity.receiptParsing.ReceiptParser
 import edu.card.clarity.repositories.PurchaseRepository
+import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
+import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import org.json.JSONObject
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class RecordReceiptScreenViewModel @Inject constructor(
     cashBackCreditCardRepository: CashBackCreditCardRepository,
     pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val purchaseRepository: PurchaseRepository,
-    @ApplicationContext private val context: Context,
-    ) : ViewModel() {
+    private val receiptParser: ReceiptParser,
+) : ViewModel() {
     private val dateFormatter = SimpleDateFormat.getDateInstance()
 
     private var selectedCreditCardIndex: Int? = null
@@ -68,34 +65,17 @@ class RecordReceiptScreenViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
 
         viewModelScope.launch {
-            try {
-                val response = receiptScanner.scanReceipt(context, imagePath)
-                if (response.status.isSuccess()) {
-                    val responseBody: String = response.body()
-                    val jsonObject = JSONObject(responseBody)
-                    processReceiptData(jsonObject)
-                } else {
-                    Log.e("onImageCaptured", "Error: ${response.status}")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            val parseResult = receiptParser.parseReceiptImage(imagePath)
+
+            selectedPurchaseType = parseResult.purchaseType
+
+            _uiState.value = _uiState.value.copy(
+                date = parseResult.time.toString(),
+                totalAmount = parseResult.total.toString(),
+                merchant = parseResult.merchant,
+                selectedPurchaseType = parseResult.purchaseType.name
+            )
         }
-    }
-
-
-    private fun processReceiptData(jsonObject: JSONObject) {
-        val receiptDate = jsonObject.optString("date")
-        val totalAmount = jsonObject.optString("total")
-        val merchant = jsonObject.optJSONObject("vendor")?.optString("name")
-        val purchaseType = jsonObject.optString("category")
-
-        _uiState.value = _uiState.value.copy(
-            date = receiptDate ?: "",
-            totalAmount = totalAmount,
-            merchant = merchant ?: "",
-            selectedPurchaseType = purchaseType
-        )
     }
 
     fun openCamera() {
