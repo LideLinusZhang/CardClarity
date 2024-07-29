@@ -115,7 +115,7 @@ fun RecordReceiptScreen(
                     }
                 )
             } else {
-                uiState.photoPath?.let { path ->
+                uiState.imagePath?.let { path ->
                     val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
                     Image(
                         bitmap = imageBitmap,
@@ -144,7 +144,7 @@ fun RecordReceiptScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     label = "Total Amount",
-                    text = uiState.totalAmount,
+                    text = uiState.total,
                     placeholderText = "Enter total amount",
                     onTextChange = viewModel::updateTotalAmount
                 )

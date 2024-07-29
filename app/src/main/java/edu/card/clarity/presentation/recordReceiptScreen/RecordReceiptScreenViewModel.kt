@@ -50,9 +50,6 @@ class RecordReceiptScreenViewModel @Inject constructor(
         .mapLatest { it.map { card -> card.info.name } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    private val _showCamera = MutableStateFlow(false)
-    val showCamera: StateFlow<Boolean> = _showCamera.asStateFlow()
-
     fun onCameraError(error: String) {
         _uiState.value = _uiState.value.copy(cameraError = error)
     }
@@ -62,7 +59,10 @@ class RecordReceiptScreenViewModel @Inject constructor(
     }
 
     fun onImageCaptured(imagePath: String) {
-        _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
+        _uiState.value = _uiState.value.copy(
+            imagePath = imagePath,
+            showCamera = false
+        )
 
         viewModelScope.launch {
             val parseResult = receiptParser.parseReceiptImage(imagePath)
@@ -71,7 +71,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
 
             _uiState.value = _uiState.value.copy(
                 date = parseResult.time.toString(),
-                totalAmount = parseResult.total.toString(),
+                total = parseResult.total.toString(),
                 merchant = parseResult.merchant,
                 selectedPurchaseType = parseResult.purchaseType.name
             )
@@ -82,16 +82,12 @@ class RecordReceiptScreenViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(showCamera = true)
     }
 
-    fun resetCamera() {
-        _showCamera.value = true
-    }
-
     fun updateDate(date: String) {
         _uiState.value = _uiState.value.copy(date = date)
     }
 
     fun updateTotalAmount(totalAmount: String) {
-        _uiState.value = _uiState.value.copy(totalAmount = totalAmount)
+        _uiState.value = _uiState.value.copy(total = totalAmount)
     }
 
     fun updateMerchant(merchant: String) {
@@ -114,7 +110,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
     fun addReceipt() {
         viewModelScope.launch {
             val creditCard = allCard.value[selectedCreditCardIndex!!]
-            val total = _uiState.value.totalAmount.toFloat()
+            val total = _uiState.value.total.toFloat()
             val type = selectedPurchaseType!!
 
             val purchaseId = purchaseRepository.addPurchase(
@@ -128,7 +124,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
                 )
             )
 
-            uiState.value.photoPath?.let {
+            uiState.value.imagePath?.let {
                 purchaseRepository.addReceiptImagePath(it, purchaseId)
             }
         }
