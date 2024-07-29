@@ -24,6 +24,17 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        def propertiesFile = new File(rootProject.rootDir, "secrets.properties")
+        if (propertiesFile.exists()) {
+            def properties = new Properties()
+            properties.load(new FileInputStream(propertiesFile))
+
+            buildConfigField "String", "VERYFI_API_KEY", "\"${properties['VERYFI_API_KEY']}\""
+            buildConfigField "String", "VERYFI_CLIENT_ID", "\"${properties['VERYFI_CLIENT_ID']}\""
+        } else {
+            throw new FileNotFoundException("secrets.properties file not found")
+        }
     }
 
     buildTypes {

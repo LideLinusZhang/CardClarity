@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,11 +30,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import edu.card.clarity.presentation.common.CardBox
+import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.DarkAccentBlue
+import edu.card.clarity.ui.theme.LightBlue
 import java.util.Locale
 
 
@@ -52,7 +57,7 @@ fun HomeScreen(navController: NavController,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-
+        Spacer(modifier = Modifier.height(16.dp))
         RewardsSummary(months = uiState.selectedMonths, userName = "Sophie Chan", rewardsSummary = uiState.rewardsSummary)
 
         LabelSelectorBar(
@@ -94,9 +99,9 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
         Text(
             modifier = Modifier
                 .padding(bottom = 12.dp),
-            text = "Hi $userName,",
+            text = "Hi $userName 👋,",
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
+            style = CardClarityTypography.titleLarge,
             color = Color.Black
         )
         Text(
@@ -106,11 +111,14 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
             color = Color.Black
         )
     }
+
     if (months == 1) {
-        Column( modifier = Modifier
-            .fillMaxHeight(0.45f),
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.45f),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
                 text = if (rewardsSummary.isNotEmpty()) {
                     String.format(Locale.CANADA, "+$%.2f", rewardsSummary[0].amount)
@@ -128,28 +136,63 @@ fun RewardsSummary(months: Int, userName: String, rewardsSummary: List<RewardsSu
                 color = Color.Black
             )
         }
-    }
-    else {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.45f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Row(
+    } else {
+        if (rewardsSummary.isNotEmpty()) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 250.dp, max = 324.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+                    .fillMaxHeight(0.45f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                rewardsSummary.forEach { item ->
-                    Bar(month = item.month, value = item.amount, maxValue = maxData.toFloat(), totalBars = months)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 250.dp, max = 324.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    rewardsSummary.forEach { item ->
+                        Bar(month = item.month, value = item.amount, maxValue = maxData.toFloat(), totalBars = months)
+                    }
                 }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(0.45f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "No rewards data available",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .background(LightBlue, shape = CircleShape)
+                ) {
+                    Text(
+                        text = "💡",
+                        fontSize = 48.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Start making purchases to see your rewards here!",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 32.dp)
+                )
             }
         }
     }
-
 }
 
 @Composable
@@ -286,31 +329,6 @@ fun LabelSelectorBar(
         item { Spacer(modifier = Modifier.width(horizontalPadding)) }
     }
 }
-
-@Composable
-fun CardBox(label: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.LightGray)
-            .clickable(onClick = onClick)
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(12.dp)
-                .heightIn(min = 100.dp, max = 100.dp)
-        ) {
-            Text(
-                text = label,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black,
-            )
-        }
-    }
-}
-
 
 @Composable
 @Preview

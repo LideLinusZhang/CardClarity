@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +32,8 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import edu.card.clarity.R
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.utils.Destinations
+import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.DarkAccentBlue
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -77,13 +81,26 @@ fun PurchaseScreen(navController: NavController, geolocationViewModel: Geolocati
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(
-            text = "Best Card for Every Purchase",
-            fontWeight = FontWeight.Bold,
-            fontSize = 26.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
 
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(Icons.Filled.LocationOn, contentDescription = "Location Icon", tint = DarkAccentBlue)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Best Card for Every Purchase",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                style = CardClarityTypography.titleLarge,
+                color = Color.Black
+            )
+        }
+        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(

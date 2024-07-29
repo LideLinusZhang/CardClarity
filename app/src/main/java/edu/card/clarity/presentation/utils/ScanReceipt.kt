@@ -3,6 +3,7 @@ package edu.card.clarity.presentation.utils
 import android.content.Context
 import android.util.Base64
 import android.util.Log
+import edu.card.clarity.BuildConfig
 import edu.card.clarity.enums.PurchaseType
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -35,8 +36,8 @@ class ReceiptScanner @Inject constructor(
 
     suspend fun scanReceipt(context: Context, path: String): HttpResponse {
         return withContext(Dispatchers.IO) {
-            val clientId = "VERYFI_CLIENT_ID"
-            val apiKey = "VERYFI_API_KEY"
+            val clientId = BuildConfig.VERYFI_CLIENT_ID
+            val apiKey = BuildConfig.VERYFI_API_KEY
             val base64Image = imageToBase64(context, path)
 
             val categories = JSONArray(PurchaseType.toList())
