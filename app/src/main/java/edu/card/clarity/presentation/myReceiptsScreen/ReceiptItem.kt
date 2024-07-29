@@ -37,9 +37,9 @@ fun ReceiptsItem(
 ) {
     var showImage by remember { mutableStateOf(false) }
 
-    if (showImage && receipt.photoPath != null) {
+    if (showImage && receipt.receiptImagePath != null) {
         ImageDialog(
-            photoPath = receipt.photoPath,
+            photoPath = receipt.receiptImagePath,
             onClose = { showImage = false }
         )
     }
@@ -165,7 +165,7 @@ fun ReceiptsItemPreview() {
         purchaseType = "Groceries",
         purchaseTime = "2024-07-24 21:07:08",
         total = "200",
-        photoPath = null
+        receiptImagePath = null
     )
     ReceiptsItem(receipt, onRemoveReceipt = {})
 }
