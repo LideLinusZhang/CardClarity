@@ -2,6 +2,7 @@ package edu.card.clarity.repositories
 
 import android.icu.util.Calendar
 import edu.card.clarity.data.purchase.PurchaseDao
+import edu.card.clarity.data.purchase.receipt.ReceiptDao
 import edu.card.clarity.data.purchase.Purchase as PurchaseInDB
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.enums.PurchaseType
@@ -28,6 +29,7 @@ import java.util.UUID
 
 class PurchaseRepositoryTest {
     private lateinit var purchaseDao: PurchaseDao
+    private lateinit var receiptDao: ReceiptDao
     private lateinit var purchaseRepository: PurchaseRepository
 
     private val testDispatcher = StandardTestDispatcher()
@@ -39,7 +41,8 @@ class PurchaseRepositoryTest {
     @BeforeEach
     fun setUp() {
         purchaseDao = mock(PurchaseDao::class.java)
-        purchaseRepository = PurchaseRepository(purchaseDao, testDispatcher)
+        receiptDao = mock(ReceiptDao::class.java)
+        purchaseRepository = PurchaseRepository(purchaseDao, receiptDao, testDispatcher)
         mockedStaticCalendar.`when`<Calendar> { Calendar.getInstance() }.thenReturn(mockCalendar)
     }
 

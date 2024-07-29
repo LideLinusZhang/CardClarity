@@ -10,5 +10,5 @@ data class ReceiptUiState(
     val total: String,
     val creditCardId: UUID,
     val creditCardName: String,
-    val photoPath: String?
+    val receiptImagePath: String? = null
 )

@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,10 +54,10 @@ import java.util.Calendar
 @Composable
 fun RecordReceiptScreen(
     navController: NavController,
-    viewModel: RecordReceiptViewModel = hiltViewModel()
+    viewModel: RecordReceiptScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val allCards by viewModel.allCards.collectAsState()
+    val allCardNames by viewModel.allCardNames.collectAsState()
     val context = LocalContext.current
     val cameraError = uiState.cameraError
     var showImage by remember { mutableStateOf(false) }
@@ -76,7 +77,7 @@ fun RecordReceiptScreen(
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                viewModel.onDateChange("$year-${month + 1}-$dayOfMonth")
+                viewModel.updateDate("$year-${month + 1}-$dayOfMonth")
             },
             Calendar.getInstance().get(Calendar.YEAR),
             Calendar.getInstance().get(Calendar.MONTH),
@@ -172,36 +173,34 @@ fun RecordReceiptScreen(
                 label = "Total Amount",
                 text = uiState.totalAmount,
                 placeholderText = "Enter total amount",
-                onTextChange = viewModel::onTotalAmountChange
+                onTextChange = viewModel::updateTotalAmount
             )
             TextField(
                 label = "Merchant",
                 text = uiState.merchant,
                 placeholderText = "Enter merchant",
-                onTextChange = viewModel::onMerchantChange
+                onTextChange = viewModel::updateMerchant
             )
             DropdownMenu(
                 label = "Select Card Used",
-                options = allCards.map { it.name },
-                selectedOption = uiState.selectedCard?.name ?: "Select a card",
-                onOptionSelected = { viewModel.onCardSelected(allCards[it]) }
+                options = allCardNames,
+                selectedOption = uiState.selectedCreditCardName ?: "Select a card",
+                onOptionSelected = viewModel::updateSelectedCreditCard
             )
             DropdownMenu(
                 label = "Select Purchase Type",
                 options = PurchaseType.entries.map { it.name },
-                selectedOption = uiState.selectedPurchaseType,
-                onOptionSelected = { viewModel.onPurchaseTypeSelected(PurchaseType.entries[it].name) }
+                selectedOption = uiState.selectedPurchaseType ?: "Select a purchase type",
+                onOptionSelected = viewModel::updateSelectedPurchaseType
             )
             CustomButton(
                 text = "Add Receipt",
                 onClick = {
-                    if (uiState.selectedCard != null) {
-                        Log.d("receipt", uiState.selectedCard!!.name)
+                        Log.d("receipt", uiState.selectedCreditCardName!!)
                         viewModel.addReceipt()
                         navController.popBackStack()
-                    }
                 },
-                enabled = uiState.selectedCard != null
+                enabled = uiState.selectedCreditCardName != null && uiState.selectedPurchaseType != null
             )
 //                Spacer(modifier = Modifier.height(42.dp))
         }
