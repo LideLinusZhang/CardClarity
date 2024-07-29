@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import org.json.JSONObject
+import java.util.Locale
 
 @HiltViewModel
 class RecordReceiptScreenViewModel @Inject constructor(
@@ -32,7 +33,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
     private val purchaseRepository: PurchaseRepository,
     @ApplicationContext private val context: Context,
     ) : ViewModel() {
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     private var selectedCreditCardIndex: Int? = null
     private var selectedPurchaseType: PurchaseType? = null
@@ -53,9 +54,6 @@ class RecordReceiptScreenViewModel @Inject constructor(
         .mapLatest { it.map { card -> card.info.name } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    private val _showCamera = MutableStateFlow(false)
-    val showCamera: StateFlow<Boolean> = _showCamera.asStateFlow()
-
     fun onCameraError(error: String) {
         _uiState.value = _uiState.value.copy(cameraError = error)
     }
@@ -66,7 +64,6 @@ class RecordReceiptScreenViewModel @Inject constructor(
 
     fun onImageCaptured(imagePath: String) {
         _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
-
         viewModelScope.launch {
             try {
                 val response = scanReceipt(context, imagePath)
@@ -100,10 +97,6 @@ class RecordReceiptScreenViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(showCamera = true)
     }
 
-    fun resetCamera() {
-        _showCamera.value = true
-    }
-
     fun updateDate(date: String) {
         _uiState.value = _uiState.value.copy(date = date)
     }
@@ -117,6 +110,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
     }
 
     fun updateSelectedCreditCard(selectedCreditCardIndex: Int) {
+        this.selectedCreditCardIndex = selectedCreditCardIndex
         _uiState.value = _uiState.value.copy(
             selectedCreditCardName = allCardNames.value[selectedCreditCardIndex]
         )
@@ -131,23 +125,26 @@ class RecordReceiptScreenViewModel @Inject constructor(
 
     fun addReceipt() {
         viewModelScope.launch {
-            val creditCard = allCard.value[selectedCreditCardIndex!!]
-            val total = _uiState.value.totalAmount.toFloat()
-            val type = selectedPurchaseType!!
+            if (selectedCreditCardIndex != null && selectedCreditCardIndex!! < allCard.value.size) {
+                val creditCard = allCard.value[selectedCreditCardIndex!!]
+                val total = _uiState.value.totalAmount.toFloat()
+                val type = selectedPurchaseType!!
+                val time = dateFormatter.parse(_uiState.value.date)
 
-            val purchaseId = purchaseRepository.addPurchase(
-                Purchase(
-                    time = dateFormatter.parse(_uiState.value.date),
-                    total = total,
-                    merchant = _uiState.value.merchant,
-                    type = type,
-                    rewardAmount = creditCard.getReturnAmountInCash(total, type),
-                    creditCardId = creditCard.info.id!!
+                val purchaseId = purchaseRepository.addPurchase(
+                    Purchase(
+                        time = time,
+                        total = total,
+                        merchant = _uiState.value.merchant,
+                        type = type,
+                        rewardAmount = creditCard.getReturnAmountInCash(total, type),
+                        creditCardId = creditCard.info.id!!
+                    )
                 )
-            )
 
-            uiState.value.photoPath?.let {
-                purchaseRepository.addReceiptImagePath(it, purchaseId)
+                uiState.value.photoPath?.let {
+                    purchaseRepository.addReceiptImagePath(it, purchaseId)
+                }
             }
         }
     }
