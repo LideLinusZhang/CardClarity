@@ -2,9 +2,7 @@ package edu.card.clarity.presentation.recordReceiptScreen
 
 import android.Manifest
 import android.app.DatePickerDialog
-import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +43,7 @@ import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.presentation.common.CustomButton
 import edu.card.clarity.presentation.common.DatePickerField
 import edu.card.clarity.presentation.common.DropdownMenu
+import edu.card.clarity.presentation.common.ImageDialog
 import edu.card.clarity.presentation.common.TextField
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
@@ -59,6 +60,14 @@ fun RecordReceiptScreen(
     val allCardNames by viewModel.allCardNames.collectAsState()
     val context = LocalContext.current
     val cameraError = uiState.cameraError
+    var showImage by remember { mutableStateOf(false) }
+
+    if (showImage && uiState.photoPath != null) {
+        ImageDialog(
+            photoPath = uiState.photoPath!!,
+            onClose = { showImage = false }
+        )
+    }
 
     if (cameraError != null) {
         ErrorDialog(error = cameraError, onDismiss = viewModel::resetCameraError)
@@ -83,14 +92,14 @@ fun RecordReceiptScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(horizontal = 32.dp, vertical = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -105,8 +114,8 @@ fun RecordReceiptScreen(
                 )
             }
             HorizontalDivider(thickness = 1.dp, color = Color.Gray)
-            Spacer(modifier = Modifier.height(16.dp))
 
+            // Show camera
             if (uiState.showCamera) {
                 CameraCapture(
                     onImageCaptured = viewModel::onImageCaptured,
@@ -114,19 +123,35 @@ fun RecordReceiptScreen(
                         viewModel.onCameraError("Failed to capture image: ${exception.message}")
                     }
                 )
-            } else {
-                uiState.imagePath?.let { path ->
-                    val imageBitmap = BitmapFactory.decodeFile(path).asImageBitmap()
-                    Image(
-                        bitmap = imageBitmap,
-                        contentDescription = "Captured Receipt",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
+            }
+
+            // Show "View Receipt" and "Rescan Receipt" buttons
+            if (uiState.photoPath != null) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    CustomButton(
+                        onClick = { showImage = !showImage },
+                        text = "View Receipt",
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CustomButton(
+                        onClick = {
+                            if (cameraPermissionState.status.isGranted) {
+                                viewModel.openCamera()
+                            } else {
+                                cameraPermissionState.launchPermissionRequest()
+                            }
+                        },
+                        text = "Rescan Receipt",
+                        modifier = Modifier.weight(1f)
                     )
                 }
+            }
+
+            // Show "Scan Receipt" button
+            else {
                 CustomButton(
-                    text = "Scan your receipt",
+                    text = "Scan receipt",
                     onClick = {
                         if (cameraPermissionState.status.isGranted) {
                             viewModel.openCamera()
@@ -135,52 +160,49 @@ fun RecordReceiptScreen(
                         }
                     }
                 )
-                Text("Detected information:")
-                DatePickerField(
-                    date = uiState.date,
-                    label = "Date",
-                    onClick = { datePickerDialog.show() }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    label = "Total Amount",
-                    text = uiState.total,
-                    placeholderText = "Enter total amount",
-                    onTextChange = viewModel::updateTotalAmount
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    label = "Merchant",
-                    text = uiState.merchant,
-                    placeholderText = "Enter merchant",
-                    onTextChange = viewModel::updateMerchant
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DropdownMenu(
-                    label = "Select Card Used",
-                    options = allCardNames,
-                    selectedOption = uiState.selectedCreditCardName ?: "Select a credit card",
-                    onOptionSelected = viewModel::updateSelectedCreditCard
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DropdownMenu(
-                    label = "Select Purchase Type",
-                    options = PurchaseType.entries.map { it.name },
-                    selectedOption = uiState.selectedPurchaseType ?: "Select a purchase type",
-                    onOptionSelected = viewModel::updateSelectedPurchaseType
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                CustomButton(
-                    text = "Add Receipt",
-                    onClick = {
+
+            }
+
+            Text("Detected information:")
+            DatePickerField(
+                date = uiState.date,
+                label = "Date",
+                onClick = { datePickerDialog.show() }
+            )
+            TextField(
+                label = "Total Amount",
+                text = uiState.totalAmount,
+                placeholderText = "Enter total amount",
+                onTextChange = viewModel::updateTotalAmount
+            )
+            TextField(
+                label = "Merchant",
+                text = uiState.merchant,
+                placeholderText = "Enter merchant",
+                onTextChange = viewModel::updateMerchant
+            )
+            DropdownMenu(
+                label = "Select Card Used",
+                options = allCardNames,
+                selectedOption = uiState.selectedCreditCardName ?: "Select a card",
+                onOptionSelected = viewModel::updateSelectedCreditCard
+            )
+            DropdownMenu(
+                label = "Select Purchase Type",
+                options = PurchaseType.entries.map { it.name },
+                selectedOption = uiState.selectedPurchaseType ?: "Select a purchase type",
+                onOptionSelected = viewModel::updateSelectedPurchaseType
+            )
+            CustomButton(
+                text = "Add Receipt",
+                onClick = {
                         Log.d("receipt", uiState.selectedCreditCardName!!)
                         viewModel.addReceipt()
                         navController.popBackStack()
-                    },
-                    enabled = uiState.selectedCreditCardName != null && uiState.selectedPurchaseType != null
-                )
-                Spacer(modifier = Modifier.height(42.dp))
-            }
+                },
+                enabled = uiState.selectedCreditCardName != null && uiState.selectedPurchaseType != null
+            )
+//                Spacer(modifier = Modifier.height(42.dp))
         }
     }
 }

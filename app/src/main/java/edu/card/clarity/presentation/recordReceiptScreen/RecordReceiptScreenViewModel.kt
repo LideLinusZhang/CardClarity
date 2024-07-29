@@ -59,6 +59,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
     }
 
     fun onImageCaptured(imagePath: String) {
+        _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
         _uiState.value = _uiState.value.copy(
             imagePath = imagePath,
             showCamera = false
@@ -95,6 +96,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
     }
 
     fun updateSelectedCreditCard(selectedCreditCardIndex: Int) {
+        this.selectedCreditCardIndex = selectedCreditCardIndex
         _uiState.value = _uiState.value.copy(
             selectedCreditCardName = allCardNames.value[selectedCreditCardIndex]
         )
@@ -109,20 +111,22 @@ class RecordReceiptScreenViewModel @Inject constructor(
 
     fun addReceipt() {
         viewModelScope.launch {
-            val creditCard = allCard.value[selectedCreditCardIndex!!]
-            val total = _uiState.value.total.toFloat()
-            val type = selectedPurchaseType!!
+            if (selectedCreditCardIndex != null && selectedCreditCardIndex!! < allCard.value.size) {
+                val creditCard = allCard.value[selectedCreditCardIndex!!]
+                val total = _uiState.value.totalAmount.toFloat()
+                val type = selectedPurchaseType!!
+                val time = dateFormatter.parse(_uiState.value.date)
 
-            val purchaseId = purchaseRepository.addPurchase(
-                Purchase(
-                    time = dateFormatter.parse(_uiState.value.date),
-                    total = total,
-                    merchant = _uiState.value.merchant,
-                    type = type,
-                    rewardAmount = creditCard.getReturnAmountInCash(total, type),
-                    creditCardId = creditCard.info.id!!
+                val purchaseId = purchaseRepository.addPurchase(
+                    Purchase(
+                        time = time,
+                        total = total,
+                        merchant = _uiState.value.merchant,
+                        type = type,
+                        rewardAmount = creditCard.getReturnAmountInCash(total, type),
+                        creditCardId = creditCard.info.id!!
+                    )
                 )
-            )
 
             uiState.value.imagePath?.let {
                 purchaseRepository.addReceiptImagePath(it, purchaseId)
