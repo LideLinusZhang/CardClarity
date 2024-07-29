@@ -18,18 +18,24 @@ import edu.card.clarity.ui.theme.DarkAccentBlue
 import edu.card.clarity.ui.theme.LightBlue
 
 @Composable
-fun CustomButton(text: String, onClick: () -> Unit, enabled: Boolean = true) {
+fun CustomButton(
+    modifier: Modifier = Modifier,
+    transparency: Float = 1f,
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true
+) {
     OutlinedButton(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(2.dp, DarkAccentBlue),
-        colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = LightBlue.copy(alpha = transparency)
+        ),
         enabled = enabled
     ) {
-        Box(modifier = Modifier.padding(16.dp)) {
+        Box(modifier = Modifier.padding(vertical = 8.dp)) {
             Text(
                 text = text,
                 color = Color.Black,

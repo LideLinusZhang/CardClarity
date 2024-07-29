@@ -7,7 +7,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -17,11 +16,13 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import edu.card.clarity.presentation.common.CustomButton
 import java.util.concurrent.Executor
 
 @Composable
@@ -60,17 +61,22 @@ fun CameraCapture(onImageCaptured: (String) -> Unit, onError: (ImageCaptureExcep
 
                 previewView
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(4f / 3f)
         )
 
-        Button(
+        CustomButton(
             onClick = {
                 takePhoto(context, imageCapture, executor, onImageCaptured, onError)
             },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            Text("Take Picture")
-        }
+            text = "Take Photo",
+            transparency = 0.5f,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .width(200.dp)
+                .align(Alignment.BottomCenter)
+        )
     }
 }
 

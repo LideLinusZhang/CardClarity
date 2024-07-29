@@ -65,7 +65,14 @@ fun MyReceiptsScreen(navController: NavController,
                 HorizontalDivider(thickness = 1.dp, color = Color.Gray)
             }
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                CustomButton(
+                    text = "Record a Receipt",
+                    onClick = {
+                        navController.navigate(Destinations.RECORD_RECEIPT)
+                    }
+                )
+            }
+            item {
                 DropdownMenu(
                     label = "Credit Card",
                     options = creditCardFilterOptions,
@@ -83,15 +90,7 @@ fun MyReceiptsScreen(navController: NavController,
             items(receipts) { receipt ->
                 ReceiptsItem(receipt, viewModel::deleteReceipt)
             }
-            item {
-                CustomButton(
-                    text = "Record a Receipt",
-                    onClick = {
-                        navController.navigate(Destinations.RECORD_RECEIPT)
-                    }
-                )
-                Spacer(modifier = Modifier.height(60.dp))
-            }
+            item{ Spacer(modifier = Modifier.height(48.dp)) }
         }
     }
 }
