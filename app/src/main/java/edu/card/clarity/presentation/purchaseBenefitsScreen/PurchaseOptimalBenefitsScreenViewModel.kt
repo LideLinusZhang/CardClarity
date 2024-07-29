@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.card.clarity.domain.Purchase
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
@@ -104,29 +103,21 @@ class PurchaseOptimalBenefitsScreenViewModel @Inject constructor(
 
     private fun findOptimalCreditCard(category: PurchaseType) {
         viewModelScope.launch {
-            val dummyPurchase = Purchase(
-                id = UUID.randomUUID(),
-                time = Date(),
-                merchant = "Dummy Merchant",
-                type = category,
-                total = 100f,
-                rewardAmount = 0f,
-                creditCardId = UUID.randomUUID()
-            )
+            val dummyTotal = 100.0f
 
             val optimalCashBackCard = try {
-                cashBackCreditCardRepository.findOptimalCreditCard(dummyPurchase)
+                cashBackCreditCardRepository.findOptimalCreditCard(dummyTotal, category)
             } catch (e: NoSuchElementException) {
                 null
             }
             val optimalPointBackCard = try {
-                pointBackCreditCardRepository.findOptimalCreditCard(dummyPurchase)
+                pointBackCreditCardRepository.findOptimalCreditCard(dummyTotal, category)
             } catch (e: NoSuchElementException) {
                 null
             }
 
             val optimalCard = listOfNotNull(optimalCashBackCard, optimalPointBackCard).maxByOrNull {
-                it.getReturnAmountInCash(dummyPurchase)
+                it.getReturnAmountInCash(dummyTotal, category)
             }
 
             // The Optimal Card's corresponding benefit that makes it optimal
