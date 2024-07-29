@@ -59,7 +59,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
     }
 
     fun onImageCaptured(imagePath: String) {
-        _uiState.value = _uiState.value.copy(photoPath = imagePath, showCamera = false)
+        _uiState.value = _uiState.value.copy(imagePath = imagePath, showCamera = false)
         _uiState.value = _uiState.value.copy(
             imagePath = imagePath,
             showCamera = false
@@ -113,7 +113,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
         viewModelScope.launch {
             if (selectedCreditCardIndex != null && selectedCreditCardIndex!! < allCard.value.size) {
                 val creditCard = allCard.value[selectedCreditCardIndex!!]
-                val total = _uiState.value.totalAmount.toFloat()
+                val total = _uiState.value.total.toFloat()
                 val type = selectedPurchaseType!!
                 val time = dateFormatter.parse(_uiState.value.date)
 
@@ -128,8 +128,9 @@ class RecordReceiptScreenViewModel @Inject constructor(
                     )
                 )
 
-            uiState.value.imagePath?.let {
-                purchaseRepository.addReceiptImagePath(it, purchaseId)
+                uiState.value.imagePath?.let {
+                    purchaseRepository.addReceiptImagePath(it, purchaseId)
+                }
             }
         }
     }

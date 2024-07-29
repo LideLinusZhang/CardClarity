@@ -20,6 +20,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -72,11 +73,23 @@ class ReceiptParser @Inject constructor(
 
         val responseJson = JSONObject(parsingResponse.bodyAsText())
 
+        val time: Date = try {
+            dateFormatter.parse(responseJson.optString("date"))
+        } catch (_: Exception) {
+            Date()
+        }
+
+        val purchaseType: PurchaseType = try {
+            PurchaseType.valueOf(responseJson.optString("category"))
+        } catch (_: Exception) {
+            PurchaseType.Others
+        }
+
         return ReceiptParsingResult(
-            time = dateFormatter.parse(responseJson.optString("date")),
-            total = responseJson.optString("total").toFloat(),
+            time = time,
+            total = responseJson.optString("total").toFloatOrNull() ?: 0.0f,
             merchant = responseJson.optJSONObject("vendor")?.optString("name") ?: "",
-            purchaseType = PurchaseType.valueOf(responseJson.optString("category"))
+            purchaseType = purchaseType
         )
     }
 

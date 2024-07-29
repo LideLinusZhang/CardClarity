@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,9 +61,9 @@ fun RecordReceiptScreen(
     val cameraError = uiState.cameraError
     var showImage by remember { mutableStateOf(false) }
 
-    if (showImage && uiState.photoPath != null) {
+    if (showImage && uiState.imagePath != null) {
         ImageDialog(
-            photoPath = uiState.photoPath!!,
+            photoPath = uiState.imagePath!!,
             onClose = { showImage = false }
         )
     }
@@ -126,8 +125,11 @@ fun RecordReceiptScreen(
             }
 
             // Show "View Receipt" and "Rescan Receipt" buttons
-            if (uiState.photoPath != null) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            if (uiState.imagePath != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
                     CustomButton(
                         onClick = { showImage = !showImage },
                         text = "View Receipt",
@@ -171,7 +173,7 @@ fun RecordReceiptScreen(
             )
             TextField(
                 label = "Total Amount",
-                text = uiState.totalAmount,
+                text = uiState.total,
                 placeholderText = "Enter total amount",
                 onTextChange = viewModel::updateTotalAmount
             )
@@ -196,9 +198,9 @@ fun RecordReceiptScreen(
             CustomButton(
                 text = "Add Receipt",
                 onClick = {
-                        Log.d("receipt", uiState.selectedCreditCardName!!)
-                        viewModel.addReceipt()
-                        navController.popBackStack()
+                    Log.d("receipt", uiState.selectedCreditCardName!!)
+                    viewModel.addReceipt()
+                    navController.popBackStack()
                 },
                 enabled = uiState.selectedCreditCardName != null && uiState.selectedPurchaseType != null
             )
