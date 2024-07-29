@@ -5,7 +5,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import javax.inject.Singleton
 
 @Module
@@ -15,6 +14,6 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideKtorClient(): HttpClient {
-        return HttpClient(CIO) {}
+        return HttpClient {}
     }
 }
