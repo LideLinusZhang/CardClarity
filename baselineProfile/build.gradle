@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'edu.card.clarity.baselineprofile'
+    namespace 'edu.card.baselineprofile'
     compileSdk 34
 
     compileOptions {
