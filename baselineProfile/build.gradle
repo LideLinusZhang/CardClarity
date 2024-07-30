@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'edu.card.baselineprofile'
+    namespace 'edu.card.clarity.baselineprofile'
     compileSdk 34
 
     compileOptions {
@@ -32,6 +32,7 @@ android {
 // You can specify to run the generators on a managed devices or connected devices.
 baselineProfile {
     useConnectedDevices = true
+    saveInSrc = true
 }
 
 dependencies {
