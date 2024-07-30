@@ -70,7 +70,7 @@ class RecordReceiptScreenViewModel @Inject constructor(
             selectedPurchaseType = parseResult.purchaseType
 
             _uiState.value = _uiState.value.copy(
-                date = parseResult.time.toString(),
+                date = dateFormatter.format(parseResult.time),
                 total = parseResult.total.toString(),
                 merchant = parseResult.merchant,
                 selectedPurchaseType = parseResult.purchaseType.name
