@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class, SingletonComponent::class)
+@InstallIn(SingletonComponent::class)
 object DateFormatterModule {
     @Singleton
     @Provides
