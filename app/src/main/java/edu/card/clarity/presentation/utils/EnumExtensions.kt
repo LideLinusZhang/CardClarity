@@ -5,7 +5,7 @@ import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.enums.RewardType
 
 internal val RewardType.displayString: String
-    get() = when (this) {
+    get() = when(this) {
         RewardType.CashBack -> "Cash Back"
         RewardType.PointBack -> "Point Back"
     }

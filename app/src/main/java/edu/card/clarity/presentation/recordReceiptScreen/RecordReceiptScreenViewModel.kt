@@ -1,6 +1,6 @@
 package edu.card.clarity.presentation.recordReceiptScreen
 
-import android.icu.text.DateFormat
+import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +28,9 @@ class RecordReceiptScreenViewModel @Inject constructor(
     pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val purchaseRepository: PurchaseRepository,
     private val receiptParser: ReceiptParser,
-    private val dateFormatter: DateFormat
 ) : ViewModel() {
+    private val dateFormatter = SimpleDateFormat.getDateInstance()
+
     private var selectedCreditCardIndex: Int? = null
     private var selectedPurchaseType: PurchaseType? = null
 

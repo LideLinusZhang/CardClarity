@@ -1,5 +1,4 @@
 package edu.card.clarity.data.converters
-
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

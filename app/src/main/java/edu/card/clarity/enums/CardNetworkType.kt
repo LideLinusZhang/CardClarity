@@ -4,6 +4,5 @@ enum class CardNetworkType {
     Visa,
     MasterCard,
     AMEX;
-
     companion object
 }

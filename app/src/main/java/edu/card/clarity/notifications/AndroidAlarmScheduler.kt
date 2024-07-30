@@ -7,17 +7,17 @@ import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AndroidAlarmScheduler @Inject constructor(
     @ApplicationContext private val context: Context
-) : AlarmScheduler {
+): AlarmScheduler {
+
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
     private val oneMonthInterval = 30L * 24 * 60 * 60 * 1000
+//    private val oneMinuteInterval = 30L * 1000
 
     override fun schedule(item: SchedulerAlarmItem) {
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
+        val intent = Intent(context, AlarmReceiver::class.java).apply{
             putExtra("EXTRA_MESSAGE", item.message)
         }
         alarmManager.setRepeating(
@@ -43,4 +43,5 @@ class AndroidAlarmScheduler @Inject constructor(
             )
         )
     }
+
 }

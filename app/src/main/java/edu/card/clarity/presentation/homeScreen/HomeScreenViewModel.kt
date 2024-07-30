@@ -6,13 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.card.clarity.domain.Purchase
 import edu.card.clarity.enums.PurchaseType
 import edu.card.clarity.repositories.PurchaseRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -51,35 +45,34 @@ class HomeScreenViewModel @Inject constructor(
         fetchLastMonthsRewards(months)
     }
 
-    private fun generateDummyPurchasesFlow(startTime: Date, endTime: Date): Flow<List<Purchase>> =
-        flow {
-            val dummyPurchases = mutableListOf<Purchase>()
-            val calendar = Calendar.getInstance()
-            calendar.time = startTime
-            var current = calendar.time
+    private fun generateDummyPurchasesFlow(startTime: Date, endTime: Date): Flow<List<Purchase>> = flow {
+        val dummyPurchases = mutableListOf<Purchase>()
+        val calendar = Calendar.getInstance()
+        calendar.time = startTime
+        var current = calendar.time
 
-            while (current.before(endTime)) {
-                val purchase = Purchase(
-                    id = null,
-                    time = current,
-                    merchant = "Dummy Merchant",
-                    type = PurchaseType.Groceries,
-                    total = Random.nextFloat() * 100,
-                    rewardAmount = Random.nextFloat() * 10,
-                    creditCardId = UUID.randomUUID()
-                )
-                dummyPurchases.add(purchase)
-                calendar.add(Calendar.DAY_OF_MONTH, 10)
-                current = calendar.time
-            }
-            emit(dummyPurchases)
+        while (current.before(endTime)) {
+            val purchase = Purchase(
+                id = null,
+                time = current,
+                merchant = "Dummy Merchant",
+                type = PurchaseType.Groceries,
+                total = Random.nextFloat() * 100,
+                rewardAmount = Random.nextFloat() * 10,
+                creditCardId = UUID.randomUUID()
+            )
+            dummyPurchases.add(purchase)
+            calendar.add(Calendar.DAY_OF_MONTH, 10)
+            current = calendar.time
         }
+        emit(dummyPurchases)
+    }
 
     private fun fetchLastMonthsRewards(months: Int) {
         viewModelScope.launch {
             val now = Calendar.getInstance()
             val endTime = now.time
-            now.add(Calendar.MONTH, -(months - 1))
+            now.add(Calendar.MONTH, -(months-1))
             now.set(Calendar.DAY_OF_MONTH, 1)
             val startTime = now.time
 
@@ -97,7 +90,7 @@ class HomeScreenViewModel @Inject constructor(
     private fun calculateRewardsSummary(purchases: List<Purchase>): List<RewardsSummaryItem> {
         val rewardsByMonth = mutableMapOf<Int, Float>()
 
-        purchases.forEach { purchase: Purchase ->
+        purchases.forEach { purchase : Purchase ->
             val calendar = Calendar.getInstance().apply {
                 time = purchase.time
             }

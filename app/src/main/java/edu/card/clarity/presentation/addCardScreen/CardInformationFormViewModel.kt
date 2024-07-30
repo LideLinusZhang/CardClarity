@@ -1,10 +1,13 @@
 package edu.card.clarity.presentation.addCardScreen
 
-import android.icu.text.DateFormat
+import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import edu.card.clarity.notifications.AndroidAlarmScheduler
 import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.converters.toSchedulerAlarmItem
@@ -12,7 +15,6 @@ import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.enums.RewardType
-import edu.card.clarity.notifications.AndroidAlarmScheduler
 import edu.card.clarity.presentation.utils.displayStrings
 import edu.card.clarity.repositories.PointSystemRepository
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
@@ -34,13 +36,12 @@ class CardInformationFormViewModel @Inject constructor(
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val pointSystemRepository: PointSystemRepository,
     private val alarmItemDao: AlarmItemDao,
-    private val dateFormatter: DateFormat,
-    private val scheduler: AndroidAlarmScheduler,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     val cardNetworkTypeStrings = CardNetworkType.displayStrings
     val rewardTypeOptionStrings = RewardType.displayStrings
-
-    private var alarmItem: AlarmItem? = null
+    val scheduler = AndroidAlarmScheduler(context)
+    var alarmItem: AlarmItem? = null
 
     private val _uiState = MutableStateFlow(
         CardInformationFormUiState(
@@ -49,6 +50,8 @@ class CardInformationFormViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<CardInformationFormUiState> = _uiState.asStateFlow()
+
+    private val dateFormatter = SimpleDateFormat.getDateInstance()
 
     private var selectedCardNetworkType: CardNetworkType = CardNetworkType.entries.first()
     private var selectedRewardType: RewardType = RewardType.entries.first()
@@ -117,11 +120,8 @@ class CardInformationFormViewModel @Inject constructor(
         }
     }
 
-    private fun Calendar.toLocalDateTime(): LocalDateTime {
-        return LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(this.timeInMillis),
-            ZoneId.systemDefault()
-        )
+    fun Calendar.toLocalDateTime(): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.timeInMillis), ZoneId.systemDefault())
     }
 
 
@@ -157,6 +157,8 @@ class CardInformationFormViewModel @Inject constructor(
                 scheduler.schedule(it.toSchedulerAlarmItem())
             }
         }
+
+
 
         _uiState.update {
             CardInformationFormUiState(

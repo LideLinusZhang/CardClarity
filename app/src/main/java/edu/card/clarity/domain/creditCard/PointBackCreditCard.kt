@@ -10,10 +10,7 @@ data class PointBackCreditCard(
     val pointSystem: PointSystem
 ) : ICreditCard {
     override fun getReturnAmountInCash(purchaseTotal: Float, purchaseType: PurchaseType): Float {
-        return getReturnAmountInPoint(
-            purchaseTotal,
-            purchaseType
-        ) * pointSystem.pointToCashConversionRate
+        return getReturnAmountInPoint(purchaseTotal, purchaseType) * pointSystem.pointToCashConversionRate
     }
 
     fun getReturnAmountInPoint(purchaseTotal: Float, purchaseType: PurchaseType): Int {

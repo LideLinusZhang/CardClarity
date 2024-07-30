@@ -31,4 +31,4 @@ data class CreditCardInfo(
     override val paymentDueDate: Calendar,
     @ColumnInfo(defaultValue = "0")
     override val isReminderEnabled: Boolean,
-) : ICreditCardInfo
+): ICreditCardInfo

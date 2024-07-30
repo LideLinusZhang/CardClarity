@@ -10,10 +10,7 @@ import edu.card.clarity.enums.CardNetworkType
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -21,9 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PaymentDueDateViewModel @Inject constructor(
-    cashBackCreditCardRepository: CashBackCreditCardRepository,
-    pointBackCreditCardRepository: PointBackCreditCardRepository
+    private val cashBackCreditCardRepository: CashBackCreditCardRepository,
+    private val pointBackCreditCardRepository: PointBackCreditCardRepository
 ) : ViewModel() {
+
     private val _creditCards = combine(
         cashBackCreditCardRepository.getAllCreditCardInfoStream(),
         pointBackCreditCardRepository.getAllCreditCardInfoStream()
@@ -73,11 +71,11 @@ class PaymentDueDateViewModel @Inject constructor(
             // add one month if we are wrapping to the earliest due date next month
             val adjustedMonth = if (nextPaymentThisMonth == null) dueMonth + 1 else dueMonth
 
-            val dueDate =
-                LocalDate.of(dueYear, adjustedMonth, it.dueDate.get(Calendar.DAY_OF_MONTH))
+            val dueDate = LocalDate.of(dueYear, adjustedMonth, it.dueDate.get(Calendar.DAY_OF_MONTH))
             Pair(it.cardName, dueDate)
         }
     }
+
 
     private fun Calendar.toLocalDate(): LocalDate {
         val instant = this.toInstant()

@@ -25,8 +25,7 @@ class AddBenefitScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val cardIdString: String = savedStateHandle[ArgumentNames.CREDIT_CARD_ID]!!
-    private val cardRewardTypeOrdinal: Int =
-        savedStateHandle[ArgumentNames.CREDIT_CARD_REWARD_TYPE]!!
+    private val cardRewardTypeOrdinal: Int = savedStateHandle[ArgumentNames.CREDIT_CARD_REWARD_TYPE]!!
 
     private val cardId: UUID = UUID.fromString(cardIdString)
     val cardRewardType = RewardType.entries[cardRewardTypeOrdinal]

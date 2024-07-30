@@ -7,22 +7,22 @@ import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.alarmItem.AlarmItemDao
 import edu.card.clarity.data.creditCard.CreditCardDao
 import edu.card.clarity.data.creditCard.CreditCardInfo
+import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardId
 import edu.card.clarity.data.creditCard.pointBack.CreditCardIdPointSystemIdPair
 import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssociationDao
-import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardId
 import edu.card.clarity.data.creditCard.predefined.PredefinedCreditCardInfo
 import edu.card.clarity.data.creditCard.userAdded.UserAddedCreditCardInfo
 import edu.card.clarity.data.migration.DeleteUnnecessaryTableAutoMigrationSpec
-import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.pointSystem.PointSystemDao
-import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMapping
+import edu.card.clarity.data.pointSystem.PointSystem
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
-import edu.card.clarity.data.purchase.Purchase
+import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMapping
 import edu.card.clarity.data.purchase.PurchaseDao
+import edu.card.clarity.data.purchase.Purchase
 import edu.card.clarity.data.purchase.receipt.Receipt
 import edu.card.clarity.data.purchase.receipt.ReceiptDao
-import edu.card.clarity.data.purchaseReward.PurchaseReward
 import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
+import edu.card.clarity.data.purchaseReward.PurchaseReward
 
 @Database(
     entities = [

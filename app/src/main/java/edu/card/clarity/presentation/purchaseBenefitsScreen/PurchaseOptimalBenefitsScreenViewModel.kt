@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +23,7 @@ class PurchaseOptimalBenefitsScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val category: PurchaseType =
-        PurchaseType.valueOf(savedStateHandle.get<String>("category") ?: "")
+    private val category: PurchaseType = PurchaseType.valueOf(savedStateHandle.get<String>("category") ?: "")
 
     private val _creditCards = MutableStateFlow<List<CreditCardItemUiState>>(emptyList())
     val creditCards: StateFlow<List<CreditCardItemUiState>> = _creditCards
@@ -41,59 +41,57 @@ class PurchaseOptimalBenefitsScreenViewModel @Inject constructor(
 
     private fun fetchCreditCards(category: PurchaseType) {
         viewModelScope.launch {
-            val cashBackCardsFlow =
-                cashBackCreditCardRepository.getAllCreditCardsStream().map { cards ->
-                    cards.flatMap { card ->
-                        val rewardsForCategory = card.purchaseRewards.filter { reward ->
-                            reward.applicablePurchaseType == category
-                        }
+            val cashBackCardsFlow = cashBackCreditCardRepository.getAllCreditCardsStream().map { cards ->
+                cards.flatMap { card ->
+                    val rewardsForCategory = card.purchaseRewards.filter { reward ->
+                        reward.applicablePurchaseType == category
+                    }
 
-                        val rewards = rewardsForCategory.ifEmpty {
-                            card.purchaseRewards.filter { reward ->
-                                reward.applicablePurchaseType == PurchaseType.Others
-                            }
-                        }
-
-                        rewards.map { reward ->
-                            CreditCardItemUiState(
-                                name = card.info.name,
-                                rewards = listOf(
-                                    RewardUiState(
-                                        purchaseType = reward.applicablePurchaseType.name,
-                                        description = "${(reward.rewardFactor * 100).toInt()}% Cashback"
-                                    )
-                                )
-                            )
+                    val rewards = rewardsForCategory.ifEmpty {
+                        card.purchaseRewards.filter { reward ->
+                            reward.applicablePurchaseType == PurchaseType.Others
                         }
                     }
-                }
 
-            val pointBackCardsFlow =
-                pointBackCreditCardRepository.getAllCreditCardsStream().map { cards ->
-                    cards.flatMap { card ->
-                        val rewardsForCategory = card.purchaseRewards.filter { reward ->
-                            reward.applicablePurchaseType == category
-                        }
-
-                        val rewards = rewardsForCategory.ifEmpty {
-                            card.purchaseRewards.filter { reward ->
-                                reward.applicablePurchaseType == PurchaseType.Others
-                            }
-                        }
-
-                        rewards.map { reward ->
-                            CreditCardItemUiState(
-                                name = card.info.name,
-                                rewards = listOf(
-                                    RewardUiState(
-                                        purchaseType = reward.applicablePurchaseType.name,
-                                        description = "${reward.rewardFactor}x Points"
-                                    )
+                    rewards.map { reward ->
+                        CreditCardItemUiState(
+                            name = card.info.name,
+                            rewards = listOf(
+                                RewardUiState(
+                                    purchaseType = reward.applicablePurchaseType.name,
+                                    description = "${(reward.rewardFactor * 100).toInt()}% Cashback"
                                 )
                             )
-                        }
+                        )
                     }
                 }
+            }
+
+            val pointBackCardsFlow = pointBackCreditCardRepository.getAllCreditCardsStream().map { cards ->
+                cards.flatMap { card ->
+                    val rewardsForCategory = card.purchaseRewards.filter { reward ->
+                        reward.applicablePurchaseType == category
+                    }
+
+                    val rewards = rewardsForCategory.ifEmpty {
+                        card.purchaseRewards.filter { reward ->
+                            reward.applicablePurchaseType == PurchaseType.Others
+                        }
+                    }
+
+                    rewards.map { reward ->
+                        CreditCardItemUiState(
+                            name = card.info.name,
+                            rewards = listOf(
+                                RewardUiState(
+                                    purchaseType = reward.applicablePurchaseType.name,
+                                    description = "${reward.rewardFactor}x Points"
+                                )
+                            )
+                        )
+                    }
+                }
+            }
 
             combine(cashBackCardsFlow, pointBackCardsFlow) { cashBackCards, pointBackCards ->
                 cashBackCards + pointBackCards
