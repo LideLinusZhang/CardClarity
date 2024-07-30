@@ -1,6 +1,6 @@
 package edu.card.clarity.presentation.myReceiptsScreen
 
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,10 +34,9 @@ class MyReceiptsScreenViewModel @Inject constructor(
     private val purchaseRepository: PurchaseRepository,
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    private val dateFormatter: DateFormat,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
-
     private val savedCreditCardFilter: StateFlow<ReceiptFilter> = savedStateHandle
         .getStateFlow(
             key = MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY,

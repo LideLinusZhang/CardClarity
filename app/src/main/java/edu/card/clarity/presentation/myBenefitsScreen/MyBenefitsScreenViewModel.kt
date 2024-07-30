@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyBenefitsScreenViewModel @Inject constructor(
-    private val cashBackCreditCardRepository: CashBackCreditCardRepository,
-    private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    cashBackCreditCardRepository: CashBackCreditCardRepository,
+    pointBackCreditCardRepository: PointBackCreditCardRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val cardIdString: String = savedStateHandle[ArgumentNames.CREDIT_CARD_ID]!!
@@ -31,7 +31,6 @@ class MyBenefitsScreenViewModel @Inject constructor(
     private val cardRewardType = RewardType.entries[cardRewardTypeOrdinal]
 
     private val _selectedFilter = MutableStateFlow("ALL")
-    val selectedFilter: StateFlow<String> = _selectedFilter
 
     val uiState: StateFlow<List<RewardInfo>> = combine(
         when (cardRewardType) {

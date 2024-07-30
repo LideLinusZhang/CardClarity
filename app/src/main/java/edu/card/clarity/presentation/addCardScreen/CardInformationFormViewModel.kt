@@ -1,12 +1,10 @@
 package edu.card.clarity.presentation.addCardScreen
 
-import android.content.Context
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import edu.card.clarity.notifications.AndroidAlarmScheduler
 import edu.card.clarity.data.alarmItem.AlarmItem
 import edu.card.clarity.data.alarmItem.AlarmItemDao
@@ -36,11 +34,11 @@ class CardInformationFormViewModel @Inject constructor(
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val pointSystemRepository: PointSystemRepository,
     private val alarmItemDao: AlarmItemDao,
-    @ApplicationContext private val context: Context,
+    private val scheduler: AndroidAlarmScheduler,
+    private val dateFormatter: DateFormat
 ) : ViewModel() {
     val cardNetworkTypeStrings = CardNetworkType.displayStrings
     val rewardTypeOptionStrings = RewardType.displayStrings
-    val scheduler = AndroidAlarmScheduler(context)
     var alarmItem: AlarmItem? = null
 
     private val _uiState = MutableStateFlow(
@@ -50,8 +48,6 @@ class CardInformationFormViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<CardInformationFormUiState> = _uiState.asStateFlow()
-
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
 
     private var selectedCardNetworkType: CardNetworkType = CardNetworkType.entries.first()
     private var selectedRewardType: RewardType = RewardType.entries.first()
