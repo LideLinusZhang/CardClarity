@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.secrets.gradle.plugin)
     alias(libs.plugins.room)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -29,6 +30,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -58,6 +60,10 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+}
+
+baselineProfile {
+    dexLayoutOptimization = true
 }
 
 secrets {
@@ -131,4 +137,8 @@ dependencies {
 
     // HTTP Client Dependencies
     implementation libs.bundles.ktor
+
+    // Baseline Profile Dependencies
+    implementation libs.androidx.profileinstaller
+    baselineProfile project(':baselineprofile')
 }
