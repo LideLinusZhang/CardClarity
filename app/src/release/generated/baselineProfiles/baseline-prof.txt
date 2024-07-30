@@ -6637,7 +6637,7 @@ HSPLandroidx/compose/runtime/SlotWriter;->restoreCurrentGroupEnd()I
 HSPLandroidx/compose/runtime/SlotWriter;->saveCurrentGroupEnd()V
 HSPLandroidx/compose/runtime/SlotWriter;->set(IILjava/lang/Object;)Ljava/lang/Object;
 HSPLandroidx/compose/runtime/SlotWriter;->set(ILjava/lang/Object;)Ljava/lang/Object;
-HSPLandroidx/compose/runtime/SlotWriter;->set(Ljava/lang/Object;)V
+HPLandroidx/compose/runtime/SlotWriter;->set(Ljava/lang/Object;)V
 HSPLandroidx/compose/runtime/SlotWriter;->skip()Ljava/lang/Object;
 HSPLandroidx/compose/runtime/SlotWriter;->skipGroup()I
 HSPLandroidx/compose/runtime/SlotWriter;->skipToGroupEnd()V
@@ -14806,7 +14806,7 @@ HSPLandroidx/emoji2/text/MetadataListReader$OffsetInfo;->getStartOffset()J
 Landroidx/emoji2/text/MetadataListReader$OpenTypeReader;
 Landroidx/emoji2/text/MetadataRepo;
 HSPLandroidx/emoji2/text/MetadataRepo;-><init>(Landroid/graphics/Typeface;Landroidx/emoji2/text/flatbuffer/MetadataList;)V
-HPLandroidx/emoji2/text/MetadataRepo;->constructIndex(Landroidx/emoji2/text/flatbuffer/MetadataList;)V
+HSPLandroidx/emoji2/text/MetadataRepo;->constructIndex(Landroidx/emoji2/text/flatbuffer/MetadataList;)V
 HSPLandroidx/emoji2/text/MetadataRepo;->create(Landroid/graphics/Typeface;Ljava/nio/ByteBuffer;)Landroidx/emoji2/text/MetadataRepo;
 HSPLandroidx/emoji2/text/MetadataRepo;->getMetadataList()Landroidx/emoji2/text/flatbuffer/MetadataList;
 HSPLandroidx/emoji2/text/MetadataRepo;->getRootNode()Landroidx/emoji2/text/MetadataRepo$Node;
@@ -14816,7 +14816,7 @@ HSPLandroidx/emoji2/text/MetadataRepo$Node;-><init>()V
 HSPLandroidx/emoji2/text/MetadataRepo$Node;-><init>(I)V
 HSPLandroidx/emoji2/text/MetadataRepo$Node;->get(I)Landroidx/emoji2/text/MetadataRepo$Node;
 HSPLandroidx/emoji2/text/MetadataRepo$Node;->getData()Landroidx/emoji2/text/TypefaceEmojiRasterizer;
-HPLandroidx/emoji2/text/MetadataRepo$Node;->put(Landroidx/emoji2/text/TypefaceEmojiRasterizer;II)V
+HSPLandroidx/emoji2/text/MetadataRepo$Node;->put(Landroidx/emoji2/text/TypefaceEmojiRasterizer;II)V
 Landroidx/emoji2/text/SpannableBuilder;
 Landroidx/emoji2/text/TypefaceEmojiRasterizer;
 HSPLandroidx/emoji2/text/TypefaceEmojiRasterizer;-><clinit>()V
@@ -14834,7 +14834,7 @@ HSPLandroidx/emoji2/text/flatbuffer/MetadataItem;->__assign(ILjava/nio/ByteBuffe
 HSPLandroidx/emoji2/text/flatbuffer/MetadataItem;->codepoints(I)I
 HSPLandroidx/emoji2/text/flatbuffer/MetadataItem;->codepointsLength()I
 HSPLandroidx/emoji2/text/flatbuffer/MetadataItem;->emojiStyle()Z
-HPLandroidx/emoji2/text/flatbuffer/MetadataItem;->id()I
+HSPLandroidx/emoji2/text/flatbuffer/MetadataItem;->id()I
 HSPLandroidx/emoji2/text/flatbuffer/MetadataItem;->sdkAdded()S
 Landroidx/emoji2/text/flatbuffer/MetadataList;
 HSPLandroidx/emoji2/text/flatbuffer/MetadataList;-><init>()V
