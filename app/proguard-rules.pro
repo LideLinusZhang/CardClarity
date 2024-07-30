@@ -20,22 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Keep rules for BouncyCastle, Conscrypt, OpenJSSE, and internal Java classes
--keep class org.bouncycastle.** { *; }
--keep class org.conscrypt.** { *; }
--keep class org.openjsse.** { *; }
-
--keep class javax.naming.** { *; }
--keep class sun.security.** { *; }
--keep class sun.misc.** { *; }
--keep class sun.net.** { *; }
--keep class sun.net.www.** { *; }
--keep class sun.util.logging.** { *; }
-
--keep class com.android.org.conscrypt.** { *; }
--keep class org.apache.harmony.xnet.provider.jsse.** { *; }
-
-# For SSL/TLS-related classes that might be required
--keep class javax.net.ssl.** { *; }
--keep class javax.crypto.** { *; }
--keep class java.security.** { *; }
+# Required for Ktor, see https://youtrack.jetbrains.com/issue/KTOR-5528
+-dontwarn org.slf4j.**

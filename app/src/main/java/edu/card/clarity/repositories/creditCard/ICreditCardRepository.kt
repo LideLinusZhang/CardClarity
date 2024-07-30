@@ -1,6 +1,5 @@
 package edu.card.clarity.repositories.creditCard
 
-import edu.card.clarity.domain.Purchase
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.enums.PurchaseType
@@ -80,5 +79,5 @@ interface ICreditCardRepository {
      *
      * @return The credit card, or null if there is no credit card in the database.
      */
-    suspend fun findOptimalCreditCard(purchase: Purchase): ICreditCard?
+    suspend fun findOptimalCreditCard(purchaseTotal: Float, purchaseType: PurchaseType): ICreditCard?
 }

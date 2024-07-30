@@ -1,18 +1,12 @@
 package edu.card.clarity.presentation.myReceiptsScreen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,10 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import edu.card.clarity.presentation.common.CustomButton
 import edu.card.clarity.presentation.common.DropdownMenu
 import edu.card.clarity.presentation.utils.Destinations
 import edu.card.clarity.ui.theme.CardClarityTheme
 import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.DarkAccentBlue
 
 @Composable
 fun MyReceiptsScreen(navController: NavController,
@@ -39,57 +35,62 @@ fun MyReceiptsScreen(navController: NavController,
     val creditCardFilterOptions by viewModel.creditCardFilterOptionStrings.collectAsState()
 
     CardClarityTheme {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "My Receipts",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = CardClarityTypography.bodyLarge.fontFamily,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            DropdownMenu(
-                label = "Credit Card",
-                options = creditCardFilterOptions,
-                selectedOption = receiptFilterUiState.selectedCreditCardFilterOption,
-                onOptionSelected = viewModel::setCreditCardFilter
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            DropdownMenu(
-                label = "Purchase Type",
-                options = viewModel.purchaseTypeFilterOptionStrings,
-                selectedOption = receiptFilterUiState.selectedPurchaseTypeFilterOption,
-                onOptionSelected = viewModel::setPurchaseTypeFilter
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(modifier = Modifier.weight(0.5f)) {
-                LazyColumn {
-                    items(receipts.size) { index ->
-                        ReceiptsItem(receipts[index], viewModel::deleteReceipt)
-                    }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(Icons.Filled.ShoppingCart, contentDescription = "Shopping Icon", tint = DarkAccentBlue)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "My Receipts",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = CardClarityTypography.titleLarge,
+                        color = Color.Black
+                    )
                 }
+                HorizontalDivider(thickness = 1.dp, color = Color.Gray)
             }
-
-            Button(
-                onClick = {navController.navigate(Destinations.RECORD_RECEIPT)},
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White,
-                    contentColor = Color.Black),
-                border = BorderStroke(2.dp, Color.Black),
-                shape = RoundedCornerShape(25),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text(text = "Record a Receipt")
+            item {
+                CustomButton(
+                    text = "Record a Receipt",
+                    onClick = {
+                        navController.navigate(Destinations.RECORD_RECEIPT)
+                    }
+                )
             }
-
-            Spacer(modifier = Modifier.height(60.dp))
+            item {
+                DropdownMenu(
+                    label = "Credit Card",
+                    options = creditCardFilterOptions,
+                    selectedOption = receiptFilterUiState.selectedCreditCardFilterOption,
+                    onOptionSelected = viewModel::setCreditCardFilter
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                DropdownMenu(
+                    label = "Purchase Type",
+                    options = viewModel.purchaseTypeFilterOptionStrings,
+                    selectedOption = receiptFilterUiState.selectedPurchaseTypeFilterOption,
+                    onOptionSelected = viewModel::setPurchaseTypeFilter
+                )
+            }
+            items(receipts) { receipt ->
+                ReceiptsItem(receipt, viewModel::deleteReceipt)
+            }
+            item{ Spacer(modifier = Modifier.height(48.dp)) }
         }
     }
 }

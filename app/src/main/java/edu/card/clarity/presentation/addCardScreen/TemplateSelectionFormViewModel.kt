@@ -1,17 +1,21 @@
 package edu.card.clarity.presentation.addCardScreen
 
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import android.icu.util.Calendar
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.card.clarity.data.alarmItem.AlarmItem
+import edu.card.clarity.data.alarmItem.AlarmItemDao
+import edu.card.clarity.data.converters.toSchedulerAlarmItem
 import edu.card.clarity.domain.PointSystem
 import edu.card.clarity.domain.creditCard.CashBackCreditCard
 import edu.card.clarity.domain.creditCard.CreditCardInfo
 import edu.card.clarity.domain.creditCard.ICreditCard
 import edu.card.clarity.domain.creditCard.PointBackCreditCard
 import edu.card.clarity.enums.RewardType
+import edu.card.clarity.notifications.AndroidAlarmScheduler
 import edu.card.clarity.presentation.utils.WhileUiSubscribed
 import edu.card.clarity.presentation.utils.displayString
 import edu.card.clarity.repositories.PointSystemRepository
@@ -25,6 +29,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +40,9 @@ class TemplateSelectionFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val pointSystemRepository: PointSystemRepository,
+    private val alarmItemDao: AlarmItemDao,
+    private val scheduler: AndroidAlarmScheduler,
+    private val dateFormatter: DateFormat
 ) : ViewModel() {
     private val cashBackTemplates = cashBackCreditCardRepository
         .getAllPredefinedCreditCardsStream()
@@ -64,8 +75,6 @@ class TemplateSelectionFormViewModel @Inject constructor(
             started = WhileUiSubscribed,
             initialValue = emptyList()
         )
-
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
 
     private val mostRecentStatementDate = Calendar.getInstance()
     private val mostRecentPaymentDueDate = Calendar.getInstance()
@@ -118,6 +127,10 @@ class TemplateSelectionFormViewModel @Inject constructor(
         }
     }
 
+    private fun Calendar.toLocalDateTime(): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.timeInMillis), ZoneId.systemDefault())
+    }
+
     fun createCreditCard() {
         val selectedCard = selectedTemplate ?: return
 
@@ -135,16 +148,17 @@ class TemplateSelectionFormViewModel @Inject constructor(
                 isReminderEnabled = _uiState.value.isReminderEnabled
             )
 
-            when (selectedCard) {
+            val newCardId = when (selectedCard) {
                 is CashBackCreditCard -> {
-                    val newCardId = cashBackCreditCardRepository.createCreditCard(cardInfo)
+                    val cardId = cashBackCreditCardRepository.createCreditCard(cardInfo)
                     selectedCard.purchaseRewards.forEach { reward ->
                         cashBackCreditCardRepository.addPurchaseReward(
-                            creditCardId = newCardId,
+                            creditCardId = cardId,
                             purchaseTypes = listOf(reward.applicablePurchaseType),
                             percentage = reward.rewardFactor
                         )
                     }
+                    cardId
                 }
                 is PointBackCreditCard -> {
                     val pointSystem = PointSystem(
@@ -152,15 +166,27 @@ class TemplateSelectionFormViewModel @Inject constructor(
                         pointToCashConversionRate = selectedCard.pointSystem.pointToCashConversionRate
                     )
                     val pointSystemId = pointSystemRepository.addPointSystem(pointSystem)
-                    val newCardId = pointBackCreditCardRepository.createCreditCard(cardInfo, pointSystemId)
+                    val cardId = pointBackCreditCardRepository.createCreditCard(cardInfo, pointSystemId)
                     selectedCard.purchaseRewards.forEach { reward ->
                         pointBackCreditCardRepository.addPurchaseReward(
-                            creditCardId = newCardId,
+                            creditCardId = cardId,
                             purchaseTypes = listOf(reward.applicablePurchaseType),
                             multiplier = reward.rewardFactor
                         )
                     }
+                    cardId
                 }
+                else -> return@launch
+            }
+
+            if (_uiState.value.isReminderEnabled) {
+                val alarmItem = AlarmItem(
+                    time = mostRecentPaymentDueDate.toLocalDateTime(),
+                    message = "Your payment for ${_uiState.value.cardName} is due today",
+                    creditCardId = newCardId
+                )
+                alarmItemDao.insert(alarmItem)
+                scheduler.schedule(alarmItem.toSchedulerAlarmItem())
             }
         }
     }

@@ -13,10 +13,5 @@ enum class PurchaseType {
     Restaurants,
     Travel,
     Others;
-
-    companion object {
-        fun toList(): List<String> {
-            return entries.map { it.name }
-        }
-    }
+    companion object
 }

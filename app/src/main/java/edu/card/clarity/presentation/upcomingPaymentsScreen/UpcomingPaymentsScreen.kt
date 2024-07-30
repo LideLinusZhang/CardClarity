@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,9 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import edu.card.clarity.ui.theme.CardClarityTheme
-import edu.card.clarity.ui.theme.CardClarityTypography
+import edu.card.clarity.ui.theme.*
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -47,14 +48,23 @@ fun UpcomingPaymentsScreen(viewModel: PaymentDueDateViewModel = hiltViewModel())
 
 @Composable
 fun Header() {
-    Text(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
-        text = "Upcoming Credit Card Payments",
-        style = CardClarityTypography.titleLarge,
-        color = Color.Black
-    )
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(Icons.Filled.DateRange, contentDescription = "Date Range Icon", tint = DarkAccentBlue)
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            fontSize = 18.sp,
+            text = "Upcoming Credit Card Payments",
+            style = CardClarityTypography.titleLarge,
+            color = Color.Black
+        )
+    }
+    HorizontalDivider(thickness = 1.dp, color = Color.Gray)
 }
 
 @Composable
@@ -201,39 +211,69 @@ fun UpcomingPayment(cards: List<PaymentDueDateUiState>, viewModel: PaymentDueDat
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Next payment",
+            text = "Next Payment",
             style = CardClarityTypography.titleLarge,
+            fontSize = 18.sp,
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
         if (cards.isEmpty()) {
-            Text("No upcoming payments", style = CardClarityTypography.bodyLarge, modifier = Modifier.padding(start = 16.dp))
+            Text(
+                text = "No upcoming payments",
+                style = CardClarityTypography.bodyLarge,
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 16.dp)
+            )
         } else if (nextPaymentInfo != null) {
             val formattedDueDate = nextPaymentInfo.second.format(dateFormatter)
             Box(
                 modifier = Modifier
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(8))
                     .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(
+                        color = LightPurple,
+                        shape = RoundedCornerShape(16.dp)
+                    )
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(all = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    Text(
-                        text = "${nextPaymentInfo.first}\nDue Date: $formattedDueDate",
-                        style = CardClarityTypography.bodyLarge
+                    Box(
+                        modifier = Modifier
+                            .width(4.dp)
+                            .height(56.dp)
+                            .background(color = Purple40)
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = nextPaymentInfo.first,
+                            style = CardClarityTypography.titleMedium,
+                            color = Color.Black,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Due Date: $formattedDueDate",
+                            style = CardClarityTypography.bodyLarge,
+                            color = Color.DarkGray
+                        )
+                    }
                 }
             }
         } else {
-            Text("No upcoming payments", style = CardClarityTypography.bodyLarge, modifier = Modifier.padding(start = 16.dp))
+            Text(
+                text = "No upcoming payments",
+                style = CardClarityTypography.bodyLarge,
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 16.dp)
+            )
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

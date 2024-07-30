@@ -1,5 +1,6 @@
 package edu.card.clarity.presentation.myCardScreen
 
+import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
@@ -33,6 +34,7 @@ class MyCardsScreenViewModel @Inject constructor(
     private val creditCardDao: CreditCardDao,
     private val alarmItemDao: AlarmItemDao,
     private val scheduler: AndroidAlarmScheduler,
+    private val dateFormatter: DateFormat,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _savedFilter = savedStateHandle.getStateFlow(
@@ -102,22 +104,20 @@ class MyCardsScreenViewModel @Inject constructor(
         }
     }
 
-    companion object {
+    private fun CreditCardInfo.toUiState() = CreditCardItemUiState(
+        id!!,
+        name,
+        rewardType.ordinal,
+        dateFormatter.format(paymentDueDate.timeInMillis),
+        isReminderEnabled,
+        when (cardNetworkType) {
+            CardNetworkType.Visa -> Color(0xFFB7FF9E)
+            CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
+            CardNetworkType.AMEX -> Color(0xFFAED8FF)
+        }
+    )
+
+    private companion object {
         private const val MY_CARDS_SCREEN_SAVED_FILTER_KEY: String = "MY_CARDS_SCREEN_SAVED_FILTER"
-
-        private val dateFormatter = SimpleDateFormat.getDateInstance()
-
-        private fun CreditCardInfo.toUiState() = CreditCardItemUiState(
-            id!!,
-            name,
-            rewardType.ordinal,
-            dateFormatter.format(paymentDueDate.timeInMillis),
-            isReminderEnabled,
-            when (cardNetworkType) {
-                CardNetworkType.Visa -> Color(0xFFB7FF9E)
-                CardNetworkType.MasterCard -> Color(0xFFFF9EB8)
-                CardNetworkType.AMEX -> Color(0xFFAED8FF)
-            }
-        )
     }
 }
