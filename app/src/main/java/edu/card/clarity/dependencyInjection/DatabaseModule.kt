@@ -14,8 +14,8 @@ import edu.card.clarity.data.creditCard.pointBack.PointBackCardPointSystemAssoci
 import edu.card.clarity.data.pointSystem.PointSystemDao
 import edu.card.clarity.data.purchase.PlaceTypeToPurchaseTypeMappingDao
 import edu.card.clarity.data.purchase.PurchaseDao
-import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import edu.card.clarity.data.purchase.receipt.ReceiptDao
+import edu.card.clarity.data.purchaseReward.PurchaseRewardDao
 import javax.inject.Singleton
 
 @Module

@@ -15,7 +15,6 @@ import javax.inject.Inject
 class GeolocationViewModel @Inject constructor(
     private val geolocationInferenceService: GeolocationInferenceService
 ) : ViewModel() {
-
     private val _geolocationInference = MutableStateFlow<List<GeolocationInference>?>(null)
     val geolocationInference: StateFlow<List<GeolocationInference>?> = _geolocationInference
 

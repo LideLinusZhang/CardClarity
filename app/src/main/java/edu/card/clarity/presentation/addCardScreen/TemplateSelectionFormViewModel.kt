@@ -1,6 +1,6 @@
 package edu.card.clarity.presentation.addCardScreen
 
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import android.icu.util.Calendar
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -32,6 +32,7 @@ class TemplateSelectionFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val pointSystemRepository: PointSystemRepository,
+    private val dateFormatter: DateFormat
 ) : ViewModel() {
     private val cashBackTemplates = cashBackCreditCardRepository
         .getAllPredefinedCreditCardsStream()
@@ -49,13 +50,14 @@ class TemplateSelectionFormViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    private val allTemplates = combine(cashBackTemplates, pointBackTemplates) { cashBacks, pointBacks ->
-        cashBacks + pointBacks
-    }.stateIn(
-        scope = viewModelScope,
-        started = WhileUiSubscribed,
-        initialValue = emptyList()
-    )
+    private val allTemplates =
+        combine(cashBackTemplates, pointBackTemplates) { cashBacks, pointBacks ->
+            cashBacks + pointBacks
+        }.stateIn(
+            scope = viewModelScope,
+            started = WhileUiSubscribed,
+            initialValue = emptyList()
+        )
 
     val templateOptionStrings: StateFlow<List<String>> = allTemplates
         .map { it.map { card -> card.info.name } }
@@ -64,8 +66,6 @@ class TemplateSelectionFormViewModel @Inject constructor(
             started = WhileUiSubscribed,
             initialValue = emptyList()
         )
-
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
 
     private val mostRecentStatementDate = Calendar.getInstance()
     private val mostRecentPaymentDueDate = Calendar.getInstance()
@@ -146,13 +146,15 @@ class TemplateSelectionFormViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is PointBackCreditCard -> {
                     val pointSystem = PointSystem(
                         name = selectedCard.pointSystem.name,
                         pointToCashConversionRate = selectedCard.pointSystem.pointToCashConversionRate
                     )
                     val pointSystemId = pointSystemRepository.addPointSystem(pointSystem)
-                    val newCardId = pointBackCreditCardRepository.createCreditCard(cardInfo, pointSystemId)
+                    val newCardId =
+                        pointBackCreditCardRepository.createCreditCard(cardInfo, pointSystemId)
                     selectedCard.purchaseRewards.forEach { reward ->
                         pointBackCreditCardRepository.addPurchaseReward(
                             creditCardId = newCardId,

@@ -50,7 +50,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar (containerColor = Color.White, modifier = Modifier.height(80.dp)) {
+    NavigationBar(containerColor = Color.White, modifier = Modifier.height(80.dp)) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -83,6 +83,8 @@ fun RowScope.AddItem(
         onClick = {
             navController.navigate(screen.route)
         },
-        modifier = Modifier.weight(1f).padding(top = 20.dp),
+        modifier = Modifier
+            .weight(1f)
+            .padding(top = 20.dp),
     )
 }

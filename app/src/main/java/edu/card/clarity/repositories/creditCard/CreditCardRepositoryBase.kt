@@ -115,7 +115,10 @@ abstract class CreditCardRepositoryBase internal constructor(
         creditCardDataSource.deleteAllOf(rewardType)
     }
 
-    suspend fun findOptimalCreditCard(purchaseTotal: Float, purchaseType: PurchaseType): ICreditCard? {
+    suspend fun findOptimalCreditCard(
+        purchaseTotal: Float,
+        purchaseType: PurchaseType
+    ): ICreditCard? {
         return getAllCreditCards().maxByOrNull {
             it.getReturnAmountInCash(purchaseTotal, purchaseType)
         }

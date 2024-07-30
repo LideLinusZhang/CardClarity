@@ -43,7 +43,10 @@ data class CardInfo(
 )
 
 @Composable
-fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenViewModel = hiltViewModel()) {
+fun MyCardsScreen(
+    navController: NavHostController,
+    viewModel: MyCardsScreenViewModel = hiltViewModel()
+) {
     val creditCardItemUiStates by viewModel.uiState.collectAsStateWithLifecycle()
 
     CardClarityTheme {
@@ -84,9 +87,9 @@ fun MyCardsScreen(navController: NavHostController, viewModel: MyCardsScreenView
                 onSelectedChanged = viewModel::updateCardNetworkFilter
             )
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn (
+            LazyColumn(
                 contentPadding = PaddingValues(bottom = 45.dp)
-            ){
+            ) {
                 items(creditCardItemUiStates.size) { index ->
                     val item = creditCardItemUiStates[index]
                     CreditCardItem(

@@ -23,7 +23,8 @@ class AlarmReceiver : BroadcastReceiver() {
         val channelName = "Alarm Notifications"
         val channelImportance = NotificationManager.IMPORTANCE_HIGH
         val notificationChannel = NotificationChannel(channelId, channelName, channelImportance)
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)

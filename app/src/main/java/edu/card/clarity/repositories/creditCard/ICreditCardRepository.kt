@@ -30,6 +30,7 @@ interface ICreditCardRepository {
      * Get a credit card's information and its associated purchase rewards by its ID.
      */
     suspend fun getCreditCard(id: UUID): ICreditCard?
+
     /**
      * Get only a credit card's information by its ID.
      */
@@ -39,12 +40,14 @@ interface ICreditCardRepository {
      * Get all credit cards' information and their associated purchase rewards.
      */
     suspend fun getAllCreditCards(): List<ICreditCard>
+
     /**
      * Get all predefined credit cards' information and their associated purchase rewards.
      * An [ICreditCard] object representing a predefined credit card does
      * not have an ID associated to it.
      */
     suspend fun getAllPredefinedCreditCards(): List<ICreditCard>
+
     /**
      * Get information of all credit cards but without their associated purchase rewards.
      */
@@ -54,10 +57,12 @@ interface ICreditCardRepository {
      * Get a credit card's information and its associated purchase rewards by its ID as a stream.
      */
     fun getCreditCardStream(id: UUID): Flow<ICreditCard>
+
     /**
      * Get all credit cards' information and their associated purchase rewards as a stream.
      */
     fun getAllCreditCardsStream(): Flow<List<ICreditCard>>
+
     /**
      * Get all predefined credit cards' information and their associated
      * purchase rewards as a stream.
@@ -65,6 +70,7 @@ interface ICreditCardRepository {
      * not have an ID associated to it.
      */
     fun getAllPredefinedCreditCardsStream(): Flow<List<ICreditCard>>
+
     /**
      * Get information of all credit cards but without their associated
      * purchase rewards as a stream.
@@ -79,5 +85,8 @@ interface ICreditCardRepository {
      *
      * @return The credit card, or null if there is no credit card in the database.
      */
-    suspend fun findOptimalCreditCard(purchaseTotal: Float, purchaseType: PurchaseType): ICreditCard?
+    suspend fun findOptimalCreditCard(
+        purchaseTotal: Float,
+        purchaseType: PurchaseType
+    ): ICreditCard?
 }

@@ -12,4 +12,4 @@ data class UserAddedCreditCard(
         entityColumn = "creditCardId"
     )
     override val purchaseRewards: List<PurchaseReward>
-): ICreditCard
+) : ICreditCard

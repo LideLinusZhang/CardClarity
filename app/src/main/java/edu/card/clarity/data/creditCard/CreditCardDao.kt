@@ -73,8 +73,7 @@ interface CreditCardDao {
      * @return all credit cards of a certain reward type with credit cards associated to them.
      */
     @Transaction
-    @Query("SELECT * FROM userAddedCreditCard WHERE rewardType = :rewardType"
-    )
+    @Query("SELECT * FROM userAddedCreditCard WHERE rewardType = :rewardType")
     fun observeAllOf(rewardType: RewardType): Flow<List<UserAddedCreditCard>>
 
     /**
@@ -176,9 +175,11 @@ interface CreditCardDao {
     /**
      * Delete all credit cards of a certain reward type.
      */
-    @Query("DELETE FROM creditCardInfo " +
-            "WHERE rewardType = :rewardType " +
-            "AND id NOT IN (SELECT * FROM predefinedCreditCardId)")
+    @Query(
+        "DELETE FROM creditCardInfo " +
+                "WHERE rewardType = :rewardType " +
+                "AND id NOT IN (SELECT * FROM predefinedCreditCardId)"
+    )
     suspend fun deleteAllOf(rewardType: RewardType)
 
     /**

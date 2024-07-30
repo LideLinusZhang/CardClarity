@@ -25,4 +25,4 @@ data class UserAddedCreditCardInfo(
     override val statementDate: Calendar,
     override val paymentDueDate: Calendar,
     override val isReminderEnabled: Boolean
-): ICreditCardInfo
+) : ICreditCardInfo

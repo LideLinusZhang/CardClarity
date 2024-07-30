@@ -11,7 +11,7 @@ import java.util.UUID
 
 @DatabaseView(
     "SELECT creditCardInfo.* FROM creditCardInfo " +
-    "JOIN predefinedCreditCardId ON creditCardInfo.id = predefinedCreditCardId.creditCardId",
+            "JOIN predefinedCreditCardId ON creditCardInfo.id = predefinedCreditCardId.creditCardId",
     viewName = "predefinedCreditCard"
 )
 @TypeConverters(CalendarConverter::class)
@@ -23,4 +23,4 @@ data class PredefinedCreditCardInfo(
     override val statementDate: Calendar,
     override val paymentDueDate: Calendar,
     override val isReminderEnabled: Boolean
-): ICreditCardInfo
+) : ICreditCardInfo

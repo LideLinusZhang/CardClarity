@@ -1,6 +1,6 @@
 package edu.card.clarity.receiptParsing
 
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import android.util.Base64
 import android.util.Log
 import edu.card.clarity.BuildConfig
@@ -26,10 +26,9 @@ import javax.inject.Singleton
 
 @Singleton
 class ReceiptParser @Inject constructor(
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val dateFormatter: DateFormat
 ) {
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
-
     private suspend fun readImageAsBase64String(imagePath: String): String {
         val imageFile = File(imagePath)
 

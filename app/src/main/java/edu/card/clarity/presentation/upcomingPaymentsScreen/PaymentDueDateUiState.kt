@@ -1,7 +1,7 @@
 package edu.card.clarity.presentation.upcomingPaymentsScreen
 
-import androidx.compose.ui.graphics.Color
 import android.icu.util.Calendar
+import androidx.compose.ui.graphics.Color
 
 data class PaymentDueDateUiState(
     val cardName: String,

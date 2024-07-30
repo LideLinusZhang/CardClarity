@@ -16,7 +16,6 @@ import edu.card.clarity.ui.theme.CardClarityTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private lateinit var requestNotificationPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,16 +23,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         // Register the activity result launcher for notification permission
-        requestNotificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                Log.d("permission", "granted")
-            } else {
-                Log.d("permission", "denied")
+        requestNotificationPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    Log.d("permission", "granted")
+                } else {
+                    Log.d("permission", "denied")
+                }
             }
-        }
 
         // Request notification permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 

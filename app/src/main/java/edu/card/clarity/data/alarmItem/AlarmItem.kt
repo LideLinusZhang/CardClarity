@@ -1,9 +1,9 @@
 package edu.card.clarity.data.alarmItem
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
 import edu.card.clarity.data.converters.LocalDateTimeConverter
 import edu.card.clarity.data.creditCard.CreditCardInfo
