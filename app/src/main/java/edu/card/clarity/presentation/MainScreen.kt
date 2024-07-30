@@ -22,6 +22,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import edu.card.clarity.presentation.navigation.BottomNavBar
 import edu.card.clarity.presentation.navigation.BottomNavGraph
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 
@@ -67,6 +69,16 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
+    val baseModifier = Modifier
+        .weight(1f)
+        .padding(top = 20.dp)
+
+    val finalModifier = if (screen.desc.isNotEmpty()) {
+        baseModifier.semantics { contentDescription = screen.desc }
+    } else {
+        baseModifier
+    }
+
     NavigationBarItem(
         label = {
             Text(
@@ -83,6 +95,6 @@ fun RowScope.AddItem(
         onClick = {
             navController.navigate(screen.route)
         },
-        modifier = Modifier.weight(1f).padding(top = 20.dp),
+        modifier = finalModifier,
     )
 }

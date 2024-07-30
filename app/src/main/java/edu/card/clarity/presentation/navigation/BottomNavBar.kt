@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import edu.card.clarity.presentation.utils.Destinations
 
 sealed class BottomNavBar (
+    val desc: String = "",
     val route: String,
     val title: String,
     val icon: ImageVector
@@ -21,7 +22,8 @@ sealed class BottomNavBar (
     data object AddCard: BottomNavBar(
         route = Destinations.ADD_CARD,
         title = "Add Card",
-        icon = Icons.Default.AddCircle
+        icon = Icons.Default.AddCircle,
+        desc = "add_card_screen"
     )
     data object MyReceipts: BottomNavBar(
         route = Destinations.MY_RECEIPTS,
