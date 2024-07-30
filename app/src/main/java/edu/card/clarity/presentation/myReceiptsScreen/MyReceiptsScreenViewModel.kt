@@ -1,6 +1,6 @@
 package edu.card.clarity.presentation.myReceiptsScreen
 
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +13,7 @@ import edu.card.clarity.presentation.utils.displayStrings
 import edu.card.clarity.repositories.PurchaseRepository
 import edu.card.clarity.repositories.creditCard.CashBackCreditCardRepository
 import edu.card.clarity.repositories.creditCard.PointBackCreditCardRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +24,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -31,10 +34,9 @@ class MyReceiptsScreenViewModel @Inject constructor(
     private val purchaseRepository: PurchaseRepository,
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
+    private val dateFormatter: DateFormat,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
-
     private val savedCreditCardFilter: StateFlow<ReceiptFilter> = savedStateHandle
         .getStateFlow(
             key = MY_RECEIPTS_SCREEN_SAVED_FILTER_KEY,
@@ -117,7 +119,16 @@ class MyReceiptsScreenViewModel @Inject constructor(
     }
 
     fun deleteReceipt(id: UUID) = viewModelScope.launch {
-        // TODO: Delete receipt image also.
+        val imagePath = purchaseRepository.getReceiptImagePathById(id)
+
+        withContext(Dispatchers.IO) {
+            if (imagePath != null) {
+                val imageFile = File(imagePath)
+
+                imageFile.delete()
+            }
+        }
+
         purchaseRepository.removePurchase(id)
     }
 

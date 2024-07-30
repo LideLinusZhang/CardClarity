@@ -1,6 +1,6 @@
 package edu.card.clarity.presentation.addCardScreen
 
-import android.icu.text.SimpleDateFormat
+import android.icu.text.DateFormat
 import android.icu.util.Calendar
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -32,6 +32,7 @@ class TemplateSelectionFormViewModel @Inject constructor(
     private val cashBackCreditCardRepository: CashBackCreditCardRepository,
     private val pointBackCreditCardRepository: PointBackCreditCardRepository,
     private val pointSystemRepository: PointSystemRepository,
+    private val dateFormatter: DateFormat
 ) : ViewModel() {
     private val cashBackTemplates = cashBackCreditCardRepository
         .getAllPredefinedCreditCardsStream()
@@ -64,8 +65,6 @@ class TemplateSelectionFormViewModel @Inject constructor(
             started = WhileUiSubscribed,
             initialValue = emptyList()
         )
-
-    private val dateFormatter = SimpleDateFormat.getDateInstance()
 
     private val mostRecentStatementDate = Calendar.getInstance()
     private val mostRecentPaymentDueDate = Calendar.getInstance()

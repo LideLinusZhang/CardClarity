@@ -18,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PaymentDueDateViewModel @Inject constructor(
-    private val cashBackCreditCardRepository: CashBackCreditCardRepository,
-    private val pointBackCreditCardRepository: PointBackCreditCardRepository
+    cashBackCreditCardRepository: CashBackCreditCardRepository,
+    pointBackCreditCardRepository: PointBackCreditCardRepository
 ) : ViewModel() {
 
     private val _creditCards = combine(

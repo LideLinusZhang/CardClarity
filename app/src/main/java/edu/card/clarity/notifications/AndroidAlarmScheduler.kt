@@ -7,7 +7,9 @@ import android.content.Intent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.ZoneId
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AndroidAlarmScheduler @Inject constructor(
     @ApplicationContext private val context: Context
 ): AlarmScheduler {
