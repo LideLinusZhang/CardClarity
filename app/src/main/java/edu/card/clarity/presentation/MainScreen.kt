@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
@@ -29,11 +31,7 @@ import edu.card.clarity.presentation.navigation.BottomNavGraph
 fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = {
-            BottomBar(
-                navController = navController,
-            )
-        }
+        bottomBar = { BottomBar(navController = navController,) }
     ) {
         BottomNavGraph(navController = navController)
     }
@@ -83,6 +81,9 @@ fun RowScope.AddItem(
         onClick = {
             navController.navigate(screen.route)
         },
-        modifier = Modifier.weight(1f).padding(top = 20.dp),
+        modifier = Modifier
+            .weight(1f)
+            .padding(top = 20.dp)
+            .semantics { contentDescription = screen.desc },
     )
 }

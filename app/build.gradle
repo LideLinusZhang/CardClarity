@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.secrets.gradle.plugin)
     alias(libs.plugins.room)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -131,4 +132,8 @@ dependencies {
 
     // HTTP Client Dependencies
     implementation libs.bundles.ktor
+
+    // Baseline Profile Dependencies
+    implementation libs.androidx.profileinstaller
+    baselineProfile project(':baselineprofile')
 }
